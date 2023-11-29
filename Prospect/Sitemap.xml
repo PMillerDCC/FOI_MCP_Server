@@ -1,0 +1,223 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<DCC_Navigation>
+
+	<NavigationOption>
+		<title>Home</title>
+		<href>/Home/Index</href>
+		<isParent>no</isParent>
+		<isChild>no</isChild>
+		<isDummy>no</isDummy>
+		<restrictedTo></restrictedTo>
+	</NavigationOption>
+
+	<NavigationOption>
+		<title>Specifications</title>
+		<href>/Specification/SpecificationGrid</href>
+		<isParent>no</isParent>
+		<isChild>no</isChild>
+		<isDummy>no</isDummy>
+		<restrictedTo></restrictedTo>
+	</NavigationOption>
+
+	<NavigationOption>
+		<title>Tenders</title>
+		<href>/Tender/TenderGrid</href>
+		<isParent>no</isParent>
+		<isChild>no</isChild>
+		<isDummy>no</isDummy>
+		<restrictedTo></restrictedTo>
+	</NavigationOption>
+
+	<NavigationOption>
+		<title>Contracts</title>
+		<href>/Contract/ContractGrid</href>
+		<isParent>no</isParent>
+		<isChild>no</isChild>
+		<isDummy>no</isDummy>
+		<restrictedTo></restrictedTo>
+	</NavigationOption>
+
+	<NavigationOption>
+		<title>Operators</title>
+		<href>/Contractor/ContractorGrid</href>
+		<isParent>no</isParent>
+		<isChild>no</isChild>
+		<isDummy>no</isDummy>
+		<restrictedTo></restrictedTo>
+	</NavigationOption>
+
+	<NavigationOption>
+		<title>Reports</title>
+		<href></href>
+		<isParent>yes</isParent>
+		<isChild>no</isChild>
+		<isDummy>yes</isDummy>
+		<restrictedTo></restrictedTo>
+	</NavigationOption>
+
+		<NavigationOption>
+			<title>Contracts payments schedule</title>
+			<href>/Report/ContractsPaymentsSchedule</href>
+			<isParent>no</isParent>
+			<isChild>yes</isChild>
+			<isDummy>no</isDummy>
+			<restrictedTo></restrictedTo>
+		</NavigationOption>
+
+		<NavigationOption>
+			<title>Report 2</title>
+			<href>/Home/Index</href>
+			<isParent>no</isParent>
+			<isChild>yes</isChild>
+			<isDummy>no</isDummy>
+			<restrictedTo></restrictedTo>
+		</NavigationOption>
+
+	<NavigationOption>
+		<title>Admin</title>
+		<href></href>
+		<isParent>yes</isParent>
+		<isChild>no</isChild>
+		<isDummy>yes</isDummy>
+		<restrictedTo>System Administrator</restrictedTo>
+	</NavigationOption>
+
+		<NavigationOption>
+			<title>System users</title>
+			<href>/Admin/SystemUserGrid</href>
+			<isParent>no</isParent>
+			<isChild>yes</isChild>
+			<isDummy>no</isDummy>
+			<restrictedTo></restrictedTo>
+		</NavigationOption>
+
+		<NavigationOption>
+			<title>Export specifications to CSV</title>
+			<href>/Admin/ExportSpecificationsToCSV</href>
+			<isParent>no</isParent>
+			<isChild>yes</isChild>
+			<isDummy>no</isDummy>
+			<restrictedTo></restrictedTo>
+		</NavigationOption>
+
+		<NavigationOption>
+			<title>Export operators to CSV</title>
+			<href>/Admin/ExportContractorsToCSV</href>
+			<isParent>no</isParent>
+			<isChild>yes</isChild>
+			<isDummy>no</isDummy>
+			<restrictedTo></restrictedTo>
+		</NavigationOption>
+
+		<NavigationOption>
+			<title>Bank holidays and school term dates</title>
+			<href>/Admin/HolidayGrid</href>
+			<isParent>no</isParent>
+			<isChild>yes</isChild>
+			<isDummy>no</isDummy>
+			<restrictedTo></restrictedTo>
+		</NavigationOption>
+
+
+		<NavigationOption>
+			<title>Fuel Prices</title>
+			<href>/Admin/FuelCostGrid</href>
+			<isParent>no</isParent>
+			<isChild>yes</isChild>
+			<isDummy>no</isDummy>
+			<restrictedTo></restrictedTo>
+		</NavigationOption>
+	
+	
+		<NavigationOption>
+			<title>Apply price increase</title>
+			<href>/Home/Index</href>
+			<isParent>no</isParent>
+			<isChild>yes</isChild>
+			<isDummy>no</isDummy>
+			<restrictedTo></restrictedTo>
+		</NavigationOption>
+
+		<NavigationOption>
+			<title>Agreements for fares revenue</title>
+			<href>/Admin/AgreementGrid</href>
+			<isParent>no</isParent>
+			<isChild>yes</isChild>
+			<isDummy>no</isDummy>
+			<restrictedTo></restrictedTo>
+		</NavigationOption>
+
+		<!--<NavigationOption>
+			<title>Areas</title>
+			<href>/Admin/AreaGrid</href>
+			<isParent>no</isParent>
+			<isChild>yes</isChild>
+			<isDummy>no</isDummy>
+			<restrictedTo></restrictedTo>
+		</NavigationOption>-->
+
+		<NavigationOption>
+			<title>Contract types</title>
+			<href>/Admin/ContractTypeGrid</href>
+			<isParent>no</isParent>
+			<isChild>yes</isChild>
+			<isDummy>no</isDummy>
+			<restrictedTo></restrictedTo>
+		</NavigationOption>
+
+		<NavigationOption>
+			<title>Licence statuses</title>
+			<href>/Admin/LicenceStatusGrid</href>
+			<isParent>no</isParent>
+			<isChild>yes</isChild>
+			<isDummy>no</isDummy>
+			<restrictedTo></restrictedTo>
+		</NavigationOption>
+
+		<NavigationOption>
+			<title>Licence types</title>
+			<href>/Admin/LicenceTypeGrid</href>
+			<isParent>no</isParent>
+			<isChild>yes</isChild>
+			<isDummy>no</isDummy>
+			<restrictedTo></restrictedTo>
+		</NavigationOption>
+
+		<!--<NavigationOption>
+			<title>Local authorities</title>
+			<href>/Admin/LocalAuthorityGrid</href>
+			<isParent>no</isParent>
+			<isChild>yes</isChild>
+			<isDummy>no</isDummy>
+			<restrictedTo></restrictedTo>
+		</NavigationOption>-->
+
+		<NavigationOption>
+			<title>Local bus service restrictions</title>
+			<href>/Admin/RestrictionGrid</href>
+			<isParent>no</isParent>
+			<isChild>yes</isChild>
+			<isDummy>no</isDummy>
+			<restrictedTo></restrictedTo>
+		</NavigationOption>
+
+		<NavigationOption>
+			<title>Service types</title>
+			<href>/Admin/ServiceTypeGrid</href>
+			<isParent>no</isParent>
+			<isChild>yes</isChild>
+			<isDummy>no</isDummy>
+			<restrictedTo></restrictedTo>
+		</NavigationOption>
+
+	<!--<NavigationOption>
+        <title>About</title>
+        <href>/Home/About</href>
+        <isParent>no</isParent>
+        <isChild>no</isChild>
+        <isDummy>no</isDummy>
+        <restrictedTo></restrictedTo>
+    </NavigationOption>-->
+    
+</DCC_Navigation>

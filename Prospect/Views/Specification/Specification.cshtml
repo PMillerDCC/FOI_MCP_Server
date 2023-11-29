@@ -1,0 +1,483 @@
+﻿@model ProspectBusinessLayer.Specification
+
+@using (Html.BeginForm())
+{
+    <input type="hidden" value="@Html.AttributeEncode(Model.K_Specification)" id="K_Specification" name="K_Specification" />
+
+    <fieldset>
+        <h2 class="fakeLegend">Specification details</h2>
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="form-group marginTop10 marginBottom20">
+                    @Html.LabelFor(model => model.ContractReference, "Contract reference", new { @class="width250" })
+                    @Html.TextBoxFor(model => model.ContractReference, new { @class="width50", @readonly="readonly" })
+                </div>
+                <div id="divSection1">
+                    <div class="form-group">
+                        @Html.Label("IsBlank", "Is dummy", new { @class="width250" })
+                        <input id="dummyIsBlank" type="checkbox" name="dummyIsBlank" class="hide" onclick="checkboxClick(this);">
+                        <label for="dummyIsBlank"></label>
+                        @Html.CheckBoxFor(model => model.IsBlank, new { @id="cbIsBlank", @class="hide" })
+                    </div>
+                </div>
+                <div id="divSection2">
+                    <div class="form-group">
+                        @Html.Label("IsPackage", "Is package", new { @class="width250" })
+                        <input id="dummyIsPackage" type="checkbox" name="dummyIsPackage" class="hide" onclick="checkboxClick(this);">
+                        <label for="dummyIsPackage"></label>
+                        @Html.CheckBoxFor(model => model.IsPackage, new { @id="cbIsPackage", @class="hide" })
+                    </div>
+                </div>
+                <div id="divSection9">
+                    <div class="form-group">
+                        @Html.Label("FuelTerm", "Special Fuel Terms Apply", new { @class = "width250" })
+                        <input id="dummyFuelTerm" type="checkbox" name="checkbox" class="hide" onclick="checkboxClick(this);">
+                        <label for="dummyFuelTerm"></label>
+                        @Html.CheckBoxFor(model => model.FuelTerm, new { @id = "cbFuelTerm", @class = "hide" })
+                    </div>
+                </div>
+                <div id="divSection4">
+                    <br />
+                    <br />
+                    <br />
+                </div>
+                <div id="divSection5">
+                    <div class="form-group marginTop50">
+                        @Html.LabelFor(model => model.SpecificationServiceNo, "Service number", new { @class="width250" })
+                        @Html.TextBoxFor(model => model.SpecificationServiceNo, new { @class="form-control width300", @maxlength="100" })
+                        @Html.ValidationMessageFor(model => model.SpecificationServiceNo, null, new { @class="marginLeft250" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.RouteStart, "Route start", new { @class="width250" })
+                        @Html.TextBoxFor(model => model.RouteStart, new { @class="form-control width300", @maxlength="100" })
+                        @Html.ValidationMessageFor(model => model.RouteStart, null, new { @class="marginLeft250" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.RouteEnd, "Route end", new { @class="width250" })
+                        @Html.TextBoxFor(model => model.RouteEnd, new { @class="form-control width300", @maxlength="100" })
+                        @Html.ValidationMessageFor(model => model.RouteEnd, null, new { @class="marginLeft250" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Q_ContractType, "Contract type", new { @class="width250" })
+                        @Html.DropDownListFor(model => model.Q_ContractType, Model.ddlContractType.ToList(), "- not set -", new { @id="ddlContractType", @class="form-control width120", @onclick="ddlClick(this);", @onchange="ddlClick(this);", @onkeyup="return true;", @onkeydown="return true;" })
+                        @Html.ValidationMessageFor(model => model.Q_ContractType, null, new { @class="marginLeft250" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.DateStart, "Contract start date", new { @class="width250" })
+                        @Html.JQueryUI().DatepickerFor(model => model.DateStart, new { @id="DateStart", @class="form-control width120" }).DateFormat("dd MMM yyyy")
+                        @Html.ValidationMessageFor(model => model.DateStart, null, new { @class="marginLeft250" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.DateEnd, "Contract end date", new { @class="width250" })
+                        @Html.JQueryUI().DatepickerFor(model => model.DateEnd, new { @id="DateEnd", @class="form-control width120" }).DateFormat("dd MMM yyyy")
+                        @Html.ValidationMessageFor(model => model.DateEnd, null, new { @class="marginLeft250" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ExceptionalConditions, "Exceptional conditions", new { @class="width250" })
+                        @Html.TextBoxFor(model => model.ExceptionalConditions, new { @class="form-control width300", @maxlength="100" })
+                        @Html.ValidationMessageFor(model => model.ExceptionalConditions, null, new { @class="marginLeft250" })
+                    </div>
+
+                    <h3>Quality of service</h3>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.VehicleCapacity, "Vehicle capacity", new { @class="width250" })
+                        @Html.TextBoxFor(model => model.VehicleCapacity, new { @class="form-control width300", @maxlength="100" })
+                        @Html.ValidationMessageFor(model => model.VehicleCapacity, null, new { @class="marginLeft250" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.VehicleElderlyAndDisabled, "Accessibility", new { @class="width250" })
+                        @Html.TextBoxFor(model => model.VehicleElderlyAndDisabled, new { @class="form-control width300", @maxlength="100" })
+                        @Html.ValidationMessageFor(model => model.VehicleElderlyAndDisabled, null, new { @class="marginLeft250" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.VehicleDimensions, "Vehicle dimensions", new { @class="width250" })
+                        @Html.TextBoxFor(model => model.VehicleDimensions, new { @class="form-control width300", @maxlength="100" })
+                        @Html.ValidationMessageFor(model => model.VehicleDimensions, null, new { @class="marginLeft250" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Q_Agreement, "Agreement for fares revenue", new { @class="width250" })
+                        @Html.DropDownListFor(model => model.Q_Agreement, Model.ddlAgreement.ToList(), "- not set -", new { @id="ddlAgreement", @class="form-control width120", @onclick="ddlClick(this);", @onchange="ddlClick(this);", @onkeyup="return true;", @onkeydown="return true;" })
+                        @Html.ValidationMessageFor(model => model.Q_Agreement, null, new { @class="marginLeft250" })
+                    </div>
+                    <div class="form-group marginTop8">
+                        @Html.LabelFor(model => model.JointResponsibility1, "Joint responsibility", new { @class="width250" })
+				        <div style="width:auto">
+					        @Html.TextAreaFor(model => model.JointResponsibility1, new { @id="JointResponsibility1", @class="form-control width300", style="min-height:100px;", @maxlength="500", @onkeyup="TextAreaOnKeyUp(this, 500);", @onkeydown="return true;", onblur="TextAreaOnBlur(this)" })
+					        <div id="divJointResponsibility1" class="marginLeft250 width300 alignRight"></div>
+				        </div>
+                        @Html.ValidationMessageFor(model => model.JointResponsibility1, null, new { @class="marginLeft250" })
+                    </div>
+                    <div class="form-group marginTop8 marginBottom20">
+                        @Html.LabelFor(model => model.ServiceDetails1, "Service details", new { @class="width250" })
+                        <div style="width:auto">
+                            @Html.TextAreaFor(model => model.ServiceDetails1, new { @id="ServiceDetails1", @class="form-control width300", style="height:100px;", @maxlength="500", @onkeyup="TextAreaOnKeyUp(this, 500);", @onkeydown="return true;", onblur="TextAreaOnBlur(this)" })
+					        <div id="divServiceDetails1" class="marginLeft250 width300 alignRight"></div>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.ServiceDetails1, null, new { @class="marginLeft250" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div id="divSection6">
+
+                    <h3 class="marginTop10">Days of operation</h3>
+                    <div id="totalDays">
+                        <div class="form-group">
+                            @Html.Label("OperatesOnMon", "Monday", new { @class="width250" })
+                            <input id="dummyOperatesOnMon" type="checkbox" name="checkbox" class="hide" onclick="calculateNoOfDaysInOperation(); checkboxClick(this);">
+                            <label for="dummyOperatesOnMon"></label>
+                            @Html.CheckBoxFor(model => model.OperatesOnMon, new { @id="cbOperatesOnMon", @class="hide" })
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("OperatesOnTue", "Tuesday", new { @class="width250" })
+                            <input id="dummyOperatesOnTue" type="checkbox" name="checkbox" class="hide" onclick="calculateNoOfDaysInOperation(); checkboxClick(this);">
+                            <label for="dummyOperatesOnTue"></label>
+                            @Html.CheckBoxFor(model => model.OperatesOnTue, new { @id="cbOperatesOnTue", @class="hide" })
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("OperatesOnWed", "Wednesday", new { @class="width250" })
+                            <input id="dummyOperatesOnWed" type="checkbox" name="checkbox" class="hide" onclick="calculateNoOfDaysInOperation(); checkboxClick(this);">
+                            <label for="dummyOperatesOnWed"></label>
+                            @Html.CheckBoxFor(model => model.OperatesOnWed, new { @id="cbOperatesOnWed", @class="hide" })
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("OperatesOnThu", "Thursday", new { @class="width250" })
+                            <input id="dummyOperatesOnThu" type="checkbox" name="checkbox" class="hide" onclick="calculateNoOfDaysInOperation(); checkboxClick(this);">
+                            <label for="dummyOperatesOnThu"></label>
+                            @Html.CheckBoxFor(model => model.OperatesOnThu, new { @id="cbOperatesOnThu", @class="hide" })
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("OperatesOnFri", "Friday", new { @class="width250" })
+                            <input id="dummyOperatesOnFri" type="checkbox" name="checkbox" class="hide" onclick="calculateNoOfDaysInOperation(); checkboxClick(this);">
+                            <label for="dummyOperatesOnFri"></label>
+                            @Html.CheckBoxFor(model => model.OperatesOnFri, new { @id="cbOperatesOnFri", @class="hide" })
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("OperatesOnSat", "Saturday", new { @class="width250" })
+                            <input id="dummyOperatesOnSat" type="checkbox" name="checkbox" class="hide" onclick="calculateNoOfDaysInOperation(); checkboxClick(this);">
+                            <label for="dummyOperatesOnSat"></label>
+                            @Html.CheckBoxFor(model => model.OperatesOnSat, new { @id="cbOperatesOnSat", @class="hide" })
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("OperatesOnSun", "Sunday", new { @class="width250" })
+                            <input id="dummyOperatesOnSun" type="checkbox" name="checkbox" class="hide" onclick="calculateNoOfDaysInOperation(); checkboxClick(this);">
+                            <label for="dummyOperatesOnSun"></label>
+                            @Html.CheckBoxFor(model => model.OperatesOnSun, new { @id="cbOperatesOnSun", @class="hide" })
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("OperatesOnSchoolDays", "School days", new { @class="width250" })
+                            <input id="dummyOperatesOnSchoolDays" type="checkbox" name="checkbox" class="hide" onclick="calculateNoOfDaysInOperation(); checkboxClick(this); ">
+                            <label for="dummyOperatesOnSchoolDays"></label>
+                            @Html.CheckBoxFor(model => model.OperatesOnSchoolDays, new { @id="cbOperatesOnSchoolDays", @class="hide" })
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("OperatesOnNonSchoolDays", "Non school days", new { @class="width250" })
+                            <input id="dummyOperatesOnNonSchoolDays" type="checkbox" name="checkbox" class="hide" onclick="calculateNoOfDaysInOperation(); checkboxClick(this); ">
+                            <label for="dummyOperatesOnNonSchoolDays"></label>
+                            @Html.CheckBoxFor(model => model.OperatesOnNonSchoolDays, new { @id="cbOperatesOnNonSchoolDays", @class="hide" })
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("OperatesOnBankHolidays", "Bank holidays", new { @class="width250" })
+                            <input id="dummyOperatesOnBankHolidays" type="checkbox" name="checkbox" class="hide" onclick="calculateNoOfDaysInOperation(); checkboxClick(this);">
+                            <label for="dummyOperatesOnBankHolidays"></label>
+                            @Html.CheckBoxFor(model => model.OperatesOnBankHolidays, new { @id="cbOperatesOnBankHolidays", @class="hide" })
+                        </div>
+                        <div class="form-group">
+                            @Html.Label("OperatesOnChristmasAndNewYear", "Days between Christmas & New Year's Day", new { @class="width250" })
+                            <input id="dummyOperatesOnChristmasAndNewYear" type="checkbox" name="checkbox" class="hide" onclick="calculateNoOfDaysInOperation(); checkboxClick(this);">
+                            <label for="dummyOperatesOnChristmasAndNewYear"></label>
+                            @Html.CheckBoxFor(model => model.OperatesOnChristmasAndNewYear, new { @id="cbOperatesOnChristmasAndNewYear", @class="hide" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.CalculatedNoOfDaysInOperation, "Calculated number of days of operation", new { @class="width250" })
+                        @Html.TextBoxFor(model => model.CalculatedNoOfDaysInOperation, new { @id="tbCalculatedNoOfDaysInOperation", @class="width60", @readonly="readonly" })
+                    </div>
+                    
+                    <h3>Statistics</h3>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.AverageMilesPerDay, "Average miles per day", new { @class="width250" })
+                        @Html.TextBoxFor(model => model.AverageMilesPerDay, new { @class="form-control width60" })
+                        @Html.ValidationMessageFor(model => model.AverageMilesPerDay, null, new { @class="marginLeft250" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.AverageHoursPerDay, "Average hours per day", new { @class="width250" })
+                        @Html.TextBoxFor(model => model.AverageHoursPerDay, new { @class="form-control width60" })
+                        @Html.ValidationMessageFor(model => model.AverageHoursPerDay, null, new { @class="marginLeft250" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.NoOfVehicles, "Number of vehicles", new { @class="width250" })
+                        @Html.TextBoxFor(model => model.NoOfVehicles, new { @class="form-control width60" })
+                        @Html.ValidationMessageFor(model => model.NoOfVehicles, null, new { @class="marginLeft250" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.AverageWeeklyRevenueEstimate, "PPT estimate of average weekly revenue", new { @class="width250" })
+                        @Html.TextBoxFor(model => model.AverageWeeklyRevenueEstimate, new { @class="form-control width60" })
+                        @Html.ValidationMessageFor(model => model.AverageWeeklyRevenueEstimate, null, new { @class="marginLeft250" })
+                    </div>
+                    <h3>Notes</h3>
+                    <div class="form-group marginTop10 marginBottom20">
+                        @Html.LabelFor(model => model.Notes, "General notes", new { @class="width250 hide" })
+                        <div style="width:auto">
+                            @Html.TextAreaFor(model => model.Notes, new { @id="Notes", @class="form-control width400", style="height:140px;", @maxlength="500", @onkeyup="TextAreaOnKeyUp(this, 500);", @onkeydown="return true;", onblur="TextAreaOnBlur(this)" })
+					        <div id="divNotes" class="width400 alignRight"></div>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Notes, null, new { @class="marginLeft250" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </fieldset>
+
+    <div id="divSection7">
+        @Html.Raw(Model.TenderGrid.RenderGrid())
+    </div>
+
+    <div class="text-center marginBottom20">
+        <input class="btn btn-success" name="saveButton" type="submit" value="Save changes" data-ays-ignore="" />
+        
+            <input class="btn btn-success hidden-print" type="button" value="Create word document" onclick="location.href='@Url.Action("ExportToWord", "Specification", new { k_Specification=@Model.K_Specification } )';" />
+        
+        <input class="btn btn-success" type="button" value="Back to specification list" onclick="location.href='@Url.Action("SpecificationGrid", "Specification")';" />
+    </div>
+}
+
+
+
+
+<script type="text/javascript">
+
+
+    $(document).ready(function ()
+    {
+
+       
+        // Customise jquery datepickers
+
+        $.datepicker.setDefaults(
+        {
+            inline:true,
+            dateFormat:'d M yy',
+            dayNamesMin:['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+            firstDay:1,
+            showOtherMonths:true,
+            showAnimation:'fadeIn',
+            showButtonPanel:true,
+            changeYear:true,
+            changeMonth:true,
+            //maxDate:'365', // no of days after today ('0'=today)
+            yearRange:"-100:+2"
+        });
+
+        $("#DateStart").datepicker(
+        {
+            beforeShow:function (element, datepicker)
+            {
+                var dateEnd=$("#DateEnd").datepicker('getDate');
+                if ((dateEnd != null) && (dateEnd != ""))
+                {
+                    $("#DateStart").datepicker("option", "maxDate", dateEnd);
+                }
+            }
+        });
+
+        $("#DateEnd").datepicker(
+        {
+            beforeShow:function (element, datepicker)
+            {
+                var dateStart=$("#DateStart").datepicker('getDate');
+                if ((dateStart != null) && (dateStart != ""))
+                {
+                    $("#DateEnd").datepicker("option", "minDate", dateStart);
+                }
+            }
+        });
+
+
+
+
+        // Initialise dropdownlists
+
+        $('select').each(function (index)
+        {
+            var $this=$(this);
+            var id=$this.attr("id");
+            var ddl1=document.getElementById(id), option, i;
+            for (i=0; i < ddl1.length; i++)
+            {
+                option=ddl1[i];
+                if (option.text.toLowerCase() == "-- not set --")
+                {
+                    option.disabled=true;// disable this line if you want to allow user to select "-- not set --"
+                    option.style.color="grey";
+                }
+                else
+                {
+                    option.style.color="#2e6492";
+                }
+            }
+            if ((this.value == "-- not set --") || (this.value == ""))
+                this.style.color="grey";
+            else
+                this.style.color="#2e6492";
+        });
+
+        $('select').on('change', function ()
+        {
+            if ((this.value == "-- not set --") || (this.value == ""))
+                this.style.color="grey";
+            else
+                this.style.color="#2e6492";
+        });
+
+
+
+
+        // Initialise Checkboxes
+
+        $("input:checkbox").each(function ()
+        {
+            var $this=$(this);
+            var id=$this.attr("id");
+            if (id.indexOf('dummy') == 0)
+            {
+                this.checked=document.getElementById(id.replace('dummy', 'cb')).checked;
+            }
+        });
+
+
+    });
+
+
+
+
+    // OnLoad
+
+    function onLoad()
+    {
+        showOrHideDivs();
+        return false;
+    }
+
+
+
+
+    // Set checkboxes
+
+    function checkboxClick(element)
+    {
+        var id=element.id;
+        var target=id.replace('dummy', 'cb');
+        var remember=document.getElementById(id);
+        document.getElementById(target).checked=(remember.checked);
+        showOrHideDivs();
+        return false;
+    }
+
+
+
+
+    // Show character count while typing in a textarea
+
+    function TextAreaOnKeyUp(ctrl, max)
+    {
+        var remaining = max - ctrl.value.length;
+        $("#div" + ctrl.id).html(remaining + " characters remaining");
+    }
+
+    function TextAreaOnBlur(ctrl)
+    {
+        $("#div" + ctrl.id).html("");
+    }
+
+
+
+
+    // Calculate number of days in operation
+
+    function calculateNoOfDaysInOperation()
+    {
+        var startDay=$("#DateStart").datepicker('getDate').getDate();
+        var startMonth=$("#DateStart").datepicker('getDate').getMonth() +1;
+        var startYear=$("#DateStart").datepicker('getDate').getFullYear();
+        var endDay=$("#DateEnd").datepicker('getDate').getDate();
+        var endMonth=$("#DateEnd").datepicker('getDate').getMonth() +1;
+        var endYear=$("#DateEnd").datepicker('getDate').getFullYear();
+
+        let s =
+            startDay.toString().padStart(2, "0") + '/' + startMonth.toString().padStart(2, "0") + '/' + startYear.toString() +
+            endDay.toString().padStart(2, "0") + '/' + endMonth.toString().padStart(2, "0") + '/' + endYear.toString() +
+            (document.getElementById("dummyOperatesOnMon").checked ? "y" :"f") +
+            (document.getElementById("dummyOperatesOnTue").checked ? "y" :"f") +
+            (document.getElementById("dummyOperatesOnWed").checked ? "y" :"f") +
+            (document.getElementById("dummyOperatesOnThu").checked ? "y" :"f") +
+            (document.getElementById("dummyOperatesOnFri").checked ? "y" :"f") +
+            (document.getElementById("dummyOperatesOnSat").checked ? "y" :"f") +
+            (document.getElementById("dummyOperatesOnSun").checked ? "y" :"f") +
+            (document.getElementById("dummyOperatesOnSchoolDays").checked ? "y" :"f") +
+            (document.getElementById("dummyOperatesOnNonSchoolDays").checked ? "y" :"f") +
+            (document.getElementById("dummyOperatesOnBankHolidays").checked ? "y" :"f") +
+            (document.getElementById("dummyOperatesOnChristmasAndNewYear").checked ? "y" :"f");
+
+        $.ajax(
+        {
+            cache:false,
+            type:"GET",
+            dataType:'json',
+            url:"/Specification/CalculateNoDaysInOperation",
+            data:{ "dateAndDays":s },
+            success:function (data)
+            {
+                document.getElementById("tbCalculatedNoOfDaysInOperation").value=data;
+            },
+            error:function (xhr, ajaxOptions, thrownError)
+            {
+                alert('Failed to calculate number of days in operation.');
+            }
+        });
+
+        return false;
+    }
+
+    setTimeout(calculateNoOfDaysInOperation, 5000);
+
+
+    // Show/Hide IsBlank divs
+
+    function showOrHideDivs()
+    {
+        if (document.getElementById("cbIsBlank").checked == true)
+        {
+            document.getElementById("divSection1").style.display='inline';
+            document.getElementById("divSection2").style.display='none';
+            document.getElementById("divSection3").style.display='inline';
+            document.getElementById("divSection4").style.display='none';
+            document.getElementById("divSection5").style.display='none';
+            document.getElementById("divSection6").style.display='none';
+            document.getElementById("divSection7").style.display='none';
+        }
+        else if (document.getElementById("cbIsPackage").checked == true)
+        {
+            document.getElementById("divSection1").style.display='none';
+            document.getElementById("divSection2").style.display='inline';
+            document.getElementById("divSection3").style.display='inline';
+            document.getElementById("divSection4").style.display='none';
+            document.getElementById("divSection5").style.display='none';
+            document.getElementById("divSection6").style.display='inline';
+            document.getElementById("divSection7").style.display='none';
+        }
+        else
+        {
+            document.getElementById("divSection1").style.display='inline';
+            document.getElementById("divSection2").style.display='inline';
+            document.getElementById("divSection3").style.display='none';
+            document.getElementById("divSection4").style.display='inline';
+            document.getElementById("divSection5").style.display='inline';
+            document.getElementById("divSection6").style.display='inline';
+            document.getElementById("divSection7").style.display='inline';
+        }
+    }
+
+
+</script>
