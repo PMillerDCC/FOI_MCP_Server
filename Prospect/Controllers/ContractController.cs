@@ -62,19 +62,9 @@ namespace Prospect.Controllers
                 }
             }
 
-            int saved_K_Specification;
-            try
-            {
-                saved_K_Specification = (int)DCC_Session.Get("Saved_K_Specification");
-            }
-            catch
-            {
-                saved_K_Specification = -999;
-            }
-            DCC_Session.Add("Saved_K_Tender", k_Tender);
             #endregion
 
-            Tender model = new Tender(DCC_Session.AutoDatabaseConnection, k_Tender, saved_K_Specification);
+            Tender model = new Tender(DCC_Session.AutoDatabaseConnection, k_Tender) ;
 
             #region Initialise Contract Variations Grid
 
@@ -113,9 +103,13 @@ namespace Prospect.Controllers
 
         [Authorize]
         [HttpPost]
-        public ActionResult Contract(string saveButton, Tender model)
+        public ActionResult Contract(string saveButton, string createButton, string recycleButton, Tender model)
         {
-            if (!string.IsNullOrEmpty(saveButton))
+            bool saveVariation = (!string.IsNullOrEmpty(createButton));
+
+
+
+                if ( (!string.IsNullOrEmpty(saveButton)) || (!string.IsNullOrEmpty(createButton)))
             {
                 #region Page validation
 
@@ -126,34 +120,40 @@ namespace Prospect.Controllers
                 #region On save
                 if (ModelState.IsValid)
                 {
-                    if (model.Save(DCC_Session.AutoDatabaseConnection) < 0) this.DCC_DisplayMessage(DCC_MessageType.Error, "A problem occurred while saving");
+                    if (model.Save(DCC_Session.AutoDatabaseConnection, saveVariation) < 0) this.DCC_DisplayMessage(DCC_MessageType.Error, "A problem occurred while saving");
                     else this.DCC_DisplayMessage(DCC_MessageType.Success, "Your changes have been saved");
                 }
                 else this.DCC_DisplayMessage(DCC_MessageType.Error, "Some of your changes are invalid");
                 #endregion
+
+               
             }
 
             model.PopulateDropDownLists(DCC_Session.AutoDatabaseConnection, model.K_Tender);
 
-            #region Initialise ContractVariation Grid
+            #region Initialise Contract Variations Grid
 
             if (model.IsTenderAccepted)
             {
+
                 model.ContractVariationGrid.Initialise(
                     Request,
-                    id: "ContractVariationGrid",
+                    id: "ContractVariationsGrid",
                     itemNameSingular: "Contract variation",
-                    column1: new GridColumn(GridColumnType.Text, "CvVariationNumber", "Variation Number", 90, alignRight: true, boundSortField: "CvariationNumber", defaultSortColumn: true, defaultSortDescending: true),
-                    column2: new GridColumn(GridColumnType.Text, "CvDateVariationsStarta", "Variation Start Date", 100),
-                    column3: new GridColumn(GridColumnType.Text, "CvDateVariationsEnda", "Variation End Date", 100),
+                    column1: new GridColumn(GridColumnType.Text, "VariationNoText", "Variation Number", 90, alignRight: true, boundSortField: "VariationNo", defaultSortColumn: true, defaultSortDescending: true),
+                    column2: new GridColumn(GridColumnType.Text, "CvDateVariationsStartatext", "Variation Start Date", 160),
+                    column3: new GridColumn(GridColumnType.Text, "CvPriceChanged", "Price Changed?", 160),
+                    column4: new GridColumn(GridColumnType.Text, "AgreementChanged", "Fares Agreement Changed?", 200),
+                    column5: new GridColumn(GridColumnType.Text, "NoOfDaysOfOperationPerYearChanged", "Days in Operation Changed?", 200),
+                    addButtonText: "Add New Contract Variation",
                     addActionResult: "/ContractVariation/ContractVariation",
                     editActionResult: "/ContractVariation/ContractVariation",
-                    noOfRowsInGrid: 10,
+                    noOfRowsInGrid: 16,
                     showEditButton: false,
                     showSelectorColumn: false,
                     fullRowSelect: true,
                     dcc_Session: DCC_Session
-                );
+                    );
             }
             #endregion
 

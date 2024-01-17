@@ -7,17 +7,14 @@ using System.Web.Mvc;
 
 namespace ProspectBusinessLayer
 {
-
     #region Specification
 
     public class Specification
     {
-        //Commit Test
-
         // Properties
 
         public int       K_Specification                { get; set; }
-        public int       Q_Tender                       { get; set; }
+        public int?      Q_Tender                       { get; set; }
         public int       ContractReference              { get; set; }
         public bool      IsBlank                        { get; set; }
         public bool      IsPackage                      { get; set; }
@@ -52,7 +49,6 @@ namespace ProspectBusinessLayer
         public int       NoOfVehicles                   { get; set; }
         public decimal   AverageWeeklyRevenueEstimate   { get; set; }
         public string    Notes                          { get; set; }
-
         public string    AgreementDescription           { get; set; }
         public string    ContractTypeDescription        { get; set; }
         public string    ContractorName                 { get; set; }
@@ -345,6 +341,7 @@ namespace ProspectBusinessLayer
             DateEnd                 = DCC_GetColumn.DateTimeQ   (dataRow, "DateEnd");
             Q_ContractType          = DCC_GetColumn.Integer32   (dataRow, "Q_ContractType");
             Q_Agreement             = DCC_GetColumn.Integer32   (dataRow, "Q_Agreement");
+            
           
 
 

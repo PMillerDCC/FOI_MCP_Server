@@ -87,13 +87,18 @@
                         @Html.ValidationMessageFor(model => model.TenderPricePerDay, null, new { @class = "marginLeft250" })
                     </div>
                     <div class="form-group">
+                        @Html.LabelFor(model => model.TenderPricePerYear, "Tender price per year", new { @class = "width250" })
+                        @Html.TextBoxFor(model => model.TenderPricePerYear, new { @class = "form-control width100" })
+                        @Html.ValidationMessageFor(model => model.TenderPricePerYear, null, new { @class = "marginLeft250" })
+                    </div>
+                    <div class="form-group">
                         @Html.LabelFor(model => model.FuelPriceElement, "Fuel related element of price", new { @class = "width250" })
                         @Html.TextBoxFor(model => model.FuelPriceElement, new { @class = "form-control width100" })
                         @Html.ValidationMessageFor(model => model.FuelPriceElement, null, new { @class = "marginLeft250" })
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(model => model.TenderClosingDate, "Tender Closing Date", new { @class = "width250" })
-                        @Html.JQueryUI().DatepickerFor(model => model.TenderClosingDate, new { @id = "TenderClosingDate", @class = "form-control width120" }).DateFormat("dd MMM yyyy")
+                        @Html.JQueryUI().DatepickerFor(model => model.TenderClosingDate, new { @id = "TenderClosingDate", @class = "form-control width100" }).DateFormat("dd MMM yyyy")
                         @Html.ValidationMessageFor(model => model.TenderClosingDate, null, new { @class = "marginLeft250" })
                     </div>
                     <div class="form-group">
@@ -102,19 +107,14 @@
                         @Html.ValidationMessageFor(model => model.EstimatedAverageRevenuePerDay, null, new { @class = "marginLeft250" })
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(model => model.AverageCostPerDay, "Average cost per day", new { @class = "width250" })
-                        @Html.TextBoxFor(model => model.AverageCostPerDay, new { @class = "form-control width100" })
-                        @Html.ValidationMessageFor(model => model.AverageCostPerDay, null, new { @class = "marginLeft250" })
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.TenderPricePerYear, "Tender price per year", new { @class = "width250" })
-                        @Html.TextBoxFor(model => model.TenderPricePerYear, new { @class = "form-control width100" })
-                        @Html.ValidationMessageFor(model => model.TenderPricePerYear, null, new { @class = "marginLeft250" })
-                    </div>
-                    <div class="form-group">
                         @Html.LabelFor(model => model.EstimatedAverageRevenuePerYear, "Estimated average revenue per year", new { @class = "width250" })
                         @Html.TextBoxFor(model => model.EstimatedAverageRevenuePerYear, new { @class = "form-control width100" })
                         @Html.ValidationMessageFor(model => model.EstimatedAverageRevenuePerYear, null, new { @class = "marginLeft250" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.AverageCostPerDay, "Average cost per day", new { @class = "width250" })
+                        @Html.TextBoxFor(model => model.AverageCostPerDay, new { @class = "form-control width100" })
+                        @Html.ValidationMessageFor(model => model.AverageCostPerDay, null, new { @class = "marginLeft250" })
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(model => model.AverageCostPerYear, "Average cost per year", new { @class = "width250" })
@@ -122,12 +122,12 @@
                         @Html.ValidationMessageFor(model => model.AverageCostPerYear, null, new { @class = "marginLeft250" })
                     </div>
                     <div class="form-group marginTop20 marginBottom20">
-                        @Html.LabelFor(model => model.VehicleDetails, "Vehicle details", new { @class = "width250" })
+                        @Html.LabelFor(model => model.TenderVehicleDetails, "Vehicle details", new { @class = "width250" })
                         <div style="width: auto">
-                            @Html.TextAreaFor(model => model.VehicleDetails, new { @id = "VehicleDetails", @class = "form-control width300 height300", onblur = "TextAreaOnBlur(this)", style = "height:100px;", @maxlength = "500", @onkeyup = "TextAreaOnKeyUp(this, 1000);", @onkeydown = "return true;" })
+                            @Html.TextAreaFor(model => model.TenderVehicleDetails, new { @id = "TenderVehicleDetails", @class = "form-control width300 height300", onblur = "TextAreaOnBlur(this)", style = "height:100px;", @maxlength = "500", @onkeyup = "TextAreaOnKeyUp(this, 1000);", @onkeydown = "return true;" })
                             <div id="divVehicleDetails" class="marginLeft250 width300 alignRight"></div>
                         </div>
-                        @Html.ValidationMessageFor(model => model.VehicleDetails, null, new { @class = "width250" })
+                        @Html.ValidationMessageFor(model => model.TenderVehicleDetails, null, new { @class = "width250" })
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -164,12 +164,12 @@
                         @Html.ValidationMessageFor(model => model.TenderQualificationNotes, null, new { @class="width250" })
                     </div>
                     <div class="form-group marginTop30 marginBottom20">
-                        @Html.LabelFor(model => model.Notes, "General notes", new { @class="width250" })
+                        @Html.LabelFor(model => model.TenderNotes, "General notes", new { @class="width250" })
                         <div style="width:auto">
-                            @Html.TextAreaFor(model => model.Notes, new { @id="Notes", @class="form-control width300 height300", onblur="TextAreaOnBlur(this)", style="height:100px;", @maxlength="500", @onkeyup="TextAreaOnKeyUp(this, 1000);", @onkeydown="return true;" })
+                            @Html.TextAreaFor(model => model.TenderNotes, new { @id="TenderNotes", @class="form-control width300 height300", onblur="TextAreaOnBlur(this)", style="height:100px;", @maxlength="500", @onkeyup="TextAreaOnKeyUp(this, 1000);", @onkeydown="return true;" })
 					        <div id="divNotes" class="marginLeft250 width300 alignRight"></div>
                         </div>
-                        @Html.ValidationMessageFor(model => model.Notes, null, new { @class="width250" })
+                        @Html.ValidationMessageFor(model => model.TenderNotes, null, new { @class="width250" })
                     </div>
                 </div>
             </div>
@@ -274,6 +274,48 @@
 
     });
 
+    // Tender Calculations
+
+    function updateTenderPricePerYear() {
+        var tenderPricePerDay = parseFloat($('#TenderPricePerDay').val());
+        var calculatedNoOfDaysInOperation = parseFloat($('#CalculatedNoOfDaysInOperation').val());
+        var result = tenderPricePerDay * calculatedNoOfDaysInOperation;
+
+        $('#TenderPricePerYear').val(result.toFixed(2));
+
+    }
+
+    $('#TenderPricePerDay, #CalculatedNoOfDaysInOperation').on('input', updateTenderPricePerYear);
+
+    updateTenderPricePerYear();
+
+
+    function updateAverageRevenuePerYear() {
+        var averageRevenuePerDay = parseFloat($('#EstimatedAverageRevenuePerDay').val());
+        var calculatedNoOfDaysInOperation = parseFloat($('#CalculatedNoOfDaysInOperation').val());
+        var result = averageRevenuePerDay * calculatedNoOfDaysInOperation;
+
+        $('#EstimatedAverageRevenuePerYear').val(result.toFixed(2));
+
+    }
+
+    $('#EstimatedAverageRevenuePerDay, #CalculatedNoOfDaysInOperation').on('input', updateAverageRevenuePerYear);
+
+    updateAverageRevenuePerYear();
+
+
+    function updateAverageCostPerYear() {
+        var averageCostPerDay = parseFloat($('#AverageCostPerDay').val());
+        var calculatedNoOfDaysInOperation = parseFloat($('#CalculatedNoOfDaysInOperation').val());
+        var result = averageCostPerDay * calculatedNoOfDaysInOperation;
+
+        $('#AverageCostPerYear').val(result.toFixed(2));
+
+    }
+
+    $('#AverageCostPerDay, #CalculatedNoOfDaysInOperation').on('input', updateAverageCostPerYear);
+
+    updateAverageCostPerYear();
 
 
 

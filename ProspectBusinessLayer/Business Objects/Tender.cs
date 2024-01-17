@@ -16,10 +16,11 @@ namespace ProspectBusinessLayer
         // Properties
 
         public int       K_Tender                        { get; set; }
-        public int       TenderReference                 { get; set; }
+        public int       Q_ContractVariation             { get; set; }
         public int       Q_Specification                 { get; set; }
         public int       Q_Contractor                    { get; set; }
-        public int       NoOfDaysOfOperationPerYear      { get; set; }
+        public int       Q_Agreement                     { get; set; }
+        public int       TenderReference                 { get; set; }
         public decimal   TenderPricePerDay               { get; set; }
         public decimal   FuelPriceElement                { get; set; }
         public DateTime? TenderClosingDate               { get; set; }
@@ -30,32 +31,35 @@ namespace ProspectBusinessLayer
         public decimal   AverageCostPerYear              { get; set; }
         public bool      AnyTenderQualifications         { get; set; }
         public string    TenderQualificationNotes        { get; set; }
-        public string    Notes                           { get; set; }
+        public string    TenderNotes                     { get; set; }
         public bool      IsConforming                    { get; set; }
-        public string    VehicleDetails                  { get; set; }
+        public string    TenderVehicleDetails            { get; set; }
         public bool      IncludeInTenderAnalysis         { get; set; }
         public bool      IsTenderAccepted                { get; set; }
         public bool      IsContractCancelled             { get; set; }
         public int       ContractReference               { get; set; }
         public bool      IsPackage                       { get; set; }
-
+        public string    ServiceNo                       { get; set; }  
         public string    SpecificationServiceNo          { get; set; }
+        public string    TenderRouteStart                { get; set; }
+        public string    TenderRouteEnd                  { get; set; }
         public string    RouteStart                      { get; set; }
         public string    RouteEnd                        { get; set; }
         public DateTime? DateStart                       { get; set; }
         public DateTime? DateEnd                         { get; set; }
         public string    ContractTypeDescription         { get; set; }
         public string    ContractorName                  { get; set; }
-        public int       VariationNo                     { get; set; }
         public int       CalculatedNoOfDaysInOperation   { get; set; }
         public string    ContractorLicenceNo             { get; set; }
-        public string    Agreement                       { get; set; }
+        public string    TenderContractorLicenceNo       { get; set; }
+        public int       Agreement                       { get; set; }
         public decimal   ContractedMiles                 { get; set; }
         public string    ExceptionalConditions           { get; set; }
+        public string    TenderExceptionalConditions     { get; set; }
+        public string    TenderVehicleCapacity           { get; set; }
         public string    VehicleCapacity                 { get; set; }
         public string    VehicleElderlyAndDisabled       { get; set; }
         public string    VehicleDimensions               { get; set; }
-        public int       Q_Agreement                     { get; set; }
         public string    ServiceDetails1                 { get; set; }
         public string    ServiceDetails2                 { get; set; }
         public string    ServiceDetails3                 { get; set; }
@@ -71,31 +75,12 @@ namespace ProspectBusinessLayer
         public bool      OperatesOnBankHolidays          { get; set; }
         public bool      OperatesOnChristmasAndNewYear   { get; set; }
         public string    RouteNotes                      { get; set; }
+        public float     AverageMilesPerDay              { get; set; }
         public string    TicketNotes                     { get; set; }
         public string    VehicleNotes                    { get; set; }
         public bool      Cancelled                       { get; set; }
         public bool      Extended                        { get; set; }
-        public string    AgreementDescription            { get; set; }
-        public DateTime? CvDateVariationsStartA          { get; set; }
-        public DateTime? CvDateVariationsEndA            { get; set; }
-        public decimal   CvAverageRevenuePerDay          { get; set; }
-        public decimal   CvAverageCostPerDay             { get; set; }
-        public decimal   CvAveragePricePerDay            { get; set; }
-        public decimal   CvAverageRevenuePerYear         { get; set; }
-        public decimal   CvAverageCostPerYear            { get; set; }
-        public decimal   CvAveragePricePerYear           { get; set; }
-        public decimal   CvContractedMiles               { get; set; }
-        public decimal   CvRatePerMile                   { get; set; }
-        public decimal   CvXBNDPCENT                     { get; set; }
-        public int       CvVariationNumber               { get; set; }
-        public int       CvNumberOfDaysOperating         { get; set; }
-        public string    CvCancelled                     { get; set; }
-        public string    CvPriceChanged                  { get; set; }
-        public string    CvServiceInformation            { get; set; }
-        public string    ContractReferenceAndVariationNo { get; set; }
-                                                         
         public int       Saved_K_Specification           { get; set; }
-
         public string    ContractReferenceSort           { get { return ContractReference.ToString().PadLeft(5, '0'); } }
         public string    TenderReferenceSort             { get { return TenderReference.ToString().PadLeft(5, '0'); } }
         public string    DateStartText                   { get { return DCC_Formatting.NullDateTxt(DateStart, "dd MMM yyyy"); } }
@@ -105,11 +90,51 @@ namespace ProspectBusinessLayer
         public string    RouteText                       { get { return (string.IsNullOrEmpty(RouteStart) ? "- not set -" : RouteStart + " to " + RouteEnd); } }
         public string    DatesText                       { get { return ( (DateStart == null) ? "- not set -" : DateStartText + " to " + DateEndText); } }
         public string    TitleText                       { get { return (IsTenderAccepted ? "Contract" : "Tender"); } }
-        public string    VariationNoText                 { get { return VariationNo.ToString().PadLeft(2, '0'); } }
         public string    ServiceNoText                   { get { return (IsPackage ? "PACKAGE" : SpecificationServiceNo); } }
         public bool      FuelTerm                        { get; set; }
         public string    TenderClosingDateText           { get { return DCC_Formatting.NullDateTxt(TenderClosingDate, "dd MMM yyyy"); } }
-        public DateTime?    ContractVariationClosingDate    { get; set; }
+        public DateTime? ContractVariationClosingDate                   { get; set; }
+        public int       ContractVariation_Q_Contractor                 { get; set; }
+        public int       ContractVariation_Q_Agreement                  { get; set; }
+        public string    ContractVariationServiceNo                     { get; set; }
+        public DateTime? ContractVariationDateStart                     { get; set; }
+        public string    ContractVariationRouteStart                    { get; set; }
+        public string    ContractVariationRouteEnd                      { get; set; }
+        public string    ContractVariationVehicleDimensions             { get; set; }
+        public string    ContractVariationVehicleCapacity               { get; set; }
+        public string    ContractVariationVehicleElderlyAndDisabled     { get; set; }
+        public bool      ContractVariationOperatesOnMon                 { get; set; }
+        public bool      ContractVariationOperatesOnTue                 { get; set; }
+        public bool      ContractVariationOperatesOnWed                 { get; set; }
+        public bool      ContractVariationOperatesOnThu                 { get; set; }
+        public bool      ContractVariationOperatesOnFri                 { get; set; }
+        public bool      ContractVariationOperatesOnSat                 { get; set; }
+        public bool      ContractVariationOperatesOnSun                 { get; set; }
+        public bool      ContractVariationOperatesOnSchoolDays          { get; set; }
+        public bool      ContractVariationOperatesOnNonSchoolDays       { get; set; }
+        public bool      ContractVariationOperatesOnBankHolidays        { get; set; }
+        public bool      ContractVariationOperatesOnChristmasAndNewYear { get; set; }
+        public int       ContractVariationFuelPriceElement              { get; set; }
+        public int       ContractVariationCalculatedNoOfDaysInOperation { get; set; }
+        public float     ContractVariationAverageMilesPerDay            { get; set; }
+        public decimal   ContractVariationRatePerMile                   { get; set; }
+        public decimal   ContractVariationAverageRevenuePerDay          { get; set; }
+        public decimal   ContractVariationAverageCostPerDay             { get; set; }
+        public decimal   ContractVariationAveragePricePerDay            { get; set; }
+        public decimal   ContractVariationAverageRevenuePerYear         { get; set; }
+        public decimal   ContractVariationAverageCostPerYear            { get; set; }
+        public decimal   ContractVariationAveragePricePerYear           { get; set; }
+        public string    ContractVariationTicketNotes                   { get; set; }
+        public string    ContractVariationRouteTimetableNotes           { get; set; }
+        public DateTime? ContractVariationDateEnd                       { get; set; }
+        public string    ContractVariationExceptionalConditions         { get; set; }
+        public string    ContractVariationServiceDetails                { get; set; }
+        public string    ContractVariationNotes                         { get; set; }
+        public DateTime? ContractVariationDateEntered                   { get; set; }
+        public bool      ContractVariationIsCancelled                   { get; set; }
+        public bool      ContractVariationIsExtended                    { get; set; }
+        public int       ContractVariationNo                            { get; set; }
+
 
 
 
@@ -183,49 +208,71 @@ namespace ProspectBusinessLayer
         }
 
 
-
         // Methods
 
         public bool GetColumns(DataRow dataRow)
         {
             if (dataRow == null) return false;
 
-            K_Tender                       = DCC_GetColumn.Integer32          (dataRow, "K_Tender");
-            TenderReference                = DCC_GetColumn.Integer32          (dataRow, "TenderReference");
-            Q_Specification                = DCC_GetColumn.Integer32          (dataRow, "Q_Specification");
-            Q_Contractor                   = DCC_GetColumn.Integer32          (dataRow, "Q_Contractor");
-            NoOfDaysOfOperationPerYear     = DCC_GetColumn.Integer32          (dataRow, "NoOfDaysOfOperationPerYear");
-            TenderPricePerDay              = Math.Round(DCC_GetColumn.Decimal (dataRow, "TenderPricePerDay"), 2);
-            FuelPriceElement               = Math.Round(DCC_GetColumn.Decimal (dataRow, "FuelPriceElement"), 2);
-            TenderClosingDate              = DCC_GetColumn.DateTimeQ          (dataRow, "TenderClosingDate");
-            EstimatedAverageRevenuePerDay  = Math.Round(DCC_GetColumn.Decimal (dataRow, "EstimatedAverageRevenuePerDay"), 2);
-            AverageCostPerDay              = Math.Round(DCC_GetColumn.Decimal (dataRow, "AverageCostPerDay"), 2);
-            TenderPricePerYear             = Math.Round(DCC_GetColumn.Decimal (dataRow, "TenderPricePerYear"), 2);
-            EstimatedAverageRevenuePerYear = Math.Round(DCC_GetColumn.Decimal (dataRow, "EstimatedAverageRevenuePerYear"), 2);
-            AverageCostPerYear             = Math.Round(DCC_GetColumn.Decimal (dataRow, "AverageCostPerYear"), 2);
-            AnyTenderQualifications        = DCC_GetColumn.Bit                (dataRow, "AnyTenderQualifications");
-            TenderQualificationNotes       = DCC_GetColumn.String             (dataRow, "TenderQualificationNotes");
-            Notes                          = DCC_GetColumn.String             (dataRow, "Notes");
-            IsConforming                   = DCC_GetColumn.Bit                (dataRow, "IsConforming");
-            VehicleDetails                 = DCC_GetColumn.String             (dataRow, "VehicleDetails");
-            IncludeInTenderAnalysis        = DCC_GetColumn.Bit                (dataRow, "IncludeInTenderAnalysis");
-            IsTenderAccepted               = DCC_GetColumn.Bit                (dataRow, "IsTenderAccepted");
-            IsContractCancelled            = DCC_GetColumn.Bit                (dataRow, "IsContractCancelled");
+            K_Tender                                        = DCC_GetColumn.Integer32          (dataRow, "K_Tender");
+            TenderReference                                 = DCC_GetColumn.Integer32          (dataRow, "TenderReference");
+            Q_Specification                                 = DCC_GetColumn.Integer32          (dataRow, "Q_Specification");
+            Q_Contractor                                    = DCC_GetColumn.Integer32          (dataRow, "Q_Contractor");
+            Q_ContractVariation                             = DCC_GetColumn.Integer32          (dataRow, "Q_ContractVariation");
+            TenderContractorLicenceNo                       = DCC_GetColumn.String             (dataRow, "TenderContractorLicenceNo");
+            FuelPriceElement                                = Math.Round(DCC_GetColumn.Decimal (dataRow, "FuelPriceElement"), 2);
+            TenderClosingDate                               = DCC_GetColumn.DateTimeQ          (dataRow, "TenderClosingDate");
+            EstimatedAverageRevenuePerDay                   = Math.Round(DCC_GetColumn.Decimal (dataRow, "EstimatedAverageRevenuePerDay"), 2);
+            AverageCostPerDay                               = Math.Round(DCC_GetColumn.Decimal (dataRow, "AverageCostPerDay"), 2);
+            TenderPricePerYear                              = Math.Round(DCC_GetColumn.Decimal (dataRow, "TenderPricePerYear"), 2);
+            EstimatedAverageRevenuePerYear                  = Math.Round(DCC_GetColumn.Decimal (dataRow, "EstimatedAverageRevenuePerYear"), 2);
+            AverageCostPerYear                              = Math.Round(DCC_GetColumn.Decimal (dataRow, "AverageCostPerYear"), 2);
+            AnyTenderQualifications                         = DCC_GetColumn.Bit                (dataRow, "AnyTenderQualifications");
+            TenderQualificationNotes                        = DCC_GetColumn.String             (dataRow, "TenderQualificationNotes");
+            TenderVehicleDetails                            = DCC_GetColumn.String             (dataRow, "TenderVehicleDetails");
+            TenderNotes                                     = DCC_GetColumn.String             (dataRow, "TenderNotes");
+            IsConforming                                    = DCC_GetColumn.Bit                (dataRow, "IsConforming");
+            IncludeInTenderAnalysis                         = DCC_GetColumn.Bit                (dataRow, "IncludeInTenderAnalysis");
+            IsTenderAccepted                                = DCC_GetColumn.Bit                (dataRow, "IsTenderAccepted");
+            TenderPricePerDay                               = DCC_GetColumn.Decimal            (dataRow, "TenderPricePerDay");
+            ServiceDetails1                                 = DCC_GetColumn.String             (dataRow, "ServiceDetails1");
+            ContractVariationNo                             = DCC_GetColumn.Integer32          (dataRow, "ContractVariationNo");
+            ContractVariationServiceNo                      = DCC_GetColumn.String             (dataRow, "ContractVariationServiceNo");
+            ContractVariationDateStart                      = DCC_GetColumn.DateTimeQ          (dataRow, "ContractVariationDateStart");
+            ContractVariationRouteStart                     = DCC_GetColumn.String             (dataRow, "ContractVariationRouteStart");
+            ContractVariationRouteEnd                       = DCC_GetColumn.String             (dataRow, "ContractVariationRouteEnd");
+            ContractVariationVehicleDimensions              = DCC_GetColumn.String             (dataRow, "ContractVariationVehicleDimensions");
+            ContractVariationVehicleCapacity                = DCC_GetColumn.String             (dataRow, "ContractVariationVehicleCapacity");
+            ContractVariationVehicleElderlyAndDisabled      = DCC_GetColumn.String             (dataRow, "ContractVariationVehicleElderlyAndDisabled");
+            ContractVariation_Q_Agreement                   = DCC_GetColumn.Integer32          (dataRow, "ContractVariation_Q_Agreement");
+            ContractVariationClosingDate                    = DCC_GetColumn.DateTimeQ          (dataRow, "ContractVariationClosingDate");
+            ContractVariationOperatesOnMon                  = DCC_GetColumn.Bit                (dataRow, "ContractVariationOperatesOnMon");
+            ContractVariationOperatesOnTue                  = DCC_GetColumn.Bit                (dataRow, "ContractVariationOperatesOnTue");
+            ContractVariationOperatesOnWed                  = DCC_GetColumn.Bit                (dataRow, "ContractVariationOperatesOnWed");
+            ContractVariationOperatesOnThu                  = DCC_GetColumn.Bit                (dataRow, "ContractVariationOperatesOnThu");
+            ContractVariationOperatesOnFri                  = DCC_GetColumn.Bit                (dataRow, "ContractVariationOperatesOnFri");
+            ContractVariationOperatesOnSat                  = DCC_GetColumn.Bit                (dataRow, "ContractVariationOperatesOnSat");
+            ContractVariationOperatesOnSun                  = DCC_GetColumn.Bit                (dataRow, "ContractVariationOperatesOnSun");
+            ContractVariationOperatesOnSchoolDays           = DCC_GetColumn.Bit                (dataRow, "ContractVariationOperatesOnSchoolDays");
+            ContractVariationOperatesOnNonSchoolDays        = DCC_GetColumn.Bit                (dataRow, "ContractVariationOperatesOnNonSchoolDays");
+            ContractVariationOperatesOnBankHolidays         = DCC_GetColumn.Bit                (dataRow, "ContractVariationOperatesOnBankHolidays");
+            ContractVariationOperatesOnChristmasAndNewYear  = DCC_GetColumn.Bit                (dataRow, "ContractVariationOperatesOnChristmasAndNewYear");
+            ContractReference                               = DCC_GetColumn.Integer32          (dataRow, "ContractReference");
 
-            if (DCC_GetColumn.Exists(dataRow, "ContractReference"))             ContractReference             = DCC_GetColumn.Integer32(dataRow, "ContractReference");
+            if (DCC_GetColumn.Exists(dataRow, "Q_Agreement"))                   Q_Agreement                   = DCC_GetColumn.Integer32(dataRow, "Q_Agreement");
             if (DCC_GetColumn.Exists(dataRow, "IsPackage"))                     IsPackage                     = DCC_GetColumn.Bit(dataRow,       "IsPackage");
             if (DCC_GetColumn.Exists(dataRow, "SpecificationServiceNo"))        SpecificationServiceNo        = DCC_GetColumn.String(dataRow,    "SpecificationServiceNo");
             if (DCC_GetColumn.Exists(dataRow, "RouteStart"))                    RouteStart                    = DCC_GetColumn.String(dataRow,    "RouteStart");
             if (DCC_GetColumn.Exists(dataRow, "RouteEnd"))                      RouteEnd                      = DCC_GetColumn.String(dataRow,    "RouteEnd");
-            if (DCC_GetColumn.Exists(dataRow, "DateStart"))                     DateStart                     = DCC_GetColumn.DateTimeQ(dataRow, "DateStart");
-            if (DCC_GetColumn.Exists(dataRow, "DateEnd"))                       DateEnd                       = DCC_GetColumn.DateTimeQ(dataRow, "DateEnd");
+            if (DCC_GetColumn.Exists(dataRow, "DateStart"))                     DateStart                     = DCC_GetColumn.DateTimeQ(dataRow, "RouteStart");
+            if (DCC_GetColumn.Exists(dataRow, "DateEnd"))                       DateEnd                       = DCC_GetColumn.DateTimeQ(dataRow, "RouteEnd");
             if (DCC_GetColumn.Exists(dataRow, "ContractTypeDescription"))       ContractTypeDescription       = DCC_GetColumn.String(dataRow,    "ContractTypeDescription");
             if (DCC_GetColumn.Exists(dataRow, "ContractorName"))                ContractorName                = DCC_GetColumn.String(dataRow,    "ContractorName");
-            if (DCC_GetColumn.Exists(dataRow, "VariationNo"))                   VariationNo                   = DCC_GetColumn.Integer32(dataRow, "VariationNo");
             if (DCC_GetColumn.Exists(dataRow, "ContractorLicenceNo"))           ContractorLicenceNo           = DCC_GetColumn.String(dataRow,    "ContractorLicenceNo");
             if (DCC_GetColumn.Exists(dataRow, "CalculatedNoOfDaysInOperation")) CalculatedNoOfDaysInOperation = DCC_GetColumn.Integer32(dataRow, "CalculatedNoOfDaysInOperation");
             if (DCC_GetColumn.Exists(dataRow, "FuelTerm"))                      FuelTerm                      = DCC_GetColumn.Bit(dataRow,       "FuelTerm");
-            if (DCC_GetColumn.Exists(dataRow, "ContractVariationClosingDate"))  ContractVariationClosingDate  = DCC_GetColumn.DateTimeQ(dataRow, "ContractVariationClosingDate");
+            if (DCC_GetColumn.Exists(dataRow, "AverageMilesPerDay"))            AverageMilesPerDay            = DCC_GetColumn.Integer32(dataRow, "AverageMilesPerDay");
+
 
             return true;
         }
@@ -257,74 +304,212 @@ namespace ProspectBusinessLayer
             {
                 ContractVariationGrid = new ContractVariationGrid(db, pK_Tender);
             }
-
-         
         }
 
-        //public int Save(DCC_Database db)
-        //{
-        //    return (IsNew ? Insert(db) : Update(db));
-        //}
-
-        public int Save(DCC_Database db)
+        public int Save(DCC_Database db, bool saveVariation = false)
         {
-            int result = (IsNew ? Insert(db) : Update(db));
-
-            // After insert or update, check if the tender is accepted
-            if (result > -1 && IsTenderAccepted)
-            {
-                InsertFirstContractVariation(db, result);
-            }
+            int result = (IsNew ? Insert(db) : Update(db, saveVariation));
 
             return result;
         }
-
-        int InsertFirstContractVariation(DCC_Database db, int K_Tender)
-        {
-            DCC_DatabaseFrame dbf = new DCC_DatabaseFrame("IFirstContractVariation");
-            dbf.AddTable("ContractVariation");
-            //dbf.AddParameter("K_Tender", K_Tender);
-            int newKey = db.DataLayer.NonQueryPK(dbf);
-            if (newKey > -1) K_Tender = newKey;
-            return newKey;
-        }
-
 
         int Insert(DCC_Database db)
         {
             DCC_DatabaseFrame dbf = new DCC_DatabaseFrame("iTender");
             dbf.AddTable("Tender");
             dbf.AddParameter("Q_Specification", Q_Specification);
+            dbf.AddParameter("Q_Contractor", Q_Contractor);
             dbf.AddParameter("_PRIMARYKEY", DCC_DatabaseFrame.OUTINTEGER);
             int newKey = db.DataLayer.NonQueryPK(dbf);
             if (newKey > -1) K_Tender = newKey;
             return newKey;
         }
 
-        int Update(DCC_Database db)
+        int Update(DCC_Database db, bool saveVariation = false)
         {
+            // After insert or update, check if the tender is accepted
+            if (IsTenderAccepted)
+            {
+
+                ContractVariation contractVariation = new ContractVariation(db, pK_Tender: K_Tender);
+                if ( contractVariation.K_ContractVariation == -1)
+                {
+                    //also populate cv properties on tender class
+                    ContractVariationNo                             = ContractVariationNo;
+                    ContractVariationIsCancelled                    = Cancelled;
+                    ContractVariationIsExtended                     = Extended;
+                    ContractVariationNotes                          = TenderNotes;
+                    ContractVariation_Q_Agreement                   = Q_Agreement;
+                    ContractVariation_Q_Contractor                  = Q_Contractor;
+                    ContractVariationServiceNo                      = SpecificationServiceNo;
+                    ContractVariationRouteStart                     = RouteStart;
+                    ContractVariationRouteEnd                       = RouteEnd;
+                    ContractVariationExceptionalConditions          = ExceptionalConditions;
+                    ContractVariationVehicleCapacity                = VehicleCapacity;
+                    ContractVariationVehicleElderlyAndDisabled      = VehicleElderlyAndDisabled;
+                    ContractVariationVehicleDimensions              = VehicleDimensions;
+                    ContractVariationServiceDetails                 = ServiceDetails1;
+                    ContractVariationOperatesOnMon                  = OperatesOnMon;
+                    ContractVariationOperatesOnTue                  = OperatesOnTue;
+                    ContractVariationOperatesOnWed                  = OperatesOnWed;
+                    ContractVariationOperatesOnThu                  = OperatesOnThu;
+                    ContractVariationOperatesOnFri                  = OperatesOnFri;
+                    ContractVariationOperatesOnSat                  = OperatesOnSat;
+                    ContractVariationOperatesOnSun                  = OperatesOnSun;
+                    ContractVariationOperatesOnSchoolDays           = OperatesOnSchoolDays;
+                    ContractVariationOperatesOnNonSchoolDays        = OperatesOnNonSchoolDays;
+                    ContractVariationOperatesOnBankHolidays         = OperatesOnBankHolidays;
+                    ContractVariationOperatesOnChristmasAndNewYear  = OperatesOnChristmasAndNewYear;
+                    ContractVariationCalculatedNoOfDaysInOperation  = CalculatedNoOfDaysInOperation;
+                    ContractVariationAverageMilesPerDay             = AverageMilesPerDay;
+                    ContractVariationAverageRevenuePerDay           = EstimatedAverageRevenuePerDay;
+                    ContractVariationAverageCostPerDay              = AverageCostPerDay;
+                    ContractVariationAveragePricePerDay             = TenderPricePerDay;
+                    ContractVariationAverageRevenuePerYear          = EstimatedAverageRevenuePerYear;
+                    ContractVariationAverageCostPerYear             = AverageCostPerYear;
+                    ContractVariationAveragePricePerYear            = TenderPricePerYear;
+                    ContractVariationTicketNotes                    = TicketNotes;
+
+                    ContractVariation newContractVariation = new ContractVariation();
+                                      
+                    newContractVariation.ContractVariation_Q_Tender                     = K_Tender;
+                    newContractVariation.K_ContractVariation                            = -1;
+                    newContractVariation.ContractVariationNo                            = 0; // Set to 1 if subsequent variation
+                    newContractVariation.ContractVariationDateEntered                   = DateStart;
+                    newContractVariation.ContractVariationDateStart                     = DateStart;
+                    newContractVariation.ContractVariationIsCancelled                   = Cancelled;
+                    newContractVariation.ContractVariationIsExtended                    = Extended;
+                    newContractVariation.ContractVariationNotes                         = TenderNotes;
+                    newContractVariation.ContractVariation_Q_Agreement                  = Q_Agreement; 
+                    newContractVariation.ContractVariationServiceNo                     = SpecificationServiceNo;  
+                    newContractVariation.ContractVariationRouteStart                    = RouteStart;
+                    newContractVariation.ContractVariationRouteEnd                      = RouteEnd;
+                    newContractVariation.ContractVariationDateStart                     = DateStart;
+                    newContractVariation.ContractVariationDateEnd                       = DateEnd;  
+                    newContractVariation.ContractVariationExceptionalConditions         = ExceptionalConditions;
+                    newContractVariation.ContractVariationVehicleCapacity               = VehicleCapacity;
+                    newContractVariation.ContractVariationVehicleElderlyAndDisabled     = VehicleElderlyAndDisabled;
+                    newContractVariation.ContractVariationVehicleDimensions             = VehicleDimensions;
+                    newContractVariation.ContractVariationServiceDetails                = ServiceDetails1;
+                    newContractVariation.ContractVariationOperatesOnMon                 = OperatesOnMon;
+                    newContractVariation.ContractVariationOperatesOnTue                 = OperatesOnTue;
+                    newContractVariation.ContractVariationOperatesOnWed                 = OperatesOnWed;
+                    newContractVariation.ContractVariationOperatesOnThu                 = OperatesOnThu;
+                    newContractVariation.ContractVariationOperatesOnFri                 = OperatesOnFri;
+                    newContractVariation.ContractVariationOperatesOnSat                 = OperatesOnSat;
+                    newContractVariation.ContractVariationOperatesOnSun                 = OperatesOnSun;
+                    newContractVariation.ContractVariationOperatesOnSchoolDays          = OperatesOnSchoolDays;
+                    newContractVariation.ContractVariationOperatesOnNonSchoolDays       = OperatesOnNonSchoolDays;
+                    newContractVariation.ContractVariationOperatesOnBankHolidays        = OperatesOnBankHolidays;
+                    newContractVariation.ContractVariationOperatesOnChristmasAndNewYear = OperatesOnChristmasAndNewYear;
+                    newContractVariation.ContractVariationCalculatedNoOfDaysInOperation = CalculatedNoOfDaysInOperation;
+                    newContractVariation.ContractVariationAverageCostPerDay             = AverageCostPerDay;
+                    newContractVariation.ContractVariationTicketNotes                   = TicketNotes;
+                    newContractVariation.ContractVariationClosingDate                   = ContractVariationClosingDate;
+                    newContractVariation.Save(db);
+                }
+                else
+                {
+                    if (saveVariation)
+                    { ContractVariation newContractVariation = new ContractVariation();
+                    newContractVariation.ContractVariation_Q_Tender                     = K_Tender;
+                    newContractVariation.K_ContractVariation                            = -1;
+                    newContractVariation.ContractVariationNo                            = 1; // Set to 1 if subsequent variation
+                    newContractVariation.ContractVariationDateEntered                   = DateStart;
+                    newContractVariation.ContractVariationDateStart                     = DateStart;
+                    newContractVariation.ContractVariationIsCancelled                   = Cancelled;
+                    newContractVariation.ContractVariationIsExtended                    = Extended;
+                    newContractVariation.ContractVariationNotes                         = TenderNotes;
+                    newContractVariation.ContractVariation_Q_Agreement                  = Q_Agreement;
+                    newContractVariation.ContractVariationServiceNo                     = SpecificationServiceNo;
+                    newContractVariation.ContractVariationRouteStart                    = RouteStart;
+                    newContractVariation.ContractVariationRouteEnd                      = RouteEnd;
+                    newContractVariation.ContractVariationDateStart                     = DateStart;
+                    newContractVariation.ContractVariationDateEnd                       = DateEnd;
+                    newContractVariation.ContractVariationExceptionalConditions         = ExceptionalConditions;
+                    newContractVariation.ContractVariationVehicleCapacity               = VehicleCapacity;
+                    newContractVariation.ContractVariationVehicleElderlyAndDisabled     = VehicleElderlyAndDisabled;
+                    newContractVariation.ContractVariationVehicleDimensions             = VehicleDimensions;
+                    newContractVariation.ContractVariationServiceDetails                = ServiceDetails1;
+                    newContractVariation.ContractVariationOperatesOnMon                 = OperatesOnMon;
+                    newContractVariation.ContractVariationOperatesOnTue                 = OperatesOnTue;
+                    newContractVariation.ContractVariationOperatesOnWed                 = OperatesOnWed;
+                    newContractVariation.ContractVariationOperatesOnThu                 = OperatesOnThu;
+                    newContractVariation.ContractVariationOperatesOnFri                 = OperatesOnFri;
+                    newContractVariation.ContractVariationOperatesOnSat                 = OperatesOnSat;
+                    newContractVariation.ContractVariationOperatesOnSun                 = OperatesOnSun;
+                    newContractVariation.ContractVariationOperatesOnSchoolDays          = OperatesOnSchoolDays;
+                    newContractVariation.ContractVariationOperatesOnNonSchoolDays       = OperatesOnNonSchoolDays;
+                    newContractVariation.ContractVariationOperatesOnBankHolidays        = OperatesOnBankHolidays;
+                    newContractVariation.ContractVariationOperatesOnChristmasAndNewYear = OperatesOnChristmasAndNewYear;
+                    newContractVariation.ContractVariationCalculatedNoOfDaysInOperation = CalculatedNoOfDaysInOperation;
+                    newContractVariation.ContractVariationAverageCostPerDay             = AverageCostPerDay;
+                    newContractVariation.ContractVariationTicketNotes                   = TicketNotes;
+                    newContractVariation.ContractVariationClosingDate                   = ContractVariationClosingDate;
+                    newContractVariation.Save(db);
+                    }
+                }
+            }
+
             DCC_DatabaseFrame dbf = new DCC_DatabaseFrame("uTender");
             dbf.AddTable("Tender");
-            dbf.AddParameter("K_Tender"                      , K_Tender);
-            dbf.AddParameter("Q_Contractor"                  , Q_Contractor);
-            dbf.AddParameter("NoOfDaysOfOperationPerYear"    , NoOfDaysOfOperationPerYear);
-            dbf.AddParameter("TenderPricePerDay"             , TenderPricePerDay);
-            dbf.AddParameter("FuelPriceElement"              , FuelPriceElement);
-            dbf.AddParameter("TenderClosingDate"             , TenderClosingDate);
-            dbf.AddParameter("EstimatedAverageRevenuePerDay" , EstimatedAverageRevenuePerDay);
-            dbf.AddParameter("AverageCostPerDay"             , AverageCostPerDay);
-            dbf.AddParameter("TenderPricePerYear"            , TenderPricePerYear);
-            dbf.AddParameter("EstimatedAverageRevenuePerYear", EstimatedAverageRevenuePerYear);
-            dbf.AddParameter("AverageCostPerYear"            , AverageCostPerYear);
-            dbf.AddParameter("AnyTenderQualifications"       , AnyTenderQualifications);
-            dbf.AddParameter("TenderQualificationNotes"      , TenderQualificationNotes, 500);
-            dbf.AddParameter("Notes"                         , Notes, 500);
-            dbf.AddParameter("IsConforming"                  , IsConforming);
-            dbf.AddParameter("VehicleDetails"                , VehicleDetails, 500);
-            dbf.AddParameter("IncludeInTenderAnalysis"       , IncludeInTenderAnalysis);
-            dbf.AddParameter("IsTenderAccepted"              , IsTenderAccepted);
-            dbf.AddParameter("IsContractCancelled"           , IsContractCancelled);
-            dbf.AddParameter("ContractorLicenceNo"           , ContractorLicenceNo);
+            dbf.AddParameter("K_Tender",                                        K_Tender);
+            dbf.AddParameter("Q_Contractor",                                    Q_Contractor);
+            dbf.AddParameter("Q_Agreement",                                     Q_Agreement);
+            dbf.AddParameter("TenderPricePerDay",                               TenderPricePerDay);
+            dbf.AddParameter("FuelPriceElement",                                FuelPriceElement);
+            dbf.AddParameter("TenderClosingDate",                               TenderClosingDate);
+            dbf.AddParameter("EstimatedAverageRevenuePerDay",                   EstimatedAverageRevenuePerDay);
+            dbf.AddParameter("AverageCostPerDay",                               AverageCostPerDay);
+            dbf.AddParameter("TenderPricePerYear",                              TenderPricePerYear);
+            dbf.AddParameter("EstimatedAverageRevenuePerYear",                  EstimatedAverageRevenuePerYear);
+            dbf.AddParameter("TenderVehicleDetails",                            TenderVehicleDetails, 500);
+            dbf.AddParameter("TenderQualificationNotes",                        TenderQualificationNotes, 500);
+            dbf.AddParameter("TenderNotes",                                     TenderNotes, 500);
+            dbf.AddParameter("AverageCostPerYear",                              AverageCostPerYear);
+            dbf.AddParameter("AnyTenderQualifications",                         AnyTenderQualifications);
+            dbf.AddParameter("IsConforming",                                    IsConforming);
+            dbf.AddParameter("IncludeInTenderAnalysis",                         IncludeInTenderAnalysis);
+            dbf.AddParameter("IsTenderAccepted",                                IsTenderAccepted);
+            dbf.AddParameter("ContractVariationDateEntered",                    ContractVariationDateEntered);
+            dbf.AddParameter("ContractVariationIsExtended",                     ContractVariationIsExtended);
+            dbf.AddParameter("ContractVariationIsCancelled",                    ContractVariationIsCancelled);
+            dbf.AddParameter("ContractVariationNotes",                          ContractVariationNotes, 500);
+            dbf.AddParameter("ContractVariation_Q_Agreement",                   Q_Agreement);
+            dbf.AddParameter("ContractVariationServiceNo",                      SpecificationServiceNo, 500);
+            dbf.AddParameter("ContractVariationRouteStart",                     RouteStart, 500);
+            dbf.AddParameter("ContractVariationRouteEnd",                       RouteEnd, 500);
+            dbf.AddParameter("ContractVariationDateStart",                      ContractVariationDateStart);
+            dbf.AddParameter("ContractVariationDateEnd",                        ContractVariationDateEnd);
+            dbf.AddParameter("ContractVariationExceptionalConditions",          ContractVariationExceptionalConditions, 500);
+            dbf.AddParameter("ContractVariationVehicleCapacity",                ContractVariationVehicleCapacity, 500);
+            dbf.AddParameter("ContractVariationVehicleElderlyAndDisabled",      ContractVariationVehicleElderlyAndDisabled, 500);
+            dbf.AddParameter("ContractVariationVehicleDimensions",              ContractVariationVehicleDimensions, 500);
+            dbf.AddParameter("ContractVariationServiceDetails",                 ContractVariationServiceDetails, 500);
+            dbf.AddParameter("ContractVariationOperatesOnMon",                  ContractVariationOperatesOnMon);
+            dbf.AddParameter("ContractVariationOperatesOnTue",                  ContractVariationOperatesOnTue);
+            dbf.AddParameter("ContractVariationOperatesOnWed",                  ContractVariationOperatesOnWed);
+            dbf.AddParameter("ContractVariationOperatesOnThu",                  ContractVariationOperatesOnThu);
+            dbf.AddParameter("ContractVariationOperatesOnFri",                  ContractVariationOperatesOnFri);
+            dbf.AddParameter("ContractVariationOperatesOnSat",                  ContractVariationOperatesOnSat);
+            dbf.AddParameter("ContractVariationOperatesOnSun",                  ContractVariationOperatesOnSun);
+            dbf.AddParameter("ContractVariationOperatesOnSchoolDays",           ContractVariationOperatesOnSchoolDays);
+            dbf.AddParameter("ContractVariationOperatesOnNonSchoolDays",        ContractVariationOperatesOnNonSchoolDays);
+            dbf.AddParameter("ContractVariationOperatesOnBankHolidays",         ContractVariationOperatesOnBankHolidays);
+            dbf.AddParameter("ContractVariationOperatesOnChristmasAndNewYear",  ContractVariationOperatesOnChristmasAndNewYear);
+            dbf.AddParameter("ContractVariationCalculatedNoOfDaysInOperation",  ContractVariationCalculatedNoOfDaysInOperation);
+            dbf.AddParameter("ContractVariationAverageMilesPerDay",             ContractVariationAverageMilesPerDay);
+            dbf.AddParameter("ContractVariationRatePerMile",                    ContractVariationRatePerMile);
+            dbf.AddParameter("ContractVariationAverageRevenuePerDay",           ContractVariationAverageRevenuePerDay);
+            dbf.AddParameter("ContractVariationAverageCostPerDay",              ContractVariationAverageCostPerDay);
+            dbf.AddParameter("ContractVariationAveragePricePerDay",             ContractVariationAveragePricePerDay);
+            dbf.AddParameter("ContractVariationAverageRevenuePerYear",          ContractVariationAverageRevenuePerYear);
+            dbf.AddParameter("ContractVariationAverageCostPerYear",             ContractVariationAverageCostPerYear);
+            dbf.AddParameter("ContractVariationAveragePricePerYear",            ContractVariationAveragePricePerYear);
+            dbf.AddParameter("ContractVariationTicketNotes",                    ContractVariationTicketNotes, 500);
+            dbf.AddParameter("ContractVariationRouteTimetableNotes",            ContractVariationRouteTimetableNotes, 500);
+            dbf.AddParameter("ContractVariationClosingDate",                    ContractVariationClosingDate);
+            dbf.AddParameter("ContractVariationFuelPriceElement",               ContractVariationFuelPriceElement);
 
             db.DataLayer.NonQuery(dbf);
             return (dbf.OK ? K_Tender : -1);

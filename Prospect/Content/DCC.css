@@ -3429,9 +3429,15 @@ a.helpText
         border: 1px solid black;
         text-align: left;
     }
+
     .contractor-table {
         break-after: page !important;
         margin-bottom: 4em;
+        width: 100%;
+    }
+
+    .contractor-table > table {
+        page-break-inside:avoid;
     }
 
         /* Top of HEADER styles */
