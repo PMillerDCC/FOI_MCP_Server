@@ -135,6 +135,8 @@ namespace Prospect.Controllers
         [HttpPost]
         public ActionResult Tender(string saveButton, Tender model)
         {
+            model.PopulateDropDownLists(DCC_Session.AutoDatabaseConnection, model.K_Tender);
+
             if (!string.IsNullOrEmpty(saveButton))
             {
                 #region Page validation

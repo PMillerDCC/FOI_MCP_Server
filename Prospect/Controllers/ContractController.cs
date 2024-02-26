@@ -75,8 +75,8 @@ namespace Prospect.Controllers
                     Request,
                     id: "ContractVariationsGrid",
                     itemNameSingular: "Contract variation",
-                    column1: new GridColumn(GridColumnType.Text, "VariationNoText", "Variation Number", 90, alignRight: true, boundSortField: "VariationNo", defaultSortColumn: true, defaultSortDescending: true),
-                    column2: new GridColumn(GridColumnType.Text, "CvDateVariationsStartatext", "Variation Start Date", 160),
+                    column1: new GridColumn(GridColumnType.Text, "ContractVariationNo", "Variation Number", 90, alignRight: true, boundSortField: "ContractVariationNo", defaultSortColumn: true, defaultSortDescending: true),
+                    column2: new GridColumn(GridColumnType.Text, "ContractVariationDateStartText", "Variation Start Date", 160),
                     column3: new GridColumn(GridColumnType.Text, "CvPriceChanged", "Price Changed?", 160),
                     column4: new GridColumn(GridColumnType.Text, "AgreementChanged", "Fares Agreement Changed?", 200),
                     column5: new GridColumn(GridColumnType.Text, "NoOfDaysOfOperationPerYearChanged", "Days in Operation Changed?", 200),
@@ -107,9 +107,9 @@ namespace Prospect.Controllers
         {
             bool saveVariation = (!string.IsNullOrEmpty(createButton));
 
+            model.PopulateDropDownLists(DCC_Session.AutoDatabaseConnection, model.K_Tender);
 
-
-                if ( (!string.IsNullOrEmpty(saveButton)) || (!string.IsNullOrEmpty(createButton)))
+            if ( (!string.IsNullOrEmpty(saveButton)) || (!string.IsNullOrEmpty(createButton)))
             {
                 #region Page validation
 
@@ -137,25 +137,27 @@ namespace Prospect.Controllers
             {
 
                 model.ContractVariationGrid.Initialise(
-                    Request,
-                    id: "ContractVariationsGrid",
-                    itemNameSingular: "Contract variation",
-                    column1: new GridColumn(GridColumnType.Text, "VariationNoText", "Variation Number", 90, alignRight: true, boundSortField: "VariationNo", defaultSortColumn: true, defaultSortDescending: true),
-                    column2: new GridColumn(GridColumnType.Text, "CvDateVariationsStartatext", "Variation Start Date", 160),
-                    column3: new GridColumn(GridColumnType.Text, "CvPriceChanged", "Price Changed?", 160),
-                    column4: new GridColumn(GridColumnType.Text, "AgreementChanged", "Fares Agreement Changed?", 200),
-                    column5: new GridColumn(GridColumnType.Text, "NoOfDaysOfOperationPerYearChanged", "Days in Operation Changed?", 200),
-                    addButtonText: "Add New Contract Variation",
-                    addActionResult: "/ContractVariation/ContractVariation",
-                    editActionResult: "/ContractVariation/ContractVariation",
-                    noOfRowsInGrid: 16,
-                    showEditButton: false,
-                    showSelectorColumn: false,
-                    fullRowSelect: true,
-                    dcc_Session: DCC_Session
-                    );
+                Request,
+                id: "ContractVariationsGrid",
+                itemNameSingular: "Contract variation",
+                column1: new GridColumn(GridColumnType.Text, "ContractVariationNo", "Variation Number", 90, alignRight: true, boundSortField: "ContractVariationNo", defaultSortColumn: true, defaultSortDescending: true),
+                column2: new GridColumn(GridColumnType.Text, "ContractVariationDateStartText", "Variation Start Date", 160),
+                column3: new GridColumn(GridColumnType.Text, "IgnoreIsPriceChange", "Price Changed?", 160),
+                column4: new GridColumn(GridColumnType.Text, "IgnoreAgreementChanged", "Fares Agreement Changed?", 200),
+                column5: new GridColumn(GridColumnType.Text, "IgnoreNoOfDaysOfOperationPerYearChanged", "Days in Operation Changed?", 200),
+                addButtonText: "Add New Contract Variation",
+                addActionResult: "/ContractVariation/ContractVariation",
+                editActionResult: "/ContractVariation/ContractVariation",
+                noOfRowsInGrid: 16,
+                showEditButton: false,
+                showSelectorColumn: false,
+                fullRowSelect: true,
+                dcc_Session: DCC_Session
+                );
             }
             #endregion
+
+
 
             ViewBag.PageTitle = "Contract";
             return View(model);

@@ -1000,7 +1000,19 @@ fullscreenfieldset
     margin:27px auto 30px auto;
 }
 
+.no-bullets {
+    list-style-type: none; /* Removes the default list bullets */
+    padding-left: 0; /* Removes the default padding */
+}
 
+    .no-bullets li {
+        margin-bottom: 5px; /* Adds a little space between list items */
+    }
+
+.width200 {
+    display: inline-block; /* Ensures label and value are on the same line */
+    vertical-align: top; /* Aligns items at the top */
+}
 
 /* Chrome 29+   THIS WORKS!! */
 @media screen and (-webkit-min-device-pixel-ratio:0) and (min-resolution:.001dpcm)

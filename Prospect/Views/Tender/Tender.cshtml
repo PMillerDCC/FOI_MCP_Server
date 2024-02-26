@@ -4,12 +4,38 @@
 {
     <input type="hidden" value="@Html.AttributeEncode(Model.K_Tender)" id="K_Tender" name="K_Tender" />
     <input type="hidden" value="@Html.AttributeEncode(Model.Saved_K_Specification)" id="Saved_K_Specification" name="Saved_K_Specification" />
+
     @Html.HiddenFor(model => model.IsPackage)
     @Html.HiddenFor(model => model.RouteStart)
     @Html.HiddenFor(model => model.RouteEnd)
     @Html.HiddenFor(model => model.DateStart)
     @Html.HiddenFor(model => model.DateEnd)
     @Html.HiddenFor(model => model.FuelTerm)
+    @Html.HiddenFor(model => model.ExceptionalConditions)
+    @Html.HiddenFor(model => model.VehicleCapacity)
+    @Html.HiddenFor(model => model.VehicleElderlyAndDisabled)
+    @Html.HiddenFor(model => model.VehicleDimensions)
+    @Html.HiddenFor(model => model.ServiceDetails1)
+    @Html.HiddenFor(model => model.OperatesOnMon)
+    @Html.HiddenFor(model => model.OperatesOnTue)
+    @Html.HiddenFor(model => model.OperatesOnWed)
+    @Html.HiddenFor(model => model.OperatesOnThu)
+    @Html.HiddenFor(model => model.OperatesOnFri)
+    @Html.HiddenFor(model => model.OperatesOnSat)
+    @Html.HiddenFor(model => model.OperatesOnSun)
+    @Html.HiddenFor(model => model.OperatesOnSchoolDays)
+    @Html.HiddenFor(model => model.OperatesOnNonSchoolDays)
+    @Html.HiddenFor(model => model.OperatesOnBankHolidays)
+    @Html.HiddenFor(model => model.OperatesOnChristmasAndNewYear)
+    @Html.HiddenFor(model => model.CalculatedNoOfDaysInOperation)
+    @Html.HiddenFor(model => model.Q_Agreement)
+    @Html.HiddenFor(model => model.AverageMilesPerDay)
+    @Html.HiddenFor(model => model.Q_Specification)
+    @Html.HiddenFor(model => model.ContractReference)
+    @Html.HiddenFor(model => model.SpecificationServiceNo)
+    @Html.HiddenFor(model => model.RouteText)
+    @Html.HiddenFor(model => model.DatesText)
+    @Html.HiddenFor(model => model.ContractTypeDescription)
 
     if (Model.IsPackage)
     {
@@ -18,8 +44,8 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="form-group marginTop10 marginBottom10">
-                        @Html.LabelFor(model => model.ContractReference, "Parent contract reference", new { @class="width250" })
-                        @Html.TextBoxFor(model => model.ContractReference, new { @class="form-control width200", @readonly="readonly" })
+                        @Html.LabelFor(model => model.ContractReference, "Parent contract reference", new { @class = "width250" })
+                        @Html.TextBoxFor(model => model.ContractReference, new { @class = "form-control width200", @readonly = "readonly" })
                     </div>
                 </div>
             </div>
@@ -57,124 +83,124 @@
                         @Html.LabelFor(model => model.FuelTerm, "Special Fuel Terms Apply", new { @class = "width250" })
                         <input id="dummyFuelTerm" type="checkbox" name="checkbox" class="hide" disabled>
                         <label for="dummyFuelTerm"></label>
-                        @Html.CheckBoxFor(model => model.FuelTerm, new { @id = "cbFuelTerm", @class = "hide", @disabled="disabled" })
+                        @Html.CheckBoxFor(model => model.FuelTerm, new { @id = "cbFuelTerm", @class = "hide", @disabled = "disabled" })
                     </div>
                 </div>
             </div>
         </fieldset>
     }
-        <fieldset>
-            <h2 class="fakeLegend">Tender details</h2>
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="form-group marginTop10 marginBottom20">
-                        @Html.LabelFor(model => model.TenderReference, "Tender reference", new { @class = "width250" })
-                        @Html.TextBoxFor(model => model.TenderReference, new { @class = "form-control width150", @readonly = "readonly" })
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.Q_Contractor, "Operator", new { @class = "width250" })
-                        @Html.DropDownListFor(model => model.Q_Contractor, Model.ddlContractor.ToList(), "Required field", new { @id = "ddlContractor", @class = "form-control width300", @onclick = "ddlClick(this);", @onchange = "ddlClick(this);", @onkeyup = "return true;", @onkeydown = "return true;", required = "required" })
-                        @Html.ValidationMessageFor(model => model.Q_Contractor, null, new { @class = "marginLeft250" })
-                    </div>
-                    <div class="form-group marginTop20">
-                        @Html.LabelFor(model => model.CalculatedNoOfDaysInOperation, "Number of days of operation per year", new { @class = "width250" })
-                        @Html.TextBoxFor(model => model.CalculatedNoOfDaysInOperation, new { @class = "form-control width100", @readonly = "readonly" })
-                        @Html.ValidationMessageFor(model => model.CalculatedNoOfDaysInOperation, null, new { @class = "marginLeft250" })
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.TenderPricePerDay, "Tender price per day", new { @class = "width250" })
-                        @Html.TextBoxFor(model => model.TenderPricePerDay, new { @class = "form-control width100" })
-                        @Html.ValidationMessageFor(model => model.TenderPricePerDay, null, new { @class = "marginLeft250" })
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.TenderPricePerYear, "Tender price per year", new { @class = "width250" })
-                        @Html.TextBoxFor(model => model.TenderPricePerYear, new { @class = "form-control width100" })
-                        @Html.ValidationMessageFor(model => model.TenderPricePerYear, null, new { @class = "marginLeft250" })
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.FuelPriceElement, "Fuel related element of price", new { @class = "width250" })
-                        @Html.TextBoxFor(model => model.FuelPriceElement, new { @class = "form-control width100" })
-                        @Html.ValidationMessageFor(model => model.FuelPriceElement, null, new { @class = "marginLeft250" })
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.TenderClosingDate, "Tender Closing Date", new { @class = "width250" })
-                        @Html.JQueryUI().DatepickerFor(model => model.TenderClosingDate, new { @id = "TenderClosingDate", @class = "form-control width100" }).DateFormat("dd MMM yyyy")
-                        @Html.ValidationMessageFor(model => model.TenderClosingDate, null, new { @class = "marginLeft250" })
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.EstimatedAverageRevenuePerDay, "Estimated average revenue per day", new { @class = "width250" })
-                        @Html.TextBoxFor(model => model.EstimatedAverageRevenuePerDay, new { @class = "form-control width100" })
-                        @Html.ValidationMessageFor(model => model.EstimatedAverageRevenuePerDay, null, new { @class = "marginLeft250" })
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.EstimatedAverageRevenuePerYear, "Estimated average revenue per year", new { @class = "width250" })
-                        @Html.TextBoxFor(model => model.EstimatedAverageRevenuePerYear, new { @class = "form-control width100" })
-                        @Html.ValidationMessageFor(model => model.EstimatedAverageRevenuePerYear, null, new { @class = "marginLeft250" })
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.AverageCostPerDay, "Average cost per day", new { @class = "width250" })
-                        @Html.TextBoxFor(model => model.AverageCostPerDay, new { @class = "form-control width100" })
-                        @Html.ValidationMessageFor(model => model.AverageCostPerDay, null, new { @class = "marginLeft250" })
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.AverageCostPerYear, "Average cost per year", new { @class = "width250" })
-                        @Html.TextBoxFor(model => model.AverageCostPerYear, new { @class = "form-control width100" })
-                        @Html.ValidationMessageFor(model => model.AverageCostPerYear, null, new { @class = "marginLeft250" })
-                    </div>
-                    <div class="form-group marginTop20 marginBottom20">
-                        @Html.LabelFor(model => model.TenderVehicleDetails, "Vehicle details", new { @class = "width250" })
-                        <div style="width: auto">
-                            @Html.TextAreaFor(model => model.TenderVehicleDetails, new { @id = "TenderVehicleDetails", @class = "form-control width300 height300", onblur = "TextAreaOnBlur(this)", style = "height:100px;", @maxlength = "500", @onkeyup = "TextAreaOnKeyUp(this, 1000);", @onkeydown = "return true;" })
-                            <div id="divVehicleDetails" class="marginLeft250 width300 alignRight"></div>
-                        </div>
-                        @Html.ValidationMessageFor(model => model.TenderVehicleDetails, null, new { @class = "width250" })
-                    </div>
+    <fieldset>
+        <h2 class="fakeLegend">Tender details</h2>
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="form-group marginTop10 marginBottom20">
+                    @Html.LabelFor(model => model.TenderReference, "Tender reference", new { @class = "width250" })
+                    @Html.TextBoxFor(model => model.TenderReference, new { @class = "form-control width150", @readonly = "readonly" })
                 </div>
-                <div class="col-lg-6">
-                    <div class="form-group marginTop10">
-                        @Html.Label("IsConforming", "Agreed by PPT to be conforming", new { @class="width250" })
-                        <input id="dummyIsConforming" type="checkbox" name="checkbox" class="hide" onclick="checkboxClick(this);">
-                        <label for="dummyIsConforming"></label>
-                        @Html.CheckBoxFor(model => model.IsConforming, new { @id="cbIsConforming", @class="hide" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Q_Contractor, "Operator", new { @class = "width250" })
+                    @Html.DropDownListFor(model => model.Q_Contractor, Model.ddlContractor.ToList(), "Required field", new { @id = "ddlContractor", @class = "form-control width300", @onclick = "ddlClick(this);", @onchange = "ddlClick(this);", @onkeyup = "return true;", @onkeydown = "return true;", required = "required" })
+                    @Html.ValidationMessageFor(model => model.Q_Contractor, null, new { @class = "marginLeft250" })
+                </div>
+                <div class="form-group marginTop20">
+                    @Html.LabelFor(model => model.CalculatedNoOfDaysInOperation, "Number of days of operation per year", new { @class = "width250" })
+                    @Html.TextBoxFor(model => model.CalculatedNoOfDaysInOperation, new { @class = "form-control width100", @readonly = "readonly" })
+                    @Html.ValidationMessageFor(model => model.CalculatedNoOfDaysInOperation, null, new { @class = "marginLeft250" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.TenderPricePerDay, "Tender price per day", new { @class = "width250" })
+                    @Html.TextBoxFor(model => model.TenderPricePerDay, new { @class = "form-control width100" })
+                    @Html.ValidationMessageFor(model => model.TenderPricePerDay, null, new { @class = "marginLeft250" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.TenderPricePerYear, "Tender price per year", new { @class = "width250" })
+                    @Html.TextBoxFor(model => model.TenderPricePerYear, new { @class = "form-control width100" })
+                    @Html.ValidationMessageFor(model => model.TenderPricePerYear, null, new { @class = "marginLeft250" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FuelPriceElement, "Fuel related element of price", new { @class = "width250" })
+                    @Html.TextBoxFor(model => model.FuelPriceElement, new { @class = "form-control width100" })
+                    @Html.ValidationMessageFor(model => model.FuelPriceElement, null, new { @class = "marginLeft250" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.TenderClosingDate, "Tender Closing Date", new { @class = "width250" })
+                    @Html.JQueryUI().DatepickerFor(model => model.TenderClosingDate, new { @id = "TenderClosingDate", @class = "form-control width100" }).DateFormat("dd MMM yyyy")
+                    @Html.ValidationMessageFor(model => model.TenderClosingDate, null, new { @class = "marginLeft250" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.EstimatedAverageRevenuePerDay, "Estimated average revenue per day", new { @class = "width250" })
+                    @Html.TextBoxFor(model => model.EstimatedAverageRevenuePerDay, new { @class = "form-control width100" })
+                    @Html.ValidationMessageFor(model => model.EstimatedAverageRevenuePerDay, null, new { @class = "marginLeft250" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.EstimatedAverageRevenuePerYear, "Estimated average revenue per year", new { @class = "width250" })
+                    @Html.TextBoxFor(model => model.EstimatedAverageRevenuePerYear, new { @class = "form-control width100" })
+                    @Html.ValidationMessageFor(model => model.EstimatedAverageRevenuePerYear, null, new { @class = "marginLeft250" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.AverageCostPerDay, "Average cost per day", new { @class = "width250" })
+                    @Html.TextBoxFor(model => model.AverageCostPerDay, new { @class = "form-control width100" })
+                    @Html.ValidationMessageFor(model => model.AverageCostPerDay, null, new { @class = "marginLeft250" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.AverageCostPerYear, "Average cost per year", new { @class = "width250" })
+                    @Html.TextBoxFor(model => model.AverageCostPerYear, new { @class = "form-control width100" })
+                    @Html.ValidationMessageFor(model => model.AverageCostPerYear, null, new { @class = "marginLeft250" })
+                </div>
+                <div class="form-group marginTop20 marginBottom20">
+                    @Html.LabelFor(model => model.TenderVehicleDetails, "Vehicle details", new { @class = "width250" })
+                    <div style="width: auto">
+                        @Html.TextAreaFor(model => model.TenderVehicleDetails, new { @id = "TenderVehicleDetails", @class = "form-control width300 height300", onblur = "TextAreaOnBlur(this)", style = "height:100px;", @maxlength = "500", @onkeyup = "TextAreaOnKeyUp(this, 1000);", @onkeydown = "return true;" })
+                        <div id="divVehicleDetails" class="marginLeft250 width300 alignRight"></div>
                     </div>
-                    <div class="form-group">
-                        @Html.Label("IncludeInTenderAnalysis", "Include in tender analysis", new { @class="width250" })
-                        <input id="dummyIncludeInTenderAnalysis" type="checkbox" name="checkbox" class="hide" onclick="checkboxClick(this);">
-                        <label for="dummyIncludeInTenderAnalysis"></label>
-                        @Html.CheckBoxFor(model => model.IncludeInTenderAnalysis, new { @id="cbIncludeInTenderAnalysis", @class="hide" })
-                    </div>
-                    <div class="form-group">
-                        @Html.Label("IsTenderAccepted", "Is tender accepted", new { @class="width250" })
-                        <input id="dummyIsTenderAccepted" type="checkbox" name="checkbox" class="hide" onclick="checkboxClick(this);">
-                        <label for="dummyIsTenderAccepted"></label>
-                        @Html.CheckBoxFor(model => model.IsTenderAccepted, new { @id="cbIsTenderAccepted", @class="hide" })
-                    </div>
-                    <div class="form-group marginTop60">
-                        @Html.Label("AnyTenderQualifications", "Any qualifications to the tender", new { @class="width250" })
-                        <input id="dummyAnyTenderQualifications" type="checkbox" name="checkbox" class="hide" onclick="checkboxClick(this);">
-                        <label for="dummyAnyTenderQualifications"></label>
-                        @Html.CheckBoxFor(model => model.AnyTenderQualifications, new { @id="cbAnyTenderQualifications", @class="hide" })
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.TenderQualificationNotes, "Qualification notes", new { @class="width250" })
-                        <div style="width:auto">
-                            @Html.TextAreaFor(model => model.TenderQualificationNotes, new { @id="TenderQualificationNotes", @class="form-control width300 height300", onblur="TextAreaOnBlur(this)", style="height:100px;", @maxlength="500", @onkeyup="TextAreaOnKeyUp(this, 1000);", @onkeydown="return true;" })
-					        <div id="divTenderQualificationNotes" class="marginLeft250 width300 alignRight"></div>
-                        </div>
-                        @Html.ValidationMessageFor(model => model.TenderQualificationNotes, null, new { @class="width250" })
-                    </div>
-                    <div class="form-group marginTop30 marginBottom20">
-                        @Html.LabelFor(model => model.TenderNotes, "General notes", new { @class="width250" })
-                        <div style="width:auto">
-                            @Html.TextAreaFor(model => model.TenderNotes, new { @id="TenderNotes", @class="form-control width300 height300", onblur="TextAreaOnBlur(this)", style="height:100px;", @maxlength="500", @onkeyup="TextAreaOnKeyUp(this, 1000);", @onkeydown="return true;" })
-					        <div id="divNotes" class="marginLeft250 width300 alignRight"></div>
-                        </div>
-                        @Html.ValidationMessageFor(model => model.TenderNotes, null, new { @class="width250" })
-                    </div>
+                    @Html.ValidationMessageFor(model => model.TenderVehicleDetails, null, new { @class = "width250" })
                 </div>
             </div>
-        </fieldset>
-  
+            <div class="col-lg-6">
+                <div class="form-group marginTop10">
+                    @Html.Label("IsConforming", "Agreed by PPT to be conforming", new { @class = "width250" })
+                    <input id="dummyIsConforming" type="checkbox" name="checkbox" class="hide" onclick="checkboxClick(this);">
+                    <label for="dummyIsConforming"></label>
+                    @Html.CheckBoxFor(model => model.IsConforming, new { @id = "cbIsConforming", @class = "hide" })
+                </div>
+                <div class="form-group">
+                    @Html.Label("IncludeInTenderAnalysis", "Include in tender analysis", new { @class = "width250" })
+                    <input id="dummyIncludeInTenderAnalysis" type="checkbox" name="checkbox" class="hide" onclick="checkboxClick(this);">
+                    <label for="dummyIncludeInTenderAnalysis"></label>
+                    @Html.CheckBoxFor(model => model.IncludeInTenderAnalysis, new { @id = "cbIncludeInTenderAnalysis", @class = "hide" })
+                </div>
+                <div class="form-group">
+                    @Html.Label("IsTenderAccepted", "Is tender accepted", new { @class = "width250" })
+                    <input id="dummyIsTenderAccepted" type="checkbox" name="checkbox" class="hide" onclick="checkboxClick(this);">
+                    <label for="dummyIsTenderAccepted"></label>
+                    @Html.CheckBoxFor(model => model.IsTenderAccepted, new { @id = "cbIsTenderAccepted", @class = "hide" })
+                </div>
+                <div class="form-group marginTop60">
+                    @Html.Label("AnyTenderQualifications", "Any qualifications to the tender", new { @class = "width250" })
+                    <input id="dummyAnyTenderQualifications" type="checkbox" name="checkbox" class="hide" onclick="checkboxClick(this);">
+                    <label for="dummyAnyTenderQualifications"></label>
+                    @Html.CheckBoxFor(model => model.AnyTenderQualifications, new { @id = "cbAnyTenderQualifications", @class = "hide" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.TenderQualificationNotes, "Qualification notes", new { @class = "width250" })
+                    <div style="width:auto">
+                        @Html.TextAreaFor(model => model.TenderQualificationNotes, new { @id = "TenderQualificationNotes", @class = "form-control width300 height300", onblur = "TextAreaOnBlur(this)", style = "height:100px;", @maxlength = "500", @onkeyup = "TextAreaOnKeyUp(this, 1000);", @onkeydown = "return true;" })
+                        <div id="divTenderQualificationNotes" class="marginLeft250 width300 alignRight"></div>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.TenderQualificationNotes, null, new { @class = "width250" })
+                </div>
+                <div class="form-group marginTop30 marginBottom20">
+                    @Html.LabelFor(model => model.TenderNotes, "General notes", new { @class = "width250" })
+                    <div style="width:auto">
+                        @Html.TextAreaFor(model => model.TenderNotes, new { @id = "TenderNotes", @class = "form-control width300 height300", onblur = "TextAreaOnBlur(this)", style = "height:100px;", @maxlength = "500", @onkeyup = "TextAreaOnKeyUp(this, 1000);", @onkeydown = "return true;" })
+                        <div id="divNotes" class="marginLeft250 width300 alignRight"></div>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.TenderNotes, null, new { @class = "width250" })
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
     <div class="text-center marginBottom20">
         <input class="btn btn-success" name="saveButton" type="submit" value="Save changes" data-ays-ignore="" true"" />
         @if (Model.Saved_K_Specification == -100)
@@ -197,8 +223,7 @@
 
 <script type="text/javascript">
 
-    $(document).ready(function ()
-    {
+    $(document).ready(function () {
 
         // Customise jquery datepickers
 
@@ -224,36 +249,31 @@
 
         // Initialise dropdownlists
 
-        $('select').each(function (index)
-        {
-            var $this=$(this);
-            var id=$this.attr("id");
-            var ddl1=document.getElementById(id), option, i;
-            for (i=0; i < ddl1.length; i++)
-            {
-                option=ddl1[i];
-                if (option.text.toLowerCase() == "-- not set --")
-                {
-                    option.disabled=true;// disable this line if you want to allow user to select "-- not set --"
-                    option.style.color="grey";
+        $('select').each(function (index) {
+            var $this = $(this);
+            var id = $this.attr("id");
+            var ddl1 = document.getElementById(id), option, i;
+            for (i = 0; i < ddl1.length; i++) {
+                option = ddl1[i];
+                if (option.text.toLowerCase() == "-- not set --") {
+                    option.disabled = true;// disable this line if you want to allow user to select "-- not set --"
+                    option.style.color = "grey";
                 }
-                else
-                {
-                    option.style.color="#2e6492";
+                else {
+                    option.style.color = "#2e6492";
                 }
             }
             if ((this.value == "-- not set --") || (this.value == ""))
-                this.style.color="grey";
+                this.style.color = "grey";
             else
-                this.style.color="#2e6492";
+                this.style.color = "#2e6492";
         });
 
-        $('select').on('change', function ()
-        {
+        $('select').on('change', function () {
             if ((this.value == "-- not set --") || (this.value == ""))
-                this.style.color="grey";
+                this.style.color = "grey";
             else
-                this.style.color="#2e6492";
+                this.style.color = "#2e6492";
         });
 
 
@@ -261,13 +281,11 @@
 
         // Initialise Checkboxes
 
-        $("input:checkbox").each(function ()
-        {
-            var $this=$(this);
-            var id=$this.attr("id");
-            if (id.indexOf('dummy') == 0)
-            {
-                this.checked=document.getElementById(id.replace('dummy', 'cb')).checked;
+        $("input:checkbox").each(function () {
+            var $this = $(this);
+            var id = $this.attr("id");
+            if (id.indexOf('dummy') == 0) {
+                this.checked = document.getElementById(id.replace('dummy', 'cb')).checked;
             }
         });
 
@@ -321,8 +339,7 @@
 
     // OnLoad
 
-    function onLoad()
-    {
+    function onLoad() {
         return false;
     }
 
@@ -331,12 +348,11 @@
 
     // Set checkboxes
 
-    function checkboxClick(element)
-    {
-        var id=element.id;
-        var target=id.replace('dummy', 'cb');
-        var remember=document.getElementById(id);
-        document.getElementById(target).checked=(remember.checked);
+    function checkboxClick(element) {
+        var id = element.id;
+        var target = id.replace('dummy', 'cb');
+        var remember = document.getElementById(id);
+        document.getElementById(target).checked = (remember.checked);
         return false;
     }
 
@@ -345,14 +361,12 @@
 
     // Show character count while typing in a textarea
 
-    function TextAreaOnKeyUp(ctrl, max)
-    {
+    function TextAreaOnKeyUp(ctrl, max) {
         var remaining = max - ctrl.value.length;
         $("#div" + ctrl.id).html(remaining + " characters remaining");
     }
 
-    function TextAreaOnBlur(ctrl)
-    {
+    function TextAreaOnBlur(ctrl) {
         $("#div" + ctrl.id).html("");
     }
 

@@ -10,6 +10,9 @@
     @Html.HiddenFor(model => model.RouteEnd)
     @Html.HiddenFor(model => model.DateStart)
     @Html.HiddenFor(model => model.DateEnd)
+    
+
+
 
     <fieldset>
         <h2 class="fakeLegend">@Model.TitleText details</h2>
@@ -47,11 +50,11 @@
 
             <div class="row marginTop10">
                 <div class="col-lg-4">
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.ContractVariationDateStart, "Variation start date", new { @class = "width240" })
-                        @Html.JQueryUI().DatepickerFor(model => model.ContractVariationDateStart, new { @id = "ContractVariationDateStart", @class = "form-control width120" }).DateFormat("dd MMM yyyy")
-                        @Html.ValidationMessageFor(model => model.ContractVariationDateStart, null, new { @class = "marginLeft240" })
-                    </div>
+                    @*<div class="form-group">
+                            @Html.LabelFor(model => model.ContractVariationDateStart, "Variation start date", new { @class = "width240" })
+                            @Html.JQueryUI().DatepickerFor(model => model.ContractVariationDateStart, new { @id = "ContractVariationDateStart", @class = "form-control width120" }).DateFormat("dd MMM yyyy")
+                            @Html.ValidationMessageFor(model => model.ContractVariationDateStart, null, new { @class = "marginLeft240" })
+                        </div>*@
                     <div class="form-group marginTop10">
                         @Html.Label("ContractVariationIsCancelled", "Cancelled", new { @class = "width240" })
                         <input id="ContractVariationIsCancelled" type="checkbox" name="dummyIsBlank" class="hide" onclick="checkboxClick(this);">
@@ -81,12 +84,12 @@
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(model => model.ContractVariationDateStart, "Contract start date", new { @class = "width240" })
-                        @Html.JQueryUI().DatepickerFor(model => model.ContractVariationDateStart, new { @id = "DateStart", @class = "form-control width120" }).DateFormat("dd MMM yyyy")
+                        @Html.JQueryUI().DatepickerFor(model => model.ContractVariationDateStart, new { @id = "ContractVariationDateStart", @class = "form-control width120" }).DateFormat("dd MMM yyyy")
                         @Html.ValidationMessageFor(model => model.ContractVariationDateStart, null, new { @class = "marginLeft250" })
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(model => model.ContractVariationDateEnd, "Contract end date", new { @class = "width240" })
-                        @Html.JQueryUI().DatepickerFor(model => model.ContractVariationDateEnd, new { @id = "DateEnd", @class = "form-control width120" }).DateFormat("dd MMM yyyy")
+                        @Html.JQueryUI().DatepickerFor(model => model.ContractVariationDateEnd, new { @id = "ContractVariationDateEnd", @class = "form-control width120" }).DateFormat("dd MMM yyyy")
                         @Html.ValidationMessageFor(model => model.ContractVariationDateEnd, null, new { @class = "marginLeft250" })
                     </div>
                     <div class="form-group">
@@ -193,17 +196,17 @@
                         @Html.ValidationMessageFor(model => model.ContractVariationRatePerMile, null, new { @class = "marginLeft240" })
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(model => model.ContractVariationAverageMilesPerDay, "Average miles per day", new { @class = "width240" })
-                        @Html.TextBoxFor(model => model.ContractVariationAverageMilesPerDay, new { @class = "form-control width100" })
-                        @Html.ValidationMessageFor(model => model.ContractVariationAverageMilesPerDay, null, new { @class = "marginLeft240" })
+                        @Html.LabelFor(model => model.AverageMilesPerDay, "Average miles per day", new { @class = "width240" })
+                        @Html.TextBoxFor(model => model.AverageMilesPerDay, new { @class = "form-control width100" })
+                        @Html.ValidationMessageFor(model => model.AverageMilesPerDay, null, new { @class = "marginLeft240" })
                     </div>
                 </div>
                 <div class="col-lg-4">
                     <h3 class="marginTop5">Prices</h3>
                     <div class="form-group">
-                        @Html.LabelFor(model => model.ContractVariationFuelPriceElement, "Fuel price element", new { @class = "width240" })
-                        @Html.TextBoxFor(model => model.ContractVariationFuelPriceElement, new { @class = "form-control width100" })
-                        @Html.ValidationMessageFor(model => model.ContractVariationFuelPriceElement, null, new { @class = "marginLeft240" })
+                        @Html.LabelFor(model => model.FuelPriceElement, "Fuel price element", new { @class = "width240" })
+                        @Html.TextBoxFor(model => model.FuelPriceElement, new { @class = "form-control width100" })
+                        @Html.ValidationMessageFor(model => model.FuelPriceElement, null, new { @class = "marginLeft240" })
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(model => model.TenderPricePerDay, "Contract price per day", new { @class = "width240" })
@@ -216,9 +219,9 @@
                         @Html.ValidationMessageFor(model => model.ContractVariationClosingDate)
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(model => model.ContractVariationAverageRevenuePerDay, "Estimate average revenue per day", new { @class = "width240" })
-                        @Html.TextBoxFor(model => model.ContractVariationAverageRevenuePerDay, new { @class = "form-control width100" })
-                        @Html.ValidationMessageFor(model => model.ContractVariationAverageRevenuePerDay, null, new { @class = "marginLeft240" })
+                        @Html.LabelFor(model => model.EstimatedAverageRevenuePerDay, "Estimate average revenue per day", new { @class = "width240" })
+                        @Html.TextBoxFor(model => model.EstimatedAverageRevenuePerDay, new { @class = "form-control width100" })
+                        @Html.ValidationMessageFor(model => model.EstimatedAverageRevenuePerDay, null, new { @class = "marginLeft240" })
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(model => model.ContractVariationAverageCostPerDay, "Contractor estimate of total income", new { @class = "width240" })
@@ -229,14 +232,14 @@
             </div>
             <div class="row marginTop30">
                 <div class="col-lg-6">
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.ContractVariationTicketNotes, "Ticket Notes", new { @class = "width240" })
-                        <div style="width: auto">
-                            @Html.TextAreaFor(model => model.ContractVariationTicketNotes, new { @id = "TicketNotes", @class = "form-control width300", onblur = "TextAreaOnBlur(this)", style = "height:100px;", @maxlength = "500", @onkeyup = "TextAreaOnKeyUp(this, 1000);", @onkeydown = "return true;" })
-                            <div id="divTicketNotes" class="marginLeft240 width300 alignRight"></div>
-                        </div>
-                        @Html.ValidationMessageFor(model => model.ContractVariationTicketNotes, null, new { @class = "marginLeft240" })
-                    </div>
+                    @*<div class="form-group">
+                            @Html.LabelFor(model => model.ContractVariationTicketNotes, "Ticket Notes", new { @class = "width240" })
+                            <div style="width: auto">
+                                @Html.TextAreaFor(model => model.ContractVariationTicketNotes, new { @id = "TicketNotes", @class = "form-control width300", onblur = "TextAreaOnBlur(this)", style = "height:100px;", @maxlength = "500", @onkeyup = "TextAreaOnKeyUp(this, 1000);", @onkeydown = "return true;" })
+                                <div id="divTicketNotes" class="marginLeft240 width300 alignRight"></div>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.ContractVariationTicketNotes, null, new { @class = "marginLeft240" })
+                        </div>*@
                     <div class="form-group">
                         @Html.LabelFor(model => model.ServiceDetails1, "Service Information", new { @class = "width240" })
                         <div style="width: auto">
@@ -247,14 +250,14 @@
                     </div>
                 </div>
                 <div class="col-lg-6">
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.RouteNotes, "Route/Timetable Notes", new { @class = "width240" })
-                        <div style="width: auto">
-                            @Html.TextAreaFor(model => model.RouteNotes, new { @id = "RouteNotes", @class = "form-control width300", onblur = "TextAreaOnBlur(this)", style = "height:100px;", @maxlength = "500", @onkeyup = "TextAreaOnKeyUp(this, 1000);", @onkeydown = "return true;" })
-                            <div id="divRouteNotes" class="marginLeft240 width300 alignRight"></div>
-                        </div>
-                        @Html.ValidationMessageFor(model => model.RouteNotes, null, new { @class = "marginLeft240" })
-                    </div>
+                    @*<div class="form-group">
+                            @Html.LabelFor(model => model.RouteNotes, "Route/Timetable Notes", new { @class = "width240" })
+                            <div style="width: auto">
+                                @Html.TextAreaFor(model => model.RouteNotes, new { @id = "RouteNotes", @class = "form-control width300", onblur = "TextAreaOnBlur(this)", style = "height:100px;", @maxlength = "500", @onkeyup = "TextAreaOnKeyUp(this, 1000);", @onkeydown = "return true;" })
+                                <div id="divRouteNotes" class="marginLeft240 width300 alignRight"></div>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.RouteNotes, null, new { @class = "marginLeft240" })
+                        </div>*@
                     <div class="form-group marginBottom20">
                         @Html.LabelFor(model => model.ContractVariationNotes, "General notes", new { @class = "width240" })
                         <div style="width: auto">
@@ -315,47 +318,29 @@
                 yearRange: "-100:+2"
             });
 
-        $("#ContractVariationDateStart").datepicker(
-            {
-                beforeShow: function (element, datepicker) {
-                    var dateEnd = $("#ContractVariationDateStart").datepicker('getDate');
-                    if ((dateEnd != null) && (dateEnd != "")) {
-                        $("#ContractVariationDateStart").datepicker("option", "maxDate", dateEnd);
-                    }
-                }
-            });
+        $("#ContractVariationDateStart").datepicker({
+            dateFormat: "d M yy",
+            onClose: function (selectedDate) {
+                // When a date is selected on the start datepicker, update the minDate of the end datepicker
+                $("#ContractVariationDateEnd").datepicker("option", "minDate", selectedDate);
+            }
+        });
 
-        $("#ContractVariationClosingDate").datepicker(
-            {
-                beforeShow: function (element, datepicker) {
-                    var dateEnd = $("#ContractVariationClosingDate").datepicker('getDate');
-                    if ((dateEnd != null) && (dateEnd != "")) {
-                        $("#ContractVariationClosingDate").datepicker("option", "maxDate", dateEnd);
-                    }
-                }
-            });
+        $("#ContractVariationDateEnd").datepicker({
+            dateFormat: "d M yy",
+            onClose: function (selectedDate) {
+                // When a date is selected on the end datepicker, update the maxDate of the start datepicker
+                $("#ContractVariationDateStart").datepicker("option", "maxDate", selectedDate);
+            }
+        });
 
-        $("#ContractVariationDateStart").datepicker(
-            {
-                beforeShow: function (element, datepicker) {
-                    var dateEnd = $("#DateEnd").datepicker('getDate');
-                    if ((dateEnd != null) && (dateEnd != "")) {
-                        $("#ContractVariationDateStart").datepicker("option", "maxDate", dateEnd);
-                    }
-                }
-            });
-        $("#DateEnd").datepicker(
-            {
-                beforeShow: function (element, datepicker) {
-                    var dateStart = $("#ContractVariationDateStart").datepicker('getDate');
-                    if ((dateStart != null) && (dateStart != "")) {
-                        $("#DateEnd").datepicker("option", "minDate", dateStart);
-                    }
-                }
-            });
-
-
-
+        $("#ContractVariationClosingDate").datepicker({
+            inline: true,
+            dateFormat: 'd M yy',
+            changeYear: true,
+            changeMonth: true,
+            yearRange: "-100:+2"
+        });
 
         // Initialise dropdownlists
 

@@ -54,6 +54,17 @@ namespace ProspectBusinessLayer
         public bool      ContractVariationOperatesOnNonSchoolDays       { get; set; }
         public bool      ContractVariationOperatesOnBankHolidays        { get; set; }
         public bool      ContractVariationOperatesOnChristmasAndNewYear { get; set; }
+        public string    ContractVariationOperatesOnMonText             { get { return (ContractVariationOperatesOnMon ? "Y" : "N"); } }
+        public string    ContractVariationOperatesOnTueText             { get { return (ContractVariationOperatesOnTue ? "Y" : "N"); } }
+        public string    ContractVariationOperatesOnWedText             { get { return (ContractVariationOperatesOnWed ? "Y" : "N"); } }
+        public string    ContractVariationOperatesOnThuText             { get { return (ContractVariationOperatesOnThu ? "Y" : "N"); } }
+        public string    ContractVariationOperatesOnFriText             { get { return (ContractVariationOperatesOnFri ? "Y" : "N"); } }
+        public string    ContractVariationOperatesOnSatText             { get { return (ContractVariationOperatesOnSat ? "Y" : "N"); } }
+        public string    ContractVariationOperatesOnSunText             { get { return (ContractVariationOperatesOnSun ? "Y" : "N"); } }
+        public string    ContractVariationOperatesOnSchoolDaysText      { get { return (ContractVariationOperatesOnSchoolDays ? "Y" : "N"); } }
+        public string    ContractVariationOperatesOnNonSchoolDaysText   { get { return (ContractVariationOperatesOnNonSchoolDays ? "Y" : "N"); } }
+        public string    ContractVariationOperatesOnBankHolidaysText    { get { return (ContractVariationOperatesOnBankHolidays ? "Y" : "N"); } }
+        public string    ContractVariationOperatesOnChristmasAndNewYearText    { get { return (ContractVariationOperatesOnChristmasAndNewYear ? "Y" : "N"); } }
         public int       ContractVariationCalculatedNoOfDaysInOperation { get; set; }
         public decimal   ContractVariationAverageMilesPerDay            { get; set; }
         public decimal   ContractVariationRatePerMile                   { get; set; }
@@ -70,7 +81,6 @@ namespace ProspectBusinessLayer
         public DateTime? ContractVariationClosingDate                   { get; set; }
         public string    ContractVariationClosingDateText               { get { return DCC_Formatting.NullDateTxt(ContractVariationClosingDate, "dd MMM yyyy"); } }
         public decimal   ContractVariationFuelPriceElement              { get; set; }
-
         public string    AgreementDescription                           { get; set; }
         public int       ContractReference                              { get; set; }
         public string    ContractReferenceText                          { get { return ContractReference.ToString().PadLeft(5, '0'); } }
@@ -83,25 +93,27 @@ namespace ProspectBusinessLayer
         public string    TenderReferenceSort                            { get { return TenderReference.ToString().PadLeft(5, '0'); } }
         public decimal   EstimatedAverageRevenuePerDay                  { get; set; }
         public decimal   TenderPricePerDay                              { get; set; }
-
         public string    ExceptionalConditions                          { get; set; }
         public string    VehicleCapacity                                { get; set; }
         public string    VehicleElderlyAndDisabled                      { get; set; }
         public string    VehicleDimensions                              { get; set; }
         public decimal   AverageMilesPerDay                             { get; set; }
+        public bool      OperatesOnMon                                  { get; set; }
+        public bool      OperatesOnTue                                  { get; set; }
+        public bool      OperatesOnWed                                  { get; set; }
+        public bool      OperatesOnThu                                  { get; set; }
+        public bool      OperatesOnFri                                  { get; set; }
+        public bool      OperatesOnSat                                  { get; set; }
+        public bool      OperatesOnSun                                  { get; set; }
+        public bool      OperatesOnSchoolDays                           { get; set; }
+        public bool      OperatesOnNonSchoolDays                        { get; set; }
+        public bool      OperatesOnBankHolidays                         { get; set; }
+        public bool      OperatesOnChristmasAndNewYear                  { get; set; }
+        public decimal   FuelPriceElement                               { get; set; }
+        public bool      IgnoreIsPriceChange                            { get; set; }
+        public bool      IgnoreAgreementChanged                         { get; set; }
+        public bool      IgnoreNoOfDaysOfOperationPerYearChanged        { get; set; }
 
-        public bool OperatesOnMon                                       { get; set; }
-        public bool OperatesOnTue                                       { get; set; }
-        public bool OperatesOnWed                                       { get; set; }
-        public bool OperatesOnThu                                       { get; set; }
-        public bool OperatesOnFri                                       { get; set; }
-        public bool OperatesOnSat                                       { get; set; }
-        public bool OperatesOnSun                                       { get; set; }
-        public bool OperatesOnSchoolDays                                { get; set; }
-        public bool OperatesOnNonSchoolDays                             { get; set; }
-        public bool OperatesOnBankHolidays                              { get; set; }
-        public bool OperatesOnChristmasAndNewYear                       { get; set; }
-        
 
 
         // Utilities
@@ -124,6 +136,7 @@ namespace ProspectBusinessLayer
 
         public ContractVariation()
         {
+            K_ContractVariation = -1;
         }
 
         public ContractVariation(DataRow dataRow)
@@ -210,21 +223,25 @@ namespace ProspectBusinessLayer
             ContractVariationClosingDate                    = DCC_GetColumn.DateTimeQ(dataRow,          "ContractVariationClosingDate");
             ContractVariationFuelPriceElement               = Math.Round(DCC_GetColumn.Decimal(dataRow, "ContractVariationFuelPriceElement"), 2);
 
-            if (DCC_GetColumn.Exists(dataRow, "AgreementDescription")) AgreementDescription                   = DCC_GetColumn.String(dataRow,    "AgreementDescription");
-            if (DCC_GetColumn.Exists(dataRow, "ContractReference")) ContractReference                         = DCC_GetColumn.Integer32(dataRow, "ContractReference");
-            if (DCC_GetColumn.Exists(dataRow, "ContractTypeDescription")) ContractTypeDescription             = DCC_GetColumn.String(dataRow,    "ContractTypeDescription");
-            if (DCC_GetColumn.Exists(dataRow, "ContractorName")) ContractorName                               = DCC_GetColumn.String(dataRow,    "ContractorName");
-            if (DCC_GetColumn.Exists(dataRow, "ContractorLicenceNo")) ContractorLicenceNo                     = DCC_GetColumn.String(dataRow,    "ContractorLicenceNo");
-            if (DCC_GetColumn.Exists(dataRow, "TenderReference")) TenderReference                             = DCC_GetColumn.Integer32(dataRow, "TenderReference");
+            if (DCC_GetColumn.Exists(dataRow, "AgreementDescription"))          AgreementDescription          = DCC_GetColumn.String(dataRow,    "AgreementDescription");
+            if (DCC_GetColumn.Exists(dataRow, "ContractReference"))             ContractReference             = DCC_GetColumn.Integer32(dataRow, "ContractReference");
+            if (DCC_GetColumn.Exists(dataRow, "ContractTypeDescription"))       ContractTypeDescription       = DCC_GetColumn.String(dataRow,    "ContractTypeDescription");
+            if (DCC_GetColumn.Exists(dataRow, "ContractorName"))                ContractorName                = DCC_GetColumn.String(dataRow,    "ContractorName");
+            if (DCC_GetColumn.Exists(dataRow, "ContractorLicenceNo"))           ContractorLicenceNo           = DCC_GetColumn.String(dataRow,    "ContractorLicenceNo");
+            if (DCC_GetColumn.Exists(dataRow, "TenderReference"))               TenderReference               = DCC_GetColumn.Integer32(dataRow, "TenderReference");
             if (DCC_GetColumn.Exists(dataRow, "EstimatedAverageRevenuePerDay")) EstimatedAverageRevenuePerDay = DCC_GetColumn.Decimal(dataRow,   "EstimatedAverageRevenuePerDay");
-            if (DCC_GetColumn.Exists(dataRow, "TenderPricePerDay")) TenderPricePerDay                         = DCC_GetColumn.Decimal(dataRow,   "TenderPricePerDay");
+            if (DCC_GetColumn.Exists(dataRow, "TenderPricePerDay"))             TenderPricePerDay             = DCC_GetColumn.Decimal(dataRow,   "TenderPricePerDay");
+            if (DCC_GetColumn.Exists(dataRow, "ExceptionalConditions"))         ExceptionalConditions         = DCC_GetColumn.String(dataRow,    "ExceptionalConditions");
+            if (DCC_GetColumn.Exists(dataRow, "VehicleCapacity"))               VehicleCapacity               = DCC_GetColumn.String(dataRow,    "VehicleCapacity");
+            if (DCC_GetColumn.Exists(dataRow, "VehicleElderlyAndDisabled"))     VehicleElderlyAndDisabled     = DCC_GetColumn.String(dataRow,    "VehicleElderlyAndDisabled");
+            if (DCC_GetColumn.Exists(dataRow, "VehicleDimensions"))             VehicleDimensions             = DCC_GetColumn.String(dataRow,    "VehicleDimensions");
+            if (DCC_GetColumn.Exists(dataRow, "AverageMilesPerDay"))            AverageMilesPerDay            = DCC_GetColumn.Decimal(dataRow,   "AverageMilesPerDay");
+            if (DCC_GetColumn.Exists(dataRow, "FuelPriceElement"))              FuelPriceElement              = DCC_GetColumn.Decimal(dataRow,   "FuelPriceElement");
 
-            if (DCC_GetColumn.Exists(dataRow, "ExceptionalConditions")) ExceptionalConditions                 = DCC_GetColumn.String(dataRow,  "ExceptionalConditions");
-            if (DCC_GetColumn.Exists(dataRow, "VehicleCapacity")) VehicleCapacity                             = DCC_GetColumn.String(dataRow,  "VehicleCapacity");
-            if (DCC_GetColumn.Exists(dataRow, "VehicleElderlyAndDisabled")) VehicleElderlyAndDisabled         = DCC_GetColumn.String(dataRow,  "VehicleElderlyAndDisabled");
-            if (DCC_GetColumn.Exists(dataRow, "VehicleDimensions")) VehicleDimensions                         = DCC_GetColumn.String(dataRow,  "VehicleDimensions");
-            if (DCC_GetColumn.Exists(dataRow, "AverageMilesPerDay")) AverageMilesPerDay                       = DCC_GetColumn.Decimal(dataRow, "AverageMilesPerDay");
-           
+            if (DCC_GetColumn.Exists(dataRow, "IgnoreIsPriceChange"))                       IgnoreIsPriceChange = DCC_GetColumn.Bit(dataRow, "IgnoreIsPriceChange");
+            if (DCC_GetColumn.Exists(dataRow, "IgnoreAgreementChanged"))                    IgnoreAgreementChanged = DCC_GetColumn.Bit(dataRow, "IgnoreAgreementChanged");
+            if (DCC_GetColumn.Exists(dataRow, "IgnoreNoOfDaysOfOperationPerYearChanged"))   IgnoreNoOfDaysOfOperationPerYearChanged = DCC_GetColumn.Bit(dataRow, "IgnoreNoOfDaysOfOperationPerYearChanged");
+
 
 
             return true;
@@ -306,6 +323,7 @@ namespace ProspectBusinessLayer
             dbf.AddParameter("ContractVariationAveragePricePerYear"          , ContractVariationAveragePricePerYear);
             dbf.AddParameter("ContractVariationTicketNotes"                  , ContractVariationTicketNotes, 500);
             dbf.AddParameter("ContractVariationClosingDate"                  , ContractVariationClosingDate);
+            dbf.AddParameter("ContractVariationFuelPriceElement"             , ContractVariationFuelPriceElement);
         }
 
     }
