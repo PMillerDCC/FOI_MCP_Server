@@ -16,8 +16,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prospect", "Prospect\Prospe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DCC_Standard2014", "DCC_Standard2014\DCC_Standard2014\DCC_Standard2014.csproj", "{C85BA241-C486-461A-9D78-F45177A2B1BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prospect_Test", "Prospect_Test\Prospect_Test.csproj", "{8EB17AAB-6BCC-44C0-904D-3A84C5E7801D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,10 +34,6 @@ Global
 		{C85BA241-C486-461A-9D78-F45177A2B1BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C85BA241-C486-461A-9D78-F45177A2B1BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C85BA241-C486-461A-9D78-F45177A2B1BC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8EB17AAB-6BCC-44C0-904D-3A84C5E7801D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8EB17AAB-6BCC-44C0-904D-3A84C5E7801D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8EB17AAB-6BCC-44C0-904D-3A84C5E7801D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8EB17AAB-6BCC-44C0-904D-3A84C5E7801D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

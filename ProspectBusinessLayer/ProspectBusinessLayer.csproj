@@ -166,7 +166,6 @@
     <Compile Include="Business Objects\ContractPayment.cs" />
     <Compile Include="Business Objects\ContractsPaymentsScheduleParameters.cs" />
     <Compile Include="Business Objects\ContractsPaymentsScheduleReportRow.cs" />
-    <Compile Include="Business Objects\ContractSpecification.cs" />
     <Compile Include="Business Objects\ContractType.cs" />
     <Compile Include="Business Objects\ContractVariations.cs" />
     <Compile Include="Business Objects\FuelCost.cs" />
@@ -184,7 +183,6 @@
     <Compile Include="Business Objects\TenderAnalysisResult.cs" />
     <Compile Include="Business Objects\TendersIncludedInAnalysis.cs" />
     <Compile Include="Business Objects\TendersInCombinations.cs" />
-    <Compile Include="Business Objects\TenderSpecification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

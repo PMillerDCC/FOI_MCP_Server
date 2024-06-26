@@ -13,7 +13,6 @@ namespace Prospect.Controllers
         {
             #region Sandpit
 
-
             //string logonID = DCC_Session.CurrentUser.LogonID;
 
             //Specification specification = new Specification(DCC_Session.AutoDatabaseConnection, 1809);
@@ -39,9 +38,17 @@ namespace Prospect.Controllers
             //ServiceTypeList serviceTypeList = new ServiceTypeList(DCC_Session.AutoDatabaseConnection);
             //Restriction restriction = new Restriction(DCC_Session.AutoDatabaseConnection, 1);
             //RestrictionList restrictionList = new RestrictionList(DCC_Session.AutoDatabaseConnection);
+
             #endregion
 
-            ViewBag.PageTitle = "Home Page";
+			#region Check if the system is down
+			if (!string.IsNullOrWhiteSpace(DCC_Session.UnderMaintenance))
+			{
+				return RedirectToAction("UnderMaintenance", "Home");
+			}
+			#endregion
+
+            ViewBag.PageTitle = "Home";
             return View();
         }
 
@@ -80,6 +87,17 @@ namespace Prospect.Controllers
         }
 
         #endregion
+
+
+		#region UnderMaintenance Page
+
+		//[OutputCache(Duration = 86400)]
+		public ActionResult UnderMaintenance()
+        {
+            return View();
+        }
+
+		#endregion
 
     }
 

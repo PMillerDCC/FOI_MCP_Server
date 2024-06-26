@@ -4,134 +4,48 @@
     <h2 class="fakeLegend">Contract variation @Model.ContractVariationNoText</h2>
     <div class="row marginTop10">
         <div class="col-lg-4">
-            <h3 class="marginTop5">Service Details</h3>
-            <div class="col-lg-4">
-                <div class="marginTop5">
-                    <div class="width240 floatLeft fontSize14"> Variation Start Date: <strong>@Model.ContractVariationDateStartText</strong></div>
-                </div>
-                <div class="marginTop5">
-                    <div class="width400 floatLeft fontSize14">Service Number: <strong>@Model.ContractVariationServiceNo</strong></div>
-                </div>
-                <div class="marginTop5">
-                    <div class="width400 floatLeft fontSize14">Route Start: <strong>@Model.ContractVariationRouteStart</strong></div>
-                </div>
-                <div class="marginTop5">
-                    <div class="width400 floatLeft fontSize14">Route End: <strong>@Model.ContractVariationRouteEnd</strong></div>
-                </div>
-                <div class="marginTop5">
-                    <div class="width400 floatLeft fontSize14">Vehicle Capacity: <strong>@Model.ContractVariationVehicleCapacity</strong></div>
-                </div>
-                <div class="marginTop5">
-                    <div class="width400 floatLeft fontSize14">Accessibility: <strong>@Model.ContractVariationVehicleElderlyAndDisabled</strong></div>
-                </div>
-                <div class="marginTop5">
-                    <div class="width400 floatLeft fontSize14">Vehicle Dimensions: <strong>@Model.ContractVariationVehicleDimensions</strong></div>
-                </div>
-                <div class="marginTop5">
-                    <div class="width400 floatLeft fontSize14">Exceptional conditions: <strong>@Model.ExceptionalConditions</strong></div>
-                </div>
-            </div>
+            <h3 class="marginTop1">Service details</h3>
+            <div class="width400 floatLeft fontSize14">Variation start date: <strong>@Model.ContractVariationVariationDateStartText</strong></div>
+            @*<div class="width400 floatLeft fontSize14">Variation end date: <strong>@Model.ContractVariationVariationEndDateText</strong></div>*@
+            <div class="width400 floatLeft fontSize14">Service number: <strong>@Model.ContractVariationServiceNo</strong></div>
+            <div class="width400 floatLeft fontSize14">Route: <strong>@Model.ContractVariationRouteText</strong></div>
+            <div class="width400 floatLeft fontSize14 marginBottom15">Exceptional conditions: <strong>@Model.ContractVariationExceptionalConditions</strong></div>
+            <h3 class="marginTop1">Quality of service</h3>
+            <div class="width400 floatLeft fontSize14">Vehicle capacity: <strong>@Model.ContractVariationVehicleCapacity</strong></div>
+            <div class="width400 floatLeft fontSize14">Accessibility: <strong>@Model.ContractVariationVehicleElderlyAndDisabled</strong></div>
+            <div class="width400 floatLeft fontSize14 marginBottom15">Vehicle dimensions: <strong>@Model.ContractVariationVehicleDimensions</strong></div>
+            <h3 class="marginTop1">Agreement</h3>
+            <div class="width400 floatLeft fontSize14 marginBottom10">Agreement for fares: <strong>@Model.AgreementDescription</strong></div>
         </div>
-
         <div class="col-lg-4">
-            <h3 class="marginTop5">Days of operation</h3>
-                <div class="col-lg-4">
-                    <div class="form-group">
-                        <div class="width300 floatLeft fontSize14">Operates on Monday: <strong>@Model.ContractVariationOperatesOnMonText</strong></div>
-                    </div>
-                    <div class="form-group">
-                        <div class="width300 floatLeft fontSize14">Operates on Tuesday: <strong>@Model.ContractVariationOperatesOnTueText</strong></div>
-                    </div>
-                    <div class="form-group">
-                        <div class="width300 floatLeft fontSize14">Operates on Wednesday: <strong>@Model.ContractVariationOperatesOnWedText</strong></div>
-                    </div>
-                    <div class="form-group">
-                        <div class="width300 floatLeft fontSize14">Operates on Thursday: <strong>@Model.ContractVariationOperatesOnThuText</strong></div>
-                    </div>
-                    <div class="form-group">
-                        <div class="width300 floatLeft fontSize14">Operates on Friday: <strong>@Model.ContractVariationOperatesOnFriText</strong></div>
-                    </div>
-                    <div class="form-group">
-                        <div class="width300 floatLeft fontSize14">Operates on Saturday: <strong>@Model.ContractVariationOperatesOnSatText</strong></div>
-                    </div>
-                    <div class="form-group">
-                        <div class="width300 floatLeft fontSize14">Operates on Sunday: <strong>@Model.ContractVariationOperatesOnSunText</strong></div>
-                    </div>
-                    <div class="form-group">
-                        <div class="width300 floatLeft fontSize14">Operates on Bank Holidays: <strong>@Model.ContractVariationOperatesOnBankHolidaysText</strong></div>
-                    </div>
-                    <div class="form-group">
-                        <div class="width300 floatLeft fontSize14">Operates on School Days: <strong>@Model.ContractVariationOperatesOnSchoolDaysText</strong></div>
-                    </div>
-                    <div class="form-group">
-                        <div class="width300 floatLeft fontSize14">Operates on Non School Days: <strong>@Model.ContractVariationOperatesOnNonSchoolDaysText</strong></div>
-                    </div>
-                    <div class="form-group">
-                        <div class="width300 floatLeft fontSize14">Operates Between Christmas and New Year: <strong>@Model.ContractVariationOperatesOnChristmasAndNewYearText</strong></div>
-                    </div>
-                    <div class="form-group">
-                        <div class="width300 floatLeft fontSize14">Days in Operation: <strong>@Model.ContractVariationCalculatedNoOfDaysInOperation</strong></div>
-                    </div>
-                </div>
+            <h3 class="marginTop1">Days of operation</h3>
+            <div class="width400 floatLeft fontSize14">Operates on Monday: <strong>@Model.ContractVariationOperatesOnMonText</strong></div>
+            <div class="width400 floatLeft fontSize14">Operates on Tuesday: <strong>@Model.ContractVariationOperatesOnTueText</strong></div>
+            <div class="width400 floatLeft fontSize14">Operates on Wednesday: <strong>@Model.ContractVariationOperatesOnWedText</strong></div>
+            <div class="width400 floatLeft fontSize14">Operates on Thursday: <strong>@Model.ContractVariationOperatesOnThuText</strong></div>
+            <div class="width400 floatLeft fontSize14">Operates on Friday: <strong>@Model.ContractVariationOperatesOnFriText</strong></div>
+            <div class="width400 floatLeft fontSize14">Operates on Saturday: <strong>@Model.ContractVariationOperatesOnSatText</strong></div>
+            <div class="width400 floatLeft fontSize14">Operates on Sunday: <strong>@Model.ContractVariationOperatesOnSunText</strong></div>
+            <div class="width400 floatLeft fontSize14">Operates on bank holidays: <strong>@Model.ContractVariationOperatesOnBankHolidaysText</strong></div>
+            <div class="width400 floatLeft fontSize14">Operates on school days: <strong>@Model.ContractVariationOperatesOnSchoolDaysText</strong></div>
+            <div class="width400 floatLeft fontSize14">Operates on non school days: <strong>@Model.ContractVariationOperatesOnNonSchoolDaysText</strong></div>
+            <div class="width400 floatLeft fontSize14">Operates between Christmas and New Year: <strong>@Model.ContractVariationOperatesOnChristmasAndNewYearText</strong></div>
+            <div class="width400 floatLeft fontSize14">Days of operation (first year): <strong>@Model.ContractVariationCalculatedNoOfDaysOfOperationFirstYear</strong></div>
+            <div class="width400 floatLeft fontSize14 marginBottom10">Days of operation (full term): <strong>@Model.ContractVariationCalculatedNoOfDaysOfOperationFullTerm</strong></div>
         </div>
-
-
         <div class="col-lg-4">
-            <h3 class="marginTop5">Prices</h3>
-            <div class="form-group">
-                <div class="marginTop5">
-                    <div class="width400 floatLeft fontSize14">Agreement for Fares: <strong>@Model.AgreementDescription</strong></div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="marginTop5">
-                    <div class="width400 floatLeft fontSize14">Contract Price: <strong>@Model.TenderPricePerDay</strong></div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="marginTop5">
-                    <div class="width400 floatLeft fontSize14">Estimate average revenue per day: <strong>@Model.EstimatedAverageRevenuePerDay</strong></div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="marginTop5">
-                    <div class="width400 floatLeft fontSize14">Contractor estimate of total income: <strong>@Model.ContractVariationAverageCostPerDay</strong></div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="marginTop5">
-                    <div class="width400 floatLeft fontSize14">Average miles per day: <strong>@Model.AverageMilesPerDay</strong></div>
-                </div>
-            </div>
+            <h3 class="marginTop1">Prices</h3>
+            <div class="width400 floatLeft fontSize14">Average miles per day: <strong>@Model.ContractVariationAverageMilesPerDay</strong></div>
+            <div class="width400 floatLeft fontSize14">Rate per mile: <strong>@Model.ContractVariationRatePerMile</strong></div>
+            <div class="width400 floatLeft fontSize14">Fuel price element: <strong>@Model.ContractVariationFuelPriceElement</strong></div>
+            <div class="width400 floatLeft fontSize14">Contract price per day: <strong>@Model.ContractVariationAveragePricePerDay</strong></div>
+            <div class="width400 floatLeft fontSize14">Contract price per year: <strong>@Model.ContractVariationAveragePricePerYear</strong></div>
+            <div class="width400 floatLeft fontSize14">Estimate of average revenue per day: <strong>@Model.ContractVariationAverageRevenuePerDay</strong></div>
+            <div class="width400 floatLeft fontSize14">Estimate of average revenue per year: <strong>@Model.ContractVariationAverageRevenuePerYear</strong></div>
+            <div class="width400 floatLeft fontSize14">Contractor estimate of total income per day: <strong>@Model.ContractVariationAverageCostPerDay</strong></div>
+            <div class="width400 floatLeft fontSize14 marginBottom15">Contractor estimate of total income per year: <strong>@Model.ContractVariationAverageCostPerYear</strong></div>
+            <h3>Notes</h3>
+            <div class="width400 floatLeft fontSize14"><strong>@Model.ContractVariationNotes</strong></div>
         </div>
     </div>
-
-    @*<div class="row">
-        <div class="col-lg-12">
-            <div class="form-group">
-                @Html.Label("Ticket notes")
-                <p class="fakeTextArea marginLeft240">@Model.ContractVariationTicketNotes</p>
-            </div>
-            <div class="form-group">
-                @Html.Label("Route/timetable notes")
-                <p class="fakeTextArea marginLeft240">@Model.ContractVariationRouteTimetableNotes</p>
-            </div>
-        </div>
-    </div>*@
-
 </fieldset>
-
-<script type="text/javascript">
-
-    $(document).ready(function () {
-        // Initialise Checkboxes
-        $("input:checkbox").each(function () {
-            var $this = $(this);
-            var id = $this.attr("id");
-            if (id.indexOf('dummy') == 0) {
-                this.checked = document.getElementById(id.replace('dummy', 'cb')).checked;
-            }
-        });
-    });
-
-</script>

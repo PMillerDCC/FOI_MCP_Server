@@ -98,17 +98,17 @@ namespace ProspectBusinessLayer
                         !specification.OperatesOnBankHolidays &&
                         !specification.OperatesOnChristmasAndNewYear)
                         {
-                            specification.CalculatedNoOfDaysInOperation = specification.NoOfDaysOfOperationPerYear;  
+                            specification.CalculatedNoOfDaysOfOperationFirstYear = specification.CalculatedNoOfDaysOfOperationFirstYear;
                         }
 
-                specification.CalculateDaysInOperation(db); 
+                specification.CalculateDaysOfOperation(db); 
 
                     
 
-                    FuelCost originalPrice = new FuelCost(db, searchDate: contractVariation.ContractVariationClosingDate);
+                    FuelCost originalPrice = new FuelCost(db, searchDate: contractVariation.ContractVariationDateEnd);
                     FuelCost newPrice = new FuelCost(db, searchDate: pStartDate);
 
-                    int     daysInOperation = specification.CalculatedNoOfDaysInOperation;
+                    int     daysInOperation = specification.CalculatedNoOfDaysOfOperationFirstYear;
                     decimal priceMinusFuel = 0;
                     decimal newFuelElement = 0;
                     if(originalPrice.Price > 0) { 
@@ -133,8 +133,8 @@ namespace ProspectBusinessLayer
                     row.DateText                            = contractVariation.ContractVariationDatesText;
                     row.ContractVariationAveragePricePerDay = contractVariation.ContractVariationAveragePricePerDay;
                     row.ContractVariationFuelPriceElement   = contractVariation.ContractVariationFuelPriceElement;
-                    row.ContractVariationClosingDate        = contractVariation.ContractVariationClosingDateText;
-                    row.NoOfDaysOfOperationPerYear          = specification.CalculatedNoOfDaysInOperation;
+                    row.ContractVariationClosingDate        = contractVariation.ContractVariationVariationDateStartText;
+                    row.NoOfDaysOfOperationPerYear          = specification.CalculatedNoOfDaysOfOperationFirstYear;
                     row.ContractAmount                      = grandTotal;
                     contractorSubTotal                     += grandTotal;
                     //row.NetAmountDue                      =

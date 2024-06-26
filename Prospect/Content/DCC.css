@@ -589,7 +589,7 @@ ul.dropdown-menu li
 
 
 
-/* Top of TABBED NOTEBOOK STYLE NAVIGATION styles */
+/* Top of TABBED BOOK STYLE NAVIGATION styles */
 
 .tabbedNotebook
 {
@@ -1099,6 +1099,13 @@ fullscreenfieldset
     clear:both;
 }
 
+.input-group-text {
+    background-color: white; /* Change background color */
+    color: black; /* Change text color */
+    
+    /* Add more styles as needed */
+}
+
 label
 {
     height:26px;
@@ -1158,6 +1165,7 @@ label
     font-size:12px;
     color:#2e6492;
 }
+
 
 .form-control:focus
 {
@@ -2385,8 +2393,8 @@ a.helpText
 .silver { color:silver; }
 .data { color:#2e6492; font-weight:400; padding-left:6px; }
 .control { color:#2e6492; font-weight:400; padding-left:0; }
-.hyperlink { color:purple; font-size:10pt; font-weight:500; text-decoration:underline;}
-.hide { position:absolute; left:-30000px; }
+.hyperlink { color:purple; font-size:10pt; font-weight:500; text-decoration:underline; margin-left:6px;}
+.hide { position:absolute; left:-30000px; display:none; } /*Hiding unchecked checkboxes*/
 .printOnly { display:none; }
 .dropdownlist { color:#2e6492; font-size:13px; font-weight:400; }
 .floatLeft { float:left; }
@@ -2844,35 +2852,55 @@ a.helpText
 .maxWidth1190{ max-width:1190px; white-space:normal; }
 .maxWidth1200{ max-width:1200px; white-space:normal; }
 
-.height24  { height:25px; }
-.height30  { height:30px; }
-.height40  { height:40px; }
-.height50  { height:50px; }
-.height60  { height:60px; }
-.height70  { height:70px; }
-.height80  { height:80px; }
-.height90  { height:90px; }
-.height100 { height:100px; }
-.height110 { height:110px; }
-.height120 { height:120px; }
-.height130 { height:130px; }
-.height140 { height:140px; }
-.height150 { height:150px; }
-.height160 { height:160px; }
-.height170 { height:170px; }
-.height180 { height:180px; }
-.height190 { height:190px; }
-.height200 { height:200px; }
-.height210 { height:210px; }
-.height220 { height:220px; }
-.height230 { height:230px; }
-.height240 { height:240px; }
-.height250 { height:250px; }
-.height260 { height:260px; }
-.height270 { height:270px; }
-.height280 { height:280px; }
-.height290 { height:290px; }
-.height300 { height:300px; }
+.height24  { height:25px!important; }
+.height30  { height:30px!important; }
+.height40  { height:40px!important; }
+.height50  { height:50px!important; }
+.height60  { height:60px!important; }
+.height70  { height:70px!important; }
+.height80  { height:80px!important; }
+.height90  { height:90px!important; }
+.height100 { height:100px!important; }
+.height110 { height:110px!important; }
+.height120 { height:120px!important; }
+.height130 { height:130px!important; }
+.height140 { height:140px!important; }
+.height150 { height:150px!important; }
+.height160 { height:160px!important; }
+.height170 { height:170px!important; }
+.height180 { height:180px!important; }
+.height190 { height:190px!important; }
+.height200 { height:200px!important; }
+.height210 { height:210px!important; }
+.height220 { height:220px!important; }
+.height230 { height:230px!important; }
+.height240 { height:240px!important; }
+.height250 { height:250px!important; }
+.height260 { height:260px!important; }
+.height270 { height:270px!important; }
+.height280 { height:280px!important; }
+.height290 { height:290px!important; }
+.height300 { height:300px!important; }
+.height310 { height:310px!important; }
+.height320 { height:320px!important; }
+.height330 { height:330px!important; }
+.height340 { height:340px!important; }
+.height350 { height:350px!important; }
+.height360 { height:360px!important; }
+.height370 { height:370px!important; }
+.height380 { height:380px!important; }
+.height390 { height:390px!important; }
+.height400 { height:400px!important; }
+.height410 { height:410px!important; }
+.height420 { height:420px!important; }
+.height430 { height:430px!important; }
+.height440 { height:440px!important; }
+.height450 { height:450px!important; }
+.height460 { height:460px!important; }
+.height470 { height:470px!important; }
+.height480 { height:480px!important; }
+.height490 { height:490px!important; }
+.height500 { height:500px!important; }
 
 .asterisk:after
 {
@@ -3432,9 +3460,13 @@ a.helpText
 
     .printOnly {
         display:block;
-        width: 100%;
-        position: relative;
+       /* width: 100%;
+        position: absolute;
         bottom: 0;
+        left: 0;
+        z-index: 1000;
+        padding: 10px;
+        box-sizing: border-box;*/
         /*margin-top: 1em;*/
     }
     .note-border {

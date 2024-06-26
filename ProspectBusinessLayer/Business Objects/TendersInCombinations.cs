@@ -5,6 +5,7 @@ using System.Data;
 
 namespace ProspectBusinessLayer
 {
+
     #region TendersInCombinations
 
     public class TendersInCombinations

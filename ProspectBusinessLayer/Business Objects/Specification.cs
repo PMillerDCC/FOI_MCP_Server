@@ -7,73 +7,87 @@ using System.Web.Mvc;
 
 namespace ProspectBusinessLayer
 {
+
     #region Specification
 
     public class Specification
     {
         // Properties
 
-        public int       K_Specification                { get; set; }
-        public int?      Q_Tender                       { get; set; }
-        public int       Q_ContractType                 { get; set; }
-        public int       Q_Agreement                    { get; set; }
-        public int       ContractReference              { get; set; }
-        public bool      IsBlank                        { get; set; }
-        public bool      IsPackage                      { get; set; }
-        public bool      FuelTerm                       { get; set; }
-        public string    SpecificationServiceNo         { get; set; }
-        public string    RouteStart                     { get; set; }
-        public string    RouteEnd                       { get; set; }
-        public DateTime? DateStart                      { get; set; }
-        public DateTime? DateEnd                        { get; set; }
-        public string    ExceptionalConditions          { get; set; }
-        public string    VehicleCapacity                { get; set; }
-        public string    VehicleElderlyAndDisabled      { get; set; }
-        public string    VehicleDimensions              { get; set; }
-        public string    JointResponsibility1           { get; set; }
-        public string    ServiceDetails1                { get; set; }
-        public bool      OperatesOnMon                  { get; set; }
-        public bool      OperatesOnTue                  { get; set; }
-        public bool      OperatesOnWed                  { get; set; }
-        public bool      OperatesOnThu                  { get; set; }
-        public bool      OperatesOnFri                  { get; set; }
-        public bool      OperatesOnSat                  { get; set; }
-        public bool      OperatesOnSun                  { get; set; }
-        public bool      OperatesOnSchoolDays           { get; set; }
-        public bool      OperatesOnNonSchoolDays        { get; set; }
-        public bool      OperatesOnBankHolidays         { get; set; }
-        public bool      OperatesOnChristmasAndNewYear  { get; set; }
-        public int       NoOfDaysOfOperationPerYear     { get; set; }
-        public decimal   AverageMilesPerDay             { get; set; }
-        public decimal   AverageHoursPerDay             { get; set; }
-        public int       NoOfVehicles                   { get; set; }
-        public decimal   AverageWeeklyRevenueEstimate   { get; set; }
-        public string    Notes                          { get; set; }
-        public string    AgreementDescription           { get; set; }
-        public string    ContractTypeDescription        { get; set; }
-        public string    ContractorName                 { get; set; }
-        public string    ContractorLicenceNo            { get; set; }
-        public int       TenderReference                { get; set; }
-        public decimal   TenderPricePerDay              { get; set; }
-        public decimal   EstimatedAverageRevenuePerDay  { get; set; }
-        public decimal   AverageCostPerDay              { get; set; }
-        public decimal   TenderPricePerYear             { get; set; }
-        public decimal   EstimatedAverageRevenuePerYear { get; set; }
-        public decimal   AverageCostPerYear             { get; set; }
-        public int       CalculatedNoOfDaysInOperation  { get; set; }
-        public decimal   ContractPricePerDay            { get; set; }
-                         
-        public string    ContractReferenceSort          { get { return ContractReference.ToString().PadLeft(5, '0'); } }
-        public string    TenderReferenceSort            { get { return TenderReference.ToString().PadLeft(5, '0'); } }
-        public string    ServiceNoText                  { get { return (IsBlank ? "DUMMY" : (IsPackage ? "PACKAGE" : SpecificationServiceNo)); } }
-        public string    DateStartText                  { get { return DCC_Formatting.NullDateTxt(DateStart, "dd MMM yyyy"); } }
-        public string    DateStartSort                  { get { return DCC_Formatting.NullDateTxt(DateStart, "yyyyMMddHHmm"); } }
-        public string    DateStartFullText              { get { return DCC_Formatting.NullDateTxt(DateStart, "dd MMMM yyyy"); } }
-        public string    DateEndText                    { get { return DCC_Formatting.NullDateTxt(DateEnd, "dd MMM yyyy"); } }
-        public string    DateEndSort                    { get { return DCC_Formatting.NullDateTxt(DateEnd, "yyyyMMddHHmm"); } }
-        public string    DateEndFullText                { get { return DCC_Formatting.NullDateTxt(DateEnd, "dd MMMM yyyy"); } }
-        public string    RouteText                      { get { return (string.IsNullOrEmpty(RouteStart) ? "- not set -" : RouteStart + " to " + RouteEnd); } }
-        public string    DatesText                      { get { return (string.IsNullOrEmpty(DateStartText) ? "- not set -" : DateStartText + " to " + DateEndText); } }
+        public int       K_Specification                        { get; set; }
+
+        public int       ContractReference                      { get; set; }
+        public string    ContractReferenceText                  { get { return ContractReference.ToString(); } }
+        public string    ContractReferenceSort                  { get { return ContractReference.ToString().PadLeft(5, '0'); } }
+        public bool      IsBlank                                { get; set; }
+        public string    IsBlankText                            { get { return (IsBlank ? "Yes" : " "); } }
+        public bool      IsPackage                              { get; set; }
+        public string    IsPackageText                          { get { return (IsPackage ? "Yes" : " "); } }
+        public int?      Child01_Q_Specification                { get; set; }
+        public int?      Child02_Q_Specification                { get; set; }
+        public int?      Child03_Q_Specification                { get; set; }
+        public int?      Child04_Q_Specification                { get; set; }
+        public int?      Child05_Q_Specification                { get; set; }
+        public int?      Child06_Q_Specification                { get; set; }
+        public int?      Child07_Q_Specification                { get; set; }
+        public int?      Child08_Q_Specification                { get; set; }
+        public int?      Child09_Q_Specification                { get; set; }
+        public int?      Child10_Q_Specification                { get; set; }
+
+        public int?      Q_ContractType                         { get; set; } // changed q_ values to int? to stop them being mandatory
+        public DateTime? DateStart                              { get; set; }
+        public string    DateStartText                          { get { return DCC_Formatting.NullDateTxt(DateStart, "dd MMM yyyy"); } }
+        public string    DateStartSort                          { get { return DCC_Formatting.NullDateTxt(DateStart, "yyyyMMddHHmm"); } }
+        public string    DateStartFullText                      { get { return DCC_Formatting.NullDateTxt(DateStart, "dd MMMM yyyy"); } }
+        public DateTime? DateEnd                                { get; set; }
+        public string    DateEndText                            { get { return DCC_Formatting.NullDateTxt(DateEnd, "dd MMM yyyy"); } }
+        public string    DateEndSort                            { get { return DCC_Formatting.NullDateTxt(DateEnd, "yyyyMMddHHmm"); } }
+        public string    DateEndFullText                        { get { return DCC_Formatting.NullDateTxt(DateEnd, "dd MMMM yyyy"); } }
+        public string    DatesText                              { get { return (string.IsNullOrEmpty(DateStartText) ? "- not set -" : DateStartText + " to " + DateEndText); } }
+        public string    SpecificationServiceNo                 { get; set; }
+        public string    SpecificationServiceNoText             { get { return (IsBlank ? "BLANK" : (IsPackage ? "Various" : SpecificationServiceNo)); } }
+        public string    RouteStart                             { get; set; }
+        public string    RouteEnd                               { get; set; }
+        public string    RouteText                              { get { return (IsPackage ? "Various" : (string.IsNullOrEmpty(RouteStart) ? "- not set -" : RouteStart + " to " + RouteEnd) ); } }
+        public string    ExceptionalConditions                  { get; set; }
+
+        public string    VehicleCapacity                        { get; set; }
+        public string    VehicleElderlyAndDisabled              { get; set; }
+        public string    VehicleDimensions                      { get; set; }
+
+        public int?      Q_Agreement                            { get; set; }
+        public bool      IsFuelTerm                             { get; set; }
+        public string    IsFuelTermText                         { get { return (IsFuelTerm ? "Yes" : "No"); } }
+        public DateTime? TenderClosingDate                      { get; set; }
+        public string    TenderClosingDateText                  { get { return DCC_Formatting.NullDateTxt(TenderClosingDate, "dd MMM yyyy"); } }
+        public string    JointResponsibility1                   { get; set; }
+        public string    ServiceDetails1                        { get; set; }
+
+        public bool      OperatesOnMon                          { get; set; }
+        public bool      OperatesOnTue                          { get; set; }
+        public bool      OperatesOnWed                          { get; set; }
+        public bool      OperatesOnThu                          { get; set; }
+        public bool      OperatesOnFri                          { get; set; }
+        public bool      OperatesOnSat                          { get; set; }
+        public bool      OperatesOnSun                          { get; set; }
+        public bool      OperatesOnSchoolDays                   { get; set; }
+        public bool      OperatesOnNonSchoolDays                { get; set; }
+        public bool      OperatesOnBankHolidays                 { get; set; }
+        public bool      OperatesOnChristmasAndNewYear          { get; set; }
+        public int       CalculatedNoOfDaysOfOperationFirstYear { get; set; }
+        public int       CalculatedNoOfDaysOfOperationFullTerm  { get; set; }
+
+        public decimal   AverageMilesPerDay                     { get; set; }
+        public decimal   AverageHoursPerDay                     { get; set; }
+        public int       NoOfVehicles                           { get; set; }
+        public decimal   AverageWeeklyRevenueEstimate           { get; set; }
+
+        public string    Notes                                  { get; set; }
+
+        public string    AgreementDescription                   { get; set; }
+        public string    ContractTypeDescription                { get; set; }
+        public string    ContractorName                         { get; set; }
+        public string    ContractorLicenceNo                    { get; set; }
 
 
 
@@ -90,6 +104,9 @@ namespace ProspectBusinessLayer
 
         public class ddlItem { public int Id { get; set; } public string Name { get; set; } }
 
+        public List<ddlItem> SpecificationItems;
+        public IEnumerable<SelectListItem> ddlSpecification { get { return new SelectList(SpecificationItems, "Id", "Name"); } }
+
         public List<ddlItem> AgreementItems;
         public IEnumerable<SelectListItem> ddlAgreement { get { return new SelectList(AgreementItems, "Id", "Name"); } }
 
@@ -104,30 +121,26 @@ namespace ProspectBusinessLayer
 
 
 
-        #region Contructors
-
         // Constructors
 
         public Specification()
         {
         }
 
-        public Specification(DataRow dataRow) // takes a datarow object as a parameter and calls the GetColumns method with
-                                              // the given DataRow object
+        public Specification(DataRow dataRow) // takes a datarow object as a parameter and calls the GetColumns method with the given DataRow object
         {
             GetColumns(dataRow);
         }
 
-        public Specification(DCC_Database db, int pK_Specification = -999, DateTime? pDateStart = null, DateTime? pDateEnd = null)
+        public Specification(DCC_Database db, int pK_Specification = -999, bool pBriefMode = false)
         {
-            if (pK_Specification == -1) // create a new instance of Specification and set defaults. 
-            {                           // Checks if the parameter is equal to -1 because that will indicate that a new instance of
-                K_Specification = -1;   // the 'Specification' class should be created with default values
-            }                           // if pk_Specification is equal to -1, the constructor does not read any data from the
-                                        // database and simply creates a new instance of the 'Specification' class. The constructor
-                                        // can then set default values for any properties or fields that need them.
+            if (pK_Specification == -1)      // passing -1 creates a new instance of the 'Specification' class.
+            {                                // it automatically adds a new record, with the auto-generated specification reference
+                K_Specification = -1;        // set any default values here
+                pK_Specification = Save(db);
+            }
 
-            else if (pK_Specification > 0) // read a record from the database for the given K_Specification
+            if (pK_Specification > 0)        // read an existing record from the database for the provided K_Specification
             {
                 DCC_DatabaseFrame dbf = new DCC_DatabaseFrame("sSpecification");
                 dbf.AddTable("Specification");
@@ -135,21 +148,264 @@ namespace ProspectBusinessLayer
                 db.DataLayer.SelectData(dbf);
                 if (dbf.hasTables && dbf.TableZeroRows.Count == 1) GetColumns(dbf.RowZero);
 
-                CalculateDaysInOperation(db);
+                if (!pBriefMode) PopulateDropDownLists(db);
             }
-
-            PopulateDropDownLists(db);
         }
-
-        #endregion
 
 
 
         // Methods
 
-        public void CalculateDaysInOperation(DCC_Database db)
+        public bool GetColumns(DataRow dataRow)
         {
-            CalculatedNoOfDaysInOperation = 0;
+            if (dataRow == null) return false;
+
+            if (DCC_GetColumn.Exists(dataRow, "K_Specification"))                        K_Specification                        =            DCC_GetColumn.Integer32 (dataRow, "K_Specification");
+            if (DCC_GetColumn.Exists(dataRow, "ContractReference"))                      ContractReference                      =            DCC_GetColumn.Integer32 (dataRow, "ContractReference");
+            if (DCC_GetColumn.Exists(dataRow, "IsBlank"))                                IsBlank                                =            DCC_GetColumn.Bit       (dataRow, "IsBlank");
+            if (DCC_GetColumn.Exists(dataRow, "IsPackage"))                              IsPackage                              =            DCC_GetColumn.Bit       (dataRow, "IsPackage");
+            if (DCC_GetColumn.Exists(dataRow, "Child01_Q_Specification"))                Child01_Q_Specification                =            DCC_GetColumn.Integer32 (dataRow, "Child01_Q_Specification");
+            if (DCC_GetColumn.Exists(dataRow, "Child02_Q_Specification"))                Child02_Q_Specification                =            DCC_GetColumn.Integer32 (dataRow, "Child02_Q_Specification");
+            if (DCC_GetColumn.Exists(dataRow, "Child03_Q_Specification"))                Child03_Q_Specification                =            DCC_GetColumn.Integer32 (dataRow, "Child03_Q_Specification");
+            if (DCC_GetColumn.Exists(dataRow, "Child04_Q_Specification"))                Child04_Q_Specification                =            DCC_GetColumn.Integer32 (dataRow, "Child04_Q_Specification");
+            if (DCC_GetColumn.Exists(dataRow, "Child05_Q_Specification"))                Child05_Q_Specification                =            DCC_GetColumn.Integer32 (dataRow, "Child05_Q_Specification");
+            if (DCC_GetColumn.Exists(dataRow, "Child06_Q_Specification"))                Child06_Q_Specification                =            DCC_GetColumn.Integer32 (dataRow, "Child06_Q_Specification");
+            if (DCC_GetColumn.Exists(dataRow, "Child07_Q_Specification"))                Child07_Q_Specification                =            DCC_GetColumn.Integer32 (dataRow, "Child07_Q_Specification");
+            if (DCC_GetColumn.Exists(dataRow, "Child08_Q_Specification"))                Child08_Q_Specification                =            DCC_GetColumn.Integer32 (dataRow, "Child08_Q_Specification");
+            if (DCC_GetColumn.Exists(dataRow, "Child09_Q_Specification"))                Child09_Q_Specification                =            DCC_GetColumn.Integer32 (dataRow, "Child09_Q_Specification");
+            if (DCC_GetColumn.Exists(dataRow, "Child10_Q_Specification"))                Child10_Q_Specification                =            DCC_GetColumn.Integer32 (dataRow, "Child10_Q_Specification");
+
+            if (DCC_GetColumn.Exists(dataRow, "Q_ContractType"))                         Q_ContractType                         =            DCC_GetColumn.Integer32 (dataRow, "Q_ContractType");
+            if (DCC_GetColumn.Exists(dataRow, "DateStart"))                              DateStart                              =            DCC_GetColumn.DateTimeQ (dataRow, "DateStart");
+            if (DCC_GetColumn.Exists(dataRow, "DateEnd"))                                DateEnd                                =            DCC_GetColumn.DateTimeQ (dataRow, "DateEnd");
+            if (DCC_GetColumn.Exists(dataRow, "SpecificationServiceNo"))                 SpecificationServiceNo                 =            DCC_GetColumn.String    (dataRow, "SpecificationServiceNo");
+            if (DCC_GetColumn.Exists(dataRow, "RouteStart"))                             RouteStart                             =            DCC_GetColumn.String    (dataRow, "RouteStart");
+            if (DCC_GetColumn.Exists(dataRow, "RouteEnd"))                               RouteEnd                               =            DCC_GetColumn.String    (dataRow, "RouteEnd");
+            if (DCC_GetColumn.Exists(dataRow, "ExceptionalConditions"))                  ExceptionalConditions                  =            DCC_GetColumn.String    (dataRow, "ExceptionalConditions");
+
+            if (DCC_GetColumn.Exists(dataRow, "VehicleCapacity"))                        VehicleCapacity                        =            DCC_GetColumn.String    (dataRow, "VehicleCapacity");
+            if (DCC_GetColumn.Exists(dataRow, "VehicleElderlyAndDisabled"))              VehicleElderlyAndDisabled              =            DCC_GetColumn.String    (dataRow, "VehicleElderlyAndDisabled");
+            if (DCC_GetColumn.Exists(dataRow, "VehicleDimensions"))                      VehicleDimensions                      =            DCC_GetColumn.String    (dataRow, "VehicleDimensions");
+                                                                                                                                             
+            if (DCC_GetColumn.Exists(dataRow, "Q_Agreement"))                            Q_Agreement                            =            DCC_GetColumn.Integer32 (dataRow, "Q_Agreement");
+            if (DCC_GetColumn.Exists(dataRow, "IsFuelTerm"))                             IsFuelTerm                             =            DCC_GetColumn.Bit       (dataRow, "IsFuelTerm");
+            if (DCC_GetColumn.Exists(dataRow, "TenderClosingDate"))                      TenderClosingDate                      =            DCC_GetColumn.DateTimeQ (dataRow, "TenderClosingDate");
+            if (DCC_GetColumn.Exists(dataRow, "JointResponsibility1"))                   JointResponsibility1                   =            DCC_GetColumn.String    (dataRow, "JointResponsibility1");
+            if (DCC_GetColumn.Exists(dataRow, "ServiceDetails1"))                        ServiceDetails1                        =            DCC_GetColumn.String    (dataRow, "ServiceDetails1");
+                                                                                                                                             
+            if (DCC_GetColumn.Exists(dataRow, "OperatesOnMon"))                          OperatesOnMon                          =            DCC_GetColumn.Bit       (dataRow, "OperatesOnMon");
+            if (DCC_GetColumn.Exists(dataRow, "OperatesOnTue"))                          OperatesOnTue                          =            DCC_GetColumn.Bit       (dataRow, "OperatesOnTue");
+            if (DCC_GetColumn.Exists(dataRow, "OperatesOnWed"))                          OperatesOnWed                          =            DCC_GetColumn.Bit       (dataRow, "OperatesOnWed");
+            if (DCC_GetColumn.Exists(dataRow, "OperatesOnThu"))                          OperatesOnThu                          =            DCC_GetColumn.Bit       (dataRow, "OperatesOnThu");
+            if (DCC_GetColumn.Exists(dataRow, "OperatesOnFri"))                          OperatesOnFri                          =            DCC_GetColumn.Bit       (dataRow, "OperatesOnFri");
+            if (DCC_GetColumn.Exists(dataRow, "OperatesOnSat"))                          OperatesOnSat                          =            DCC_GetColumn.Bit       (dataRow, "OperatesOnSat");
+            if (DCC_GetColumn.Exists(dataRow, "OperatesOnSun"))                          OperatesOnSun                          =            DCC_GetColumn.Bit       (dataRow, "OperatesOnSun");
+            if (DCC_GetColumn.Exists(dataRow, "OperatesOnSchoolDays"))                   OperatesOnSchoolDays                   =            DCC_GetColumn.Bit       (dataRow, "OperatesOnSchoolDays");
+            if (DCC_GetColumn.Exists(dataRow, "OperatesOnNonSchoolDays"))                OperatesOnNonSchoolDays                =            DCC_GetColumn.Bit       (dataRow, "OperatesOnNonSchoolDays");
+            if (DCC_GetColumn.Exists(dataRow, "OperatesOnBankHolidays"))                 OperatesOnBankHolidays                 =            DCC_GetColumn.Bit       (dataRow, "OperatesOnBankHolidays");
+            if (DCC_GetColumn.Exists(dataRow, "OperatesOnChristmasAndNewYear"))          OperatesOnChristmasAndNewYear          =            DCC_GetColumn.Bit       (dataRow, "OperatesOnChristmasAndNewYear");
+            if (DCC_GetColumn.Exists(dataRow, "CalculatedNoOfDaysOfOperationFirstYear")) CalculatedNoOfDaysOfOperationFirstYear =            DCC_GetColumn.Integer32 (dataRow, "CalculatedNoOfDaysOfOperationFirstYear");
+            if (DCC_GetColumn.Exists(dataRow, "CalculatedNoOfDaysOfOperationFullTerm"))  CalculatedNoOfDaysOfOperationFullTerm  =            DCC_GetColumn.Integer32 (dataRow, "CalculatedNoOfDaysOfOperationFullTerm");
+                                                                                                                                             
+            if (DCC_GetColumn.Exists(dataRow, "AverageMilesPerDay"))                     AverageMilesPerDay                     =            DCC_GetColumn.Decimal   (dataRow, "AverageMilesPerDay");
+            if (DCC_GetColumn.Exists(dataRow, "AverageHoursPerDay"))                     AverageHoursPerDay                     =            DCC_GetColumn.Decimal   (dataRow, "AverageHoursPerDay");
+            if (DCC_GetColumn.Exists(dataRow, "NoOfVehicles"))                           NoOfVehicles                           =            DCC_GetColumn.Integer32 (dataRow, "NoOfVehicles");
+            if (DCC_GetColumn.Exists(dataRow, "AverageWeeklyRevenueEstimate"))           AverageWeeklyRevenueEstimate           = Math.Round(DCC_GetColumn.Decimal   (dataRow, "AverageWeeklyRevenueEstimate"), 2);
+
+            if (DCC_GetColumn.Exists(dataRow, "Notes"))                                  Notes                                  =            DCC_GetColumn.String    (dataRow, "Notes");
+
+            if (DCC_GetColumn.Exists(dataRow, "AgreementDescription"))                   AgreementDescription                   =            DCC_GetColumn.String    (dataRow, "AgreementDescription");
+            if (DCC_GetColumn.Exists(dataRow, "ContractTypeDescription"))                ContractTypeDescription                =            DCC_GetColumn.String    (dataRow, "ContractTypeDescription");
+            if (DCC_GetColumn.Exists(dataRow, "ContractorName"))                         ContractorName                         =            DCC_GetColumn.String    (dataRow, "ContractorName");
+            if (DCC_GetColumn.Exists(dataRow, "ContractorLicenceNo"))                    ContractorLicenceNo                    =            DCC_GetColumn.String    (dataRow, "ContractorLicenceNo");
+
+            return true;
+        }
+
+        public void PopulateDropDownLists(DCC_Database db)
+        {
+            SpecificationList specificationList = new SpecificationList(db);
+            SpecificationItems = new List<ddlItem>();
+            foreach (Specification specification in specificationList.ActiveExcludingPackages) // use ExcludingPackages here as you cannot select another package as a child
+            {
+                ddlItem ddlSpecification = new ddlItem();
+                ddlSpecification.Id = specification.K_Specification;
+                ddlSpecification.Name = specification.ContractReference.ToString() + " - " + specification.SpecificationServiceNoText;
+                SpecificationItems.Add(ddlSpecification);
+            }
+
+            AgreementItems = new List<ddlItem>();
+            AgreementList agreementList = new AgreementList(db);
+            foreach (Agreement agreement in agreementList.Selectable)
+            {
+                ddlItem ddlAgreement = new ddlItem();
+                ddlAgreement.Id = agreement.K_Agreement;
+                ddlAgreement.Name = agreement.AgreementDescription;
+                AgreementItems.Add(ddlAgreement);
+            }
+
+            ContractTypeItems = new List<ddlItem>();
+            ContractTypeList contractTypeList = new ContractTypeList(db);
+            foreach (ContractType contractType in contractTypeList.Selectable)
+            {
+                ddlItem ddlItem = new ddlItem();
+                ddlItem.Id = contractType.K_ContractType;
+                ddlItem.Name = contractType.ContractTypeDescription;
+                ContractTypeItems.Add(ddlItem);
+            }
+
+            TenderGrid = new TenderGrid(db, K_Specification);
+        }
+
+        public int Save(DCC_Database db)
+        {
+            #region If it's a package, set the earliest start date and latest end date of the child specifications
+            if (IsPackage)
+            {
+                if (Child01_Q_Specification.HasValue)
+                {
+                    Specification specification = new Specification(db, Child01_Q_Specification.Value, pBriefMode:true);
+                    DateStart = specification.DateStart;
+                    DateEnd = specification.DateEnd;
+                }
+                if (Child02_Q_Specification.HasValue)
+                {
+                    Specification specification = new Specification(db, Child02_Q_Specification.Value, pBriefMode:true);
+                    if (specification.DateStart.HasValue && specification.DateStart < DateStart.Value) DateStart = specification.DateStart;
+                    if (specification.DateEnd  .HasValue && specification.DateEnd   > DateEnd  .Value) DateEnd   = specification.DateEnd;
+                }
+                if (Child03_Q_Specification.HasValue)
+                {
+                    Specification specification = new Specification(db, Child03_Q_Specification.Value, pBriefMode:true);
+                    if (specification.DateStart.HasValue && specification.DateStart < DateStart.Value) DateStart = specification.DateStart;
+                    if (specification.DateEnd  .HasValue && specification.DateEnd   > DateEnd  .Value) DateEnd   = specification.DateEnd;
+                }
+                if (Child04_Q_Specification.HasValue)
+                {
+                    Specification specification = new Specification(db, Child04_Q_Specification.Value, pBriefMode: true);
+                    if (specification.DateStart.HasValue && specification.DateStart < DateStart.Value) DateStart = specification.DateStart;
+                    if (specification.DateEnd  .HasValue && specification.DateEnd   > DateEnd  .Value) DateEnd   = specification.DateEnd;
+                }
+                if (Child05_Q_Specification.HasValue)
+                {
+                    Specification specification = new Specification(db, Child05_Q_Specification.Value, pBriefMode: true);
+                    if (specification.DateStart.HasValue && specification.DateStart < DateStart.Value) DateStart = specification.DateStart;
+                    if (specification.DateEnd  .HasValue && specification.DateEnd   > DateEnd  .Value) DateEnd   = specification.DateEnd;
+                }
+                if (Child06_Q_Specification.HasValue)
+                {
+                    Specification specification = new Specification(db, Child06_Q_Specification.Value, pBriefMode:true);
+                    if (specification.DateStart.HasValue && specification.DateStart < DateStart.Value) DateStart = specification.DateStart;
+                    if (specification.DateEnd  .HasValue && specification.DateEnd   > DateEnd  .Value) DateEnd   = specification.DateEnd;
+                }
+                if (Child07_Q_Specification.HasValue)
+                {
+                    Specification specification = new Specification(db, Child07_Q_Specification.Value, pBriefMode: true);
+                    if (specification.DateStart.HasValue && specification.DateStart < DateStart.Value) DateStart = specification.DateStart;
+                    if (specification.DateEnd  .HasValue && specification.DateEnd   > DateEnd  .Value) DateEnd   = specification.DateEnd;
+                }
+                if (Child08_Q_Specification.HasValue)
+                {
+                    Specification specification = new Specification(db, Child08_Q_Specification.Value, pBriefMode: true);
+                    if (specification.DateStart.HasValue && specification.DateStart < DateStart.Value) DateStart = specification.DateStart;
+                    if (specification.DateEnd  .HasValue && specification.DateEnd   > DateEnd  .Value) DateEnd   = specification.DateEnd;
+                }
+                if (Child09_Q_Specification.HasValue)
+                {
+                    Specification specification = new Specification(db, Child09_Q_Specification.Value, pBriefMode:true);
+                    if (specification.DateStart.HasValue && specification.DateStart < DateStart.Value) DateStart = specification.DateStart;
+                    if (specification.DateEnd  .HasValue && specification.DateEnd   > DateEnd  .Value) DateEnd   = specification.DateEnd;
+                }
+                if (Child10_Q_Specification.HasValue)
+                {
+                    Specification specification = new Specification(db, Child10_Q_Specification.Value, pBriefMode: true);
+                    if (specification.DateStart.HasValue && specification.DateStart < DateStart.Value) DateStart = specification.DateStart;
+                    if (specification.DateEnd  .HasValue && specification.DateEnd   > DateEnd  .Value) DateEnd   = specification.DateEnd;
+                }
+            }
+            #endregion
+
+            CalculateDaysOfOperation(db);
+
+            return (IsNew ? Insert(db) : Update(db));
+        }
+
+        int Insert(DCC_Database db)
+        {
+            DCC_DatabaseFrame dbf = new DCC_DatabaseFrame("iSpecification");
+            dbf.AddTable("Specification");
+            dbf.AddParameter("_PRIMARYKEY", DCC_DatabaseFrame.OUTINTEGER);
+            int newKey = db.DataLayer.NonQueryPK(dbf);
+            if (newKey > -1) K_Specification = newKey;
+            return newKey;
+        }
+
+        int Update(DCC_Database db)
+        {
+            DCC_DatabaseFrame dbf = new DCC_DatabaseFrame("uSpecification2");
+            dbf.AddTable("Specification");
+            dbf.AddParameter("K_Specification",                        K_Specification);
+            dbf.AddParameter("IsBlank",                                IsBlank);
+            dbf.AddParameter("IsPackage",                              IsPackage);
+            dbf.AddParameter("Child01_Q_Specification",                Child01_Q_Specification);
+            dbf.AddParameter("Child02_Q_Specification",                Child02_Q_Specification);
+            dbf.AddParameter("Child03_Q_Specification",                Child03_Q_Specification);
+            dbf.AddParameter("Child04_Q_Specification",                Child04_Q_Specification);
+            dbf.AddParameter("Child05_Q_Specification",                Child05_Q_Specification);
+            dbf.AddParameter("Child06_Q_Specification",                Child06_Q_Specification);
+            dbf.AddParameter("Child07_Q_Specification",                Child07_Q_Specification);
+            dbf.AddParameter("Child08_Q_Specification",                Child08_Q_Specification);
+            dbf.AddParameter("Child09_Q_Specification",                Child09_Q_Specification);
+            dbf.AddParameter("Child10_Q_Specification",                Child10_Q_Specification);
+
+            dbf.AddParameter("Q_ContractType",                         Q_ContractType);
+            dbf.AddParameter("DateStart",                              DateStart);
+            dbf.AddParameter("DateEnd",                                DateEnd);
+            dbf.AddParameter("SpecificationServiceNo",                 SpecificationServiceNo   , 500);
+            dbf.AddParameter("RouteStart",                             RouteStart               , 500);
+            dbf.AddParameter("RouteEnd",                               RouteEnd                 , 500);
+            dbf.AddParameter("ExceptionalConditions",                  ExceptionalConditions    , 500);
+
+            dbf.AddParameter("VehicleCapacity",                        VehicleCapacity          , 500);
+            dbf.AddParameter("VehicleElderlyAndDisabled",              VehicleElderlyAndDisabled, 500);
+            dbf.AddParameter("VehicleDimensions",                      VehicleDimensions        , 500);
+
+            dbf.AddParameter("Q_Agreement",                            Q_Agreement);
+            dbf.AddParameter("IsFuelTerm",                             IsFuelTerm);
+            dbf.AddParameter("TenderClosingDate",                      TenderClosingDate);
+            dbf.AddParameter("JointResponsibility1",                   JointResponsibility1     , 500);
+            dbf.AddParameter("ServiceDetails1",                        ServiceDetails1          , 500);
+
+            dbf.AddParameter("OperatesOnMon",                          OperatesOnMon);
+            dbf.AddParameter("OperatesOnTue",                          OperatesOnTue);
+            dbf.AddParameter("OperatesOnWed",                          OperatesOnWed);
+            dbf.AddParameter("OperatesOnThu",                          OperatesOnThu);
+            dbf.AddParameter("OperatesOnFri",                          OperatesOnFri);
+            dbf.AddParameter("OperatesOnSat",                          OperatesOnSat);
+            dbf.AddParameter("OperatesOnSun",                          OperatesOnSun);
+            dbf.AddParameter("OperatesOnSchoolDays",                   OperatesOnSchoolDays);
+            dbf.AddParameter("OperatesOnNonSchoolDays",                OperatesOnNonSchoolDays);
+            dbf.AddParameter("OperatesOnBankHolidays",                 OperatesOnBankHolidays);
+            dbf.AddParameter("OperatesOnChristmasAndNewYear",          OperatesOnChristmasAndNewYear);
+            dbf.AddParameter("CalculatedNoOfDaysOfOperationFirstYear", CalculatedNoOfDaysOfOperationFirstYear);
+            dbf.AddParameter("CalculatedNoOfDaysOfOperationFullTerm",  CalculatedNoOfDaysOfOperationFullTerm);
+
+            dbf.AddParameter("AverageMilesPerDay",                     AverageMilesPerDay);
+            dbf.AddParameter("AverageHoursPerDay",                     AverageHoursPerDay);
+            dbf.AddParameter("NoOfVehicles",                           NoOfVehicles);
+            dbf.AddParameter("AverageWeeklyRevenueEstimate",           AverageWeeklyRevenueEstimate);
+
+            dbf.AddParameter("Notes",                                  Notes                    , 500);
+
+            db.DataLayer.NonQuery(dbf);
+            return (dbf.OK ? K_Specification : -1);
+        }
+
+        #region CalculateDaysOfOperation - creates a string based on the days of operation then calls the next method to calculate the number of days
+        
+        public void CalculateDaysOfOperation(DCC_Database db)
+        {
+            CalculatedNoOfDaysOfOperationFirstYear = 0;
             if ((DateStart == null) || (!DateStart.HasValue) || (DateEnd == null) || (!DateEnd.HasValue)) return;
 
             // if the contract is for more than a year, use DateStart +364 days for the EndDate
@@ -169,10 +425,31 @@ namespace ProspectBusinessLayer
                 (OperatesOnBankHolidays ? "y" : "f") +
                 (OperatesOnChristmasAndNewYear ? "y" : "f");
 
-            CalculatedNoOfDaysInOperation = CalculateDaysInOperation(db, dateAndDays);
+            CalculatedNoOfDaysOfOperationFirstYear = CalculateDaysOfOperation(db, dateAndDays);
+
+            string dateAndDays2 =
+               DateStart.Value.ToString("dd/MM/yyyy") +
+               DateEnd.Value.ToString("dd/MM/yyyy") +
+               (OperatesOnMon ? "y" : "f") +
+               (OperatesOnTue ? "y" : "f") +
+               (OperatesOnWed ? "y" : "f") +
+               (OperatesOnThu ? "y" : "f") +
+               (OperatesOnFri ? "y" : "f") +
+               (OperatesOnSat ? "y" : "f") +
+               (OperatesOnSun ? "y" : "f") +
+               (OperatesOnSchoolDays ? "y" : "f") +
+               (OperatesOnNonSchoolDays ? "y" : "f") +
+               (OperatesOnBankHolidays ? "y" : "f") +
+               (OperatesOnChristmasAndNewYear ? "y" : "f");
+
+            CalculatedNoOfDaysOfOperationFullTerm = CalculateDaysOfOperation(db, dateAndDays2);
         }
 
-        public static int CalculateDaysInOperation(DCC_Database db, string DateAndDays)
+        #endregion
+
+        #region CalculateDaysOfOperation - calculates the number of days based off the provided DateAndDays string and returns it in an int
+
+        public static int CalculateDaysOfOperation(DCC_Database db, string DateAndDays)
         {
             int noOfDaysInOperation = 0;
             List<CalendarDay> Calendar = new List<CalendarDay>();
@@ -324,149 +601,7 @@ namespace ProspectBusinessLayer
             return noOfDaysInOperation;
         }
 
-        public bool GetColumns(DataRow dataRow)
-        {
-            if (dataRow == null) return false;
-
-            K_Specification               = DCC_GetColumn.Integer32           (dataRow, "K_Specification");
-            ContractReference             = DCC_GetColumn.Integer32           (dataRow, "ContractReference");
-            IsBlank                       = DCC_GetColumn.Bit                 (dataRow, "IsBlank");
-            IsPackage                     = DCC_GetColumn.Bit                 (dataRow, "IsPackage");
-            SpecificationServiceNo        = DCC_GetColumn.String              (dataRow, "SpecificationServiceNo");
-            RouteStart                    = DCC_GetColumn.String              (dataRow, "RouteStart");
-            RouteEnd                      = DCC_GetColumn.String              (dataRow, "RouteEnd");
-            DateStart                     = DCC_GetColumn.DateTimeQ           (dataRow, "DateStart");
-            DateEnd                       = DCC_GetColumn.DateTimeQ           (dataRow, "DateEnd");
-            Q_ContractType                = DCC_GetColumn.Integer32           (dataRow, "Q_ContractType");
-            Q_Agreement                   = DCC_GetColumn.Integer32           (dataRow, "Q_Agreement");
-
-            if (DCC_GetColumn.Exists(dataRow, "AverageMilesPerDay")) AverageMilesPerDay = DCC_GetColumn.Decimal(dataRow, "AverageMilesPerDay");
-            if (DCC_GetColumn.Exists(dataRow, "AverageHoursPerDay")) AverageHoursPerDay = DCC_GetColumn.Decimal(dataRow, "AverageHoursPerDay");
-
-
-            if (DCC_GetColumn.Exists(dataRow, "CalculatedNoOfDaysInOperation"))  CalculatedNoOfDaysInOperation  = DCC_GetColumn.Integer32(dataRow,          "CalculatedNoOfDaysInOperation");
-            if (DCC_GetColumn.Exists(dataRow, "NoOfVehicles"))                   NoOfVehicles                   = DCC_GetColumn.Integer32(dataRow,          "NoOfVehicles");
-            if (DCC_GetColumn.Exists(dataRow, "FuelTerm"))                       FuelTerm                       = DCC_GetColumn.Bit(dataRow,                "FuelTerm");
-            if (DCC_GetColumn.Exists(dataRow, "ExceptionalConditions"))          ExceptionalConditions          = DCC_GetColumn.String(dataRow,             "ExceptionalConditions");
-            if (DCC_GetColumn.Exists(dataRow, "VehicleCapacity"))                VehicleCapacity                = DCC_GetColumn.String(dataRow,             "VehicleCapacity");
-            if (DCC_GetColumn.Exists(dataRow, "VehicleElderlyAndDisabled"))      VehicleElderlyAndDisabled      = DCC_GetColumn.String(dataRow,             "VehicleElderlyAndDisabled");
-            if (DCC_GetColumn.Exists(dataRow, "VehicleDimensions"))              VehicleDimensions              = DCC_GetColumn.String(dataRow,             "VehicleDimensions");
-            if (DCC_GetColumn.Exists(dataRow, "JointResponsibility1"))           JointResponsibility1           = DCC_GetColumn.String(dataRow,             "JointResponsibility1");
-            if (DCC_GetColumn.Exists(dataRow, "ServiceDetails1"))                ServiceDetails1                = DCC_GetColumn.String(dataRow,             "ServiceDetails1");
-            if (DCC_GetColumn.Exists(dataRow, "OperatesOnMon"))                  OperatesOnMon                  = DCC_GetColumn.Bit(dataRow,                "OperatesOnMon");
-            if (DCC_GetColumn.Exists(dataRow, "OperatesOnTue"))                  OperatesOnTue                  = DCC_GetColumn.Bit(dataRow,                "OperatesOnTue");
-            if (DCC_GetColumn.Exists(dataRow, "OperatesOnWed"))                  OperatesOnWed                  = DCC_GetColumn.Bit(dataRow,                "OperatesOnWed");
-            if (DCC_GetColumn.Exists(dataRow, "OperatesOnThu"))                  OperatesOnThu                  = DCC_GetColumn.Bit(dataRow,                "OperatesOnThu");
-            if (DCC_GetColumn.Exists(dataRow, "OperatesOnFri"))                  OperatesOnFri                  = DCC_GetColumn.Bit(dataRow,                "OperatesOnFri");
-            if (DCC_GetColumn.Exists(dataRow, "OperatesOnSat"))                  OperatesOnSat                  = DCC_GetColumn.Bit(dataRow,                "OperatesOnSat");
-            if (DCC_GetColumn.Exists(dataRow, "OperatesOnSun"))                  OperatesOnSun                  = DCC_GetColumn.Bit(dataRow,                "OperatesOnSun");
-            if (DCC_GetColumn.Exists(dataRow, "OperatesOnSchoolDays"))           OperatesOnSchoolDays           = DCC_GetColumn.Bit(dataRow,                "OperatesOnSchoolDays");
-            if (DCC_GetColumn.Exists(dataRow, "OperatesOnNonSchoolDays"))        OperatesOnNonSchoolDays        = DCC_GetColumn.Bit(dataRow,                "OperatesOnNonSchoolDays");
-            if (DCC_GetColumn.Exists(dataRow, "OperatesOnBankHolidays"))         OperatesOnBankHolidays         = DCC_GetColumn.Bit(dataRow,                "OperatesOnBankHolidays");
-            if (DCC_GetColumn.Exists(dataRow, "OperatesOnChristmasAndNewYear"))  OperatesOnChristmasAndNewYear  = DCC_GetColumn.Bit(dataRow,                "OperatesOnChristmasAndNewYear");
-            if (DCC_GetColumn.Exists(dataRow, "NoOfDaysOfOperationPerYear"))     NoOfDaysOfOperationPerYear     = DCC_GetColumn.Integer32(dataRow,          "NoOfDaysOfOperationPerYear");
-            if (DCC_GetColumn.Exists(dataRow, "NoOfVehicles"))                   NoOfVehicles                   = DCC_GetColumn.Integer32(dataRow,          "NoOfVehicles");
-            if (DCC_GetColumn.Exists(dataRow, "AverageWeeklyRevenueEstimate"))   AverageWeeklyRevenueEstimate   = Math.Round(DCC_GetColumn.Decimal(dataRow, "AverageWeeklyRevenueEstimate"), 2);
-            if (DCC_GetColumn.Exists(dataRow, "Notes"))                          Notes                          = DCC_GetColumn.String(dataRow,             "Notes");
-            if (DCC_GetColumn.Exists(dataRow, "AgreementDescription"))           AgreementDescription           = DCC_GetColumn.String(dataRow,             "AgreementDescription");
-            if (DCC_GetColumn.Exists(dataRow, "ContractTypeDescription"))        ContractTypeDescription        = DCC_GetColumn.String(dataRow,             "ContractTypeDescription");
-            if (DCC_GetColumn.Exists(dataRow, "TenderPricePerDay"))              TenderPricePerDay              = Math.Round(DCC_GetColumn.Decimal(dataRow, "TenderPricePerDay"), 2);
-            if (DCC_GetColumn.Exists(dataRow, "EstimatedAverageRevenuePerDay"))  EstimatedAverageRevenuePerDay  = Math.Round(DCC_GetColumn.Decimal(dataRow, "EstimatedAverageRevenuePerDay"), 2);
-            if (DCC_GetColumn.Exists(dataRow, "AverageCostPerDay"))              AverageCostPerDay              = Math.Round(DCC_GetColumn.Decimal(dataRow, "AverageCostPerDay"), 2);
-            if (DCC_GetColumn.Exists(dataRow, "TenderPricePerYear"))             TenderPricePerYear             = Math.Round(DCC_GetColumn.Decimal(dataRow, "TenderPricePerYear"), 2);
-            if (DCC_GetColumn.Exists(dataRow, "EstimatedAverageRevenuePerYear")) EstimatedAverageRevenuePerYear = Math.Round(DCC_GetColumn.Decimal(dataRow, "EstimatedAverageRevenuePerYear"), 2);
-            if (DCC_GetColumn.Exists(dataRow, "AverageCostPerYear"))             AverageCostPerYear             = Math.Round(DCC_GetColumn.Decimal(dataRow, "AverageCostPerYear"), 2);
-            if (DCC_GetColumn.Exists(dataRow, "ContractorName"))                 ContractorName                 = DCC_GetColumn.String(dataRow,             "ContractorName");
-            if (DCC_GetColumn.Exists(dataRow, "ContractorLicenceNo"))            ContractorLicenceNo            = DCC_GetColumn.String(dataRow,             "ContractorLicenceNo");
-            if (DCC_GetColumn.Exists(dataRow, "Q_Tender"))                       Q_Tender                       = DCC_GetColumn.Integer32(dataRow,          "Q_Tender");
-
-            return true;
-        }
-
-        public void PopulateDropDownLists(DCC_Database db)
-        {
-            AgreementItems = new List<ddlItem>();
-            AgreementList agreementList = new AgreementList(db);
-            foreach (Agreement agreement in agreementList.Selectable)
-            {
-                ddlItem ddlAgreement = new ddlItem();
-                ddlAgreement.Id = agreement.K_Agreement;
-                ddlAgreement.Name = agreement.AgreementDescription;
-                AgreementItems.Add(ddlAgreement);
-            }
-
-            ContractTypeItems = new List<ddlItem>();
-            ContractTypeList contractTypeList = new ContractTypeList(db);
-            foreach (ContractType contractType in contractTypeList.Selectable)
-            {
-                ddlItem ddlItem = new ddlItem();
-                ddlItem.Id = contractType.K_ContractType;
-                ddlItem.Name = contractType.ContractTypeDescription;
-                ContractTypeItems.Add(ddlItem);
-            }
-
-            TenderGrid = new TenderGrid(db, K_Specification);
-        }
-
-        public int Save(DCC_Database db)
-        {
-            return (IsNew ? Insert(db) : Update(db));
-        }
-
-        int Insert(DCC_Database db)
-        {
-            DCC_DatabaseFrame dbf = new DCC_DatabaseFrame("iSpecification");
-            dbf.AddTable("Specification");
-            dbf.AddParameter("_PRIMARYKEY", DCC_DatabaseFrame.OUTINTEGER);
-            int newKey = db.DataLayer.NonQueryPK(dbf);
-            if (newKey > -1) K_Specification = newKey;
-            return newKey;
-        }
-
-        int Update(DCC_Database db)
-        {
-            DCC_DatabaseFrame dbf = new DCC_DatabaseFrame("uSpecification");
-            dbf.AddTable("Specification");
-            dbf.AddParameter("K_Specification",                 K_Specification);
-            dbf.AddParameter("Q_ContractType",                  Q_ContractType);
-            dbf.AddParameter("Q_Agreement",                     Q_Agreement);
-            dbf.AddParameter("Q_Tender",                        Q_Tender);
-            dbf.AddParameter("IsBlank",                         IsBlank);
-            dbf.AddParameter("IsPackage",                       IsPackage);
-            dbf.AddParameter("SpecificationServiceNo",          SpecificationServiceNo, 500);
-            dbf.AddParameter("RouteStart",                      RouteStart, 500);
-            dbf.AddParameter("RouteEnd",                        RouteEnd, 500);
-            dbf.AddParameter("DateStart",                       DateStart);
-            dbf.AddParameter("DateEnd",                         DateEnd);
-            dbf.AddParameter("OperatesOnMon",                   OperatesOnMon);
-            dbf.AddParameter("OperatesOnTue",                   OperatesOnTue);
-            dbf.AddParameter("OperatesOnWed",                   OperatesOnWed);
-            dbf.AddParameter("OperatesOnThu",                   OperatesOnThu);
-            dbf.AddParameter("OperatesOnFri",                   OperatesOnFri);
-            dbf.AddParameter("OperatesOnSat",                   OperatesOnSat);
-            dbf.AddParameter("OperatesOnSun",                   OperatesOnSun);
-            dbf.AddParameter("OperatesOnSchoolDays",            OperatesOnSchoolDays);
-            dbf.AddParameter("OperatesOnNonSchoolDays",         OperatesOnNonSchoolDays);
-            dbf.AddParameter("OperatesOnBankHolidays",          OperatesOnBankHolidays);
-            dbf.AddParameter("OperatesOnChristmasAndNewYear",   OperatesOnChristmasAndNewYear);
-            dbf.AddParameter("NoOfDaysOfOperationPerYear",      NoOfDaysOfOperationPerYear);
-            dbf.AddParameter("CalculatedNoOfDaysInOperation",   CalculatedNoOfDaysInOperation);
-            dbf.AddParameter("AverageMilesPerDay",              AverageMilesPerDay);
-            dbf.AddParameter("AverageHoursPerDay",              AverageHoursPerDay);
-            dbf.AddParameter("AverageWeeklyRevenueEstimate",    AverageWeeklyRevenueEstimate);
-            dbf.AddParameter("FuelTerm",                        FuelTerm);
-            dbf.AddParameter("NoOfVehicles",                    NoOfVehicles);
-            dbf.AddParameter("VehicleCapacity",                 VehicleCapacity, 500);
-            dbf.AddParameter("VehicleElderlyAndDisabled",       VehicleElderlyAndDisabled, 500);
-            dbf.AddParameter("VehicleDimensions",               VehicleDimensions, 500);
-            dbf.AddParameter("JointResponsibility1",            JointResponsibility1, 500);
-            dbf.AddParameter("ServiceDetails1",                 ServiceDetails1, 500);
-            dbf.AddParameter("ExceptionalConditions",           ExceptionalConditions, 500);
-            dbf.AddParameter("Notes",                           Notes, 500);
-            
-            db.DataLayer.NonQuery(dbf);
-            return (dbf.OK ? K_Specification : -1);
-        }
+        #endregion
 
     }
 
@@ -481,9 +616,9 @@ namespace ProspectBusinessLayer
         // Properties
 
         public List<object> All = new List<object>();
-        public List<object> Selectable = new List<object>();
-        public List<CalendarDay> CombinedCalendar = new List<CalendarDay>();
-        public int CombinedNoOfDaysInOperation;
+        public List<object> ActiveIncludingPackages = new List<object>();
+        public List<object> ActiveExcludingPackages = new List<object>();
+
         public string PropertiesToIgnore
         {
             get
@@ -532,15 +667,11 @@ namespace ProspectBusinessLayer
         {
             Specification specification = new Specification(dataRow);
             All.Add(specification);
-            if ((specification.DateStart.HasValue) && (specification.DateStart > DateTime.Now.AddYears(-1))) Selectable.Add(specification);
-
-            #region Calculate Combined No of Days in Operation
-            //if its the first specification to be added to the list, if (Count == 1), CombinedCalendar = specification.Calendar;
-            //
-            //then all subsequent specifications, we'll need to go through the next calendar day by day and if it IsInOperation then set the day in the CombinedCalendar
-            //(if it hasn't been checked already)
-            #endregion
-
+            if ((specification.DateStart.HasValue) && (specification.DateStart > DateTime.Now.AddYears(-1)))
+            {
+                ActiveIncludingPackages.Add(specification);
+                if (!specification.IsPackage) ActiveExcludingPackages.Add(specification);
+            }
         }
 
 
@@ -578,25 +709,24 @@ namespace ProspectBusinessLayer
         // Properties
 
         public DateTime Date;
-        public bool IsMon;
-        public bool IsTue;
-        public bool IsWed;
-        public bool IsThu;
-        public bool IsFri;
-        public bool IsSat;
-        public bool IsSun;
-        public bool IsBankHoliday;
-        public bool IsSchoolDay;
-        public bool IsBetweenChrismasAndNewYear;
-        public bool IsInOperation;
-
-        public string Text { get { return DCC_Formatting.NullDateTxt(Date, "yyyy MMM dd ddd" + (IsInOperation ? " YES" : "")); } }
+        public bool     IsMon;
+        public bool     IsTue;
+        public bool     IsWed;
+        public bool     IsThu;
+        public bool     IsFri;
+        public bool     IsSat;
+        public bool     IsSun;
+        public bool     IsBankHoliday;
+        public bool     IsSchoolDay;
+        public bool     IsBetweenChrismasAndNewYear;
+        public bool     IsInOperation;
+        public string   IsInOperationText { get { return DCC_Formatting.NullDateTxt(Date, "yyyy MMM dd ddd" + (IsInOperation ? " YES" : "")); } }
 
 
 
         // Utilities
 
-        public override string ToString() { return Text; }
+        public override string ToString() { return IsInOperationText; }
 
 
 

@@ -13,8 +13,6 @@ namespace Prospect.Controllers
         public ActionResult ContractsPaymentsSchedule()
         {
             ContractsPaymentsScheduleParameters model = new ContractsPaymentsScheduleParameters();
-            model.StartDate = new System.DateTime(2023, 1, 1);
-            model.EndDate = new System.DateTime(2023, 7, 31);
             ViewBag.PageTitle = "Contracts Payments Schedule";
             return View(model);
         }

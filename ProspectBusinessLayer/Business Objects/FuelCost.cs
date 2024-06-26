@@ -12,7 +12,9 @@ namespace ProspectBusinessLayer
 
     public class FuelCost
     {
-        // Get Set Properties
+
+        // Properties
+
         public int       K_FuelCost { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:dd MMM yyyy}", ApplyFormatInEditMode = true)]
@@ -23,12 +25,14 @@ namespace ProspectBusinessLayer
         public string    PriceString { get; set; }
        
 
+
         //Utilities
 
         public int PrimaryKey { get { return K_FuelCost; } set { K_FuelCost = value; } }
         public string Key { get { return PrimaryKey.ToString(); } }
         public bool IsNew { get { return PrimaryKey == -1; } }
         public override string ToString() { return EffectiveFrom.ToString() + " " + Price.ToString() + " " + PrimaryKey.ToString().PadLeft(3); }
+
    
 
         //Constructors
@@ -55,6 +59,7 @@ namespace ProspectBusinessLayer
                 if (dbf.hasTables && dbf.TableZeroRows.Count == 1)
                     GetColumns(dbf.RowZero);
             }
+
             else if (pK_FuelCost == -1) K_FuelCost = -1;
 
             else if (pK_FuelCost >0)
@@ -66,9 +71,8 @@ namespace ProspectBusinessLayer
                 if (dbf.hasTables && dbf.TableZeroRows.Count == 1)
                     GetColumns(dbf.RowZero);
             }
-
-           
         }
+
 
 
         //Methods
@@ -124,29 +128,33 @@ namespace ProspectBusinessLayer
         public int Delete(DCC_Database dcc_Database) { throw new NotImplementedException(); }
 
     }
+    
     #endregion
+
 
     #region FuelCostList
 
     public class FuelCostList : IEnumerable<FuelCost>
     {
+
         //Properties
 
         public List<object> All = new List<object>();
         public List<object> Selectable = new List<object>();
 
+
+
         //Utilities
 
         public int Count { get { return All.Count; } }
-        public override string ToString()
-        {
-            return "FuelCostList has " + Count + " items";
-        }
+        public override string ToString() { return "FuelCostList has " + Count + " items"; }
+
 
 
         // Data Grids
 
         public FuelCostGrid FuelCostGrid;
+
 
 
         //Constructors
@@ -158,7 +166,6 @@ namespace ProspectBusinessLayer
 
         public FuelCostList(DCC_Database dCC_Database) 
         { 
-        
             DCC_DatabaseFrame dbf = new DCC_DatabaseFrame("sFuelCostList");
             dbf.AddTable("FuelCost");
             dCC_Database.DataLayer.SelectData(dbf);
@@ -166,8 +173,9 @@ namespace ProspectBusinessLayer
             {
                 foreach (DataRow dataRow in dbf.TableZeroRows) Add(dataRow);
             }
-
         }
+
+
 
         //Methods
 
@@ -178,27 +186,22 @@ namespace ProspectBusinessLayer
         }
 
 
+
         //Enumerator
 
-        public IEnumerator<FuelCost> GetEnumerator()
-        {
-            foreach (object o in All) yield return (FuelCost) o; 
-        }
-
-        IEnumerator IEnumerable.GetEnumerator() 
-        { 
-            foreach(object o in All) yield return "dummy";
-        }
+        public IEnumerator<FuelCost> GetEnumerator() { foreach (object o in All) yield return (FuelCost) o; }
+        IEnumerator IEnumerable.GetEnumerator() { foreach(object o in All) yield return "dummy"; }
 
     }
 
     #endregion
 
+
     #region FuelCostGrid
 
     public class FuelCostGrid : DCC_Grid
     {
-        public FuelCostGrid(DCC_Database db) 
+       public FuelCostGrid(DCC_Database db) 
        { 
             FuelCostList FuelCostList = new FuelCostList(db);
             TotalRows = FuelCostList.All;

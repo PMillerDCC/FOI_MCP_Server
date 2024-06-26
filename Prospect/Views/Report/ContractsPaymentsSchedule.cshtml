@@ -48,7 +48,6 @@
 
 <script type="text/javascript">
 
-
     $(document).ready(function () {
         // Customise jquery datepickers
 
@@ -69,6 +68,7 @@
 
         $("#StartDate").datepicker(
             {
+                
                 beforeShow: function (element, datepicker) {
                     var endDate = $("#EndDate").datepicker('getDate');
                     if ((endDate != null) && (endDate != "")) {
@@ -79,6 +79,7 @@
 
         $("#EndDate").datepicker(
             {
+                
                 beforeShow: function (element, datepicker) {
                     var startDate = $("#StartDate").datepicker('getDate');
                     if ((startDate != null) && (startDate != "")) {

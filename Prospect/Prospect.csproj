@@ -343,6 +343,7 @@
     <Content Include="Content\DCC_Images\tableHeaderBack.png" />
     <Content Include="Content\DCC_Images\tableHeaderBackDark.png" />
     <Content Include="Content\DCC_Images\tableTopCurve.png" />
+    <Content Include="Content\DCC_Images\under maintenance.jpg" />
     <Content Include="Content\DCC_Images\underBanner.jpg" />
     <Content Include="Content\DCC_Images\underBannerTile.jpg" />
     <Content Include="Content\DCC_Images\white_corner_left.png" />
@@ -537,7 +538,6 @@
     <Content Include="Scripts\jquery-3.7.0.min.map" />
     <None Include="Scripts\_references.js" />
     <Content Include="Sitemap.xml" />
-    <Content Include="Test.txt" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -548,14 +548,12 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\ContractController.cs" />
-    <Compile Include="Controllers\ContractSpecificationController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ContractorController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\TenderController.cs" />
     <Compile Include="Controllers\SpecificationController.cs" />
-    <Compile Include="Controllers\TenderSpecificationController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -591,11 +589,9 @@
     <Content Include="Views\Contractor\Contractor.cshtml" />
     <Content Include="Views\Contract\ContractGrid.cshtml" />
     <Content Include="Template\SpecTemplate.docx" />
-    <Content Include="Views\TenderSpecification\TenderSpecification.cshtml" />
     <Content Include="Views\Report\ContractsPaymentsSchedule.cshtml" />
     <Content Include="Views\Admin\HolidayGrid.cshtml" />
     <Content Include="Views\Admin\Holiday.cshtml" />
-    <Content Include="Views\ContractSpecification\ContractSpecification.cshtml" />
     <Content Include="Views\Contract\Contract.cshtml" />
     <Content Include="Views\Contract\_ContractVariationReadOnly.cshtml" />
     <Content Include="Views\Admin\FuelCostGrid.cshtml" />

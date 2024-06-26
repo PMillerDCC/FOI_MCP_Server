@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Prospect_Test
+namespace ProspectBusinessLayer
 {
-    internal class UnitTest3
+    internal class TestModel
     {
     }
 }

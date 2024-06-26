@@ -27,14 +27,15 @@ namespace ProspectBusinessLayer
 
         public void LoadHTML(DCC_Database db)
         {
-            string htmlString = "", lastContractor = "";
+            string htmlString = "<div style=\"position: relative; min-height: 100vh; padding-bottom: 150px;\">"; // Added relative position and padding
+
+            string lastContractor = "";
             decimal contractorSubTotal = 0;
             decimal grandTotal = 0;
             ContractsPaymentsScheduleReportRowList rowList = new ContractsPaymentsScheduleReportRowList(db, pStartDate: StartDate.Value, pEndDate: EndDate.Value);
-            
+
             foreach (ContractsPaymentsScheduleReportRow row in rowList)
             {
-                 
                 if (lastContractor != row.ContractorName)
                 {
                     if (!string.IsNullOrEmpty(lastContractor))
@@ -51,27 +52,39 @@ namespace ProspectBusinessLayer
                         grandTotal += contractorSubTotal;
 
                         contractorSubTotal = 0; // reset the total for the next contractor
-                        
-                        htmlString += "<div class=\"printOnly\">";
-                        htmlString += "<p class=\"note-border\">Notes:</p>";
-                        htmlString += "<p>I CERTIFY THAT THE ABOVE AMOUNTS ARE DUE FOR PAYMENT & THAT THE CONTRACTS HAVE BEEN PERFORMED IN ACCORDANCE WITH THE SERVICE SPECIFICATION & CONDITIONS OF CONTRACT.</p>";
-                        htmlString += "<p>Signed on behalf of Contractor ..............................</p>";
-                        htmlString += "</div>";
+
+                        //htmlString += "<div class=\"printOnly\">";
+                        htmlString += "<table style=\"float:none;\">";
+                        htmlString += "<tr>";
+                        htmlString += "<td>Notes</td>";
+                        htmlString += "</tr>";
+                        htmlString += "<tr>";
+                        htmlString += "<td style=\"height:100px; border: 1px, solid;\"></td>";
+                        htmlString += "</tr>";
+                        htmlString += "<tr>";
+                        htmlString += "<td>I CERTIFY THAT THE ABOVE AMOUNTS ARE DUE FOR PAYMENT & THAT THE CONTRACTS HAVE BEEN PERFORMED IN ACCORDANCE WITH THE SERVICE SPECIFICATION & CONDITIONS OF CONTRACT.</td>";
+                        htmlString += "</tr>";
+                        htmlString += "<tr>";
+                        htmlString += "<td>Signed on behalf of Contractor .............................................</td>";
+                        htmlString += "</tr>";
+                        htmlString += "</table>";
+                        //htmlString += "</div>";
                         htmlString += "</div>"; // Page Break Closing
+
                     }
 
                     htmlString += "<div class=\"contractor-table\">";
-                    
+
                     // Display the contractor's name and license number
 
                     htmlString += "<h3>" + row.ContractorName + " " + row.ContractorLicenceNo + "</h3>";
-                    
+
                     // Start a new table for the new contractor
 
                     htmlString += "<table style=\"margin: auto; width: 100%;\" class=\"marginBottom30\">";
-                    
+
                     // create column headers
-                    
+
                     htmlString += "<tr>";
                     htmlString += "<td>Contract Reference</td>";
                     htmlString += "<td>Agreement</td>";
@@ -102,7 +115,7 @@ namespace ProspectBusinessLayer
                 htmlString += "</tr>";
 
                 contractorSubTotal += row.ContractAmount;
-                
+
             }
 
             // create total row for the last contractor before starting a new one
@@ -112,24 +125,39 @@ namespace ProspectBusinessLayer
             htmlString += "<td align=\"right\"><strong>Total amount due</strong></td>";
             htmlString += "<td align=\"right\"><strong>" + DCC_Formatting.ReportMoney(contractorSubTotal) + "</strong></td>"; // totalNetAmountDue on operator contract
             htmlString += "</tr>";
+
+
+
             htmlString += "</table>";
-            
+
             grandTotal += contractorSubTotal;
-            
+
             contractorSubTotal = 0; // reset the total for the next contractor
 
-           
-            htmlString += "<div class=\"printOnly\">";
-            htmlString += "<p class=\"note-border\">Notes:</p>";
-            htmlString += "<p>I CERTIFY THAT THE ABOVE AMOUNTS ARE DUE FOR PAYMENT & THAT THE CONTRACTS HAVE BEEN PERFORMED IN ACCORDANCE WITH THE SERVICE SPECIFICATION & CONDITIONS OF CONTRACT.</p>"; 
-            htmlString += "<p>Signed on behalf of Contractor..............................</p>";
-            htmlString += "</div>";
-            htmlString += "</div>"; // Page Break Closing
+
+            //htmlString += "<div class=\"printOnly\">";
+            htmlString += "<table style=\"float:none;\">";
+            htmlString += "<tr>";
+            htmlString += "<td>Notes</td>";
+            htmlString += "</tr>";
+            htmlString += "<tr>";
+            htmlString += "<td style=\"height:100px; border:1px, solid;\"></td>";
+            htmlString += "</tr>";
+            htmlString += "<tr>";
+            htmlString += "<td>I CERTIFY THAT THE ABOVE AMOUNTS ARE DUE FOR PAYMENT & THAT THE CONTRACTS HAVE BEEN PERFORMED IN ACCORDANCE WITH THE SERVICE SPECIFICATION & CONDITIONS OF CONTRACT.</td>";
+            htmlString += "</tr>";
+            htmlString += "<tr>";
+            htmlString += "<td>Signed on behalf of Contractor .............................................</td>";
+            htmlString += "</tr>";
+            htmlString += "</table>";
+            //htmlString += "</div>";
 
             // create final total row for the last contractor
 
             htmlString += "<h3>Total amount due: " + DCC_Formatting.ReportMoney(grandTotal) + "</h3>";
-            
+
+            htmlString += "</div>"; // Close the relative position container
+
             RawHTML = new HtmlString(htmlString);
         }
 

@@ -21,8 +21,7 @@ namespace DCC_Standard
         public static DCC_Session Start(bool isWeb = true, bool isOffline = false)
         {
 
-
-			bool sendDevelopersToTestDatabase = true;
+			bool sendDevelopersToTestDatabase = false;
 
 
 
@@ -219,7 +218,11 @@ namespace DCC_Standard
 								}
 
 								// send me to the test database automatically
-								if (sendDevelopersToTestDatabase && session.IsDeveloper && (autoDatabaseConnection == "MyWorkforce"))
+								if (sendDevelopersToTestDatabase && session.IsDeveloper &&
+									( (autoDatabaseConnection == "MyWorkforce") ||
+									  (autoDatabaseConnection == "DutyToRefer") ||
+									  (autoDatabaseConnection == "Prospect") ||
+									  (autoDatabaseConnection == "Aycliffe") ) )
 								{
 									autoDatabaseConnection += "Test";
 									session.IsTest = true;
@@ -460,15 +463,20 @@ namespace DCC_Standard
 										DCC_SystemMessageList messageList = new DCC_SystemMessageList(session.AutoDatabaseConnection, systemUser.K_SystemUser);
 										foreach (DCC_SystemMessage message in messageList) session.SystemMessages.Add(message);
 									}
-									if (!session.IsInRole("NO ACCESS"))
+									if (authorised_AD_Group.ToLower().Contains("public"))
 									{
-										DebugTrace.WriteLine("Initialisation I:  The user is in the systemuser table so is authorised!");
+										DebugTrace.WriteLine("Initialisation I:  The system is public so is authorised!");
 										session.IsAuthorised = true;
 									}
-									else
+									else if (session.IsInRole("NO ACCESS"))
 									{
 										DebugTrace.WriteLine("Initialisation I:  The user has had their access revoked in the systemuser table so is not authorised");
 										session.IsAuthorised = false;
+									}
+									else
+									{
+										DebugTrace.WriteLine("Initialisation I:  The user is in the systemuser table so is authorised!");
+										session.IsAuthorised = true;
 									}
 								}
 							}
@@ -599,7 +607,7 @@ namespace DCC_Standard
 					{
 						if (role.IsChecked) s += role.Role + ", ";
 					}
-					if (s == "")
+					if ( (s == "") || (s.Contains("NO ACCESS")) )
 						s = "You are logged on as " + session.LogonID;
 					else
 					{

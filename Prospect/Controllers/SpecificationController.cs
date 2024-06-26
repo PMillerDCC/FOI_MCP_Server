@@ -16,20 +16,20 @@ namespace Prospect.Controllers
         [Authorize]
         public ActionResult SpecificationGrid()
         {
-            DCC_Session.Add("Saved_K_Specification", null); // mechanism to tell the tender view where to return to; put -100 for tendergrid; -200 for contractgrid; or K_Specification from the specification view; null to reset
+            DCC_Session.Add("Saved_K_Specification", -999); // store the primary key of the specification so it's automatically added when adding a tender from this view, set to -999 to reset
 
             SpecificationGrid model = new SpecificationGrid(DCC_Session.AutoDatabaseConnection);
             model.Initialise(
                 Request,
                 id: "SpecificationGrid",
                 itemNameSingular: "Specification",
-                column1: new DCC_Standard.GridColumn(GridColumnType.Text, "ContractReference", "Specification reference", 100, alignRight: true, boundSortField: "ContractReferenceSort", defaultSortColumn: true, defaultSortDescending: true),
-                column2: new DCC_Standard.GridColumn(GridColumnType.Text, "ServiceNoText"    , "Service number"         , 150),
-                column3: new DCC_Standard.GridColumn(GridColumnType.Text, "RouteText"        , "Route"                  , 250),
-                column4: new DCC_Standard.GridColumn(GridColumnType.Text, "DateStartText"    , "Start date"             , 100, alignRight: true, boundSortField: "DateStartSort"),
-                column5: new DCC_Standard.GridColumn(GridColumnType.Text, "DateEndText"      , "End date"               , 100, alignRight: true, boundSortField: "DateEndSort"),
-                column6: new DCC_Standard.GridColumn(GridColumnType.Text, "IsBlank"          , "Is dummy"               , 100, trueFalse: "Yes|No"),
-                column7: new DCC_Standard.GridColumn(GridColumnType.Text, "IsPackage"        , "Is package"             , 100, trueFalse: "Yes|No"),
+                column1: new DCC_Standard.GridColumn(GridColumnType.Text, "ContractReference"         , "Specification reference", 100, alignRight: true, boundSortField: "ContractReferenceSort", defaultSortColumn: true, defaultSortDescending: true),
+                column2: new DCC_Standard.GridColumn(GridColumnType.Text, "SpecificationServiceNoText", "Service number"         , 180),
+                column3: new DCC_Standard.GridColumn(GridColumnType.Text, "RouteText"                 , "Route"                  , 300),
+                column4: new DCC_Standard.GridColumn(GridColumnType.Text, "DateStartText"             , "Start date"             , 100, alignRight: true, boundSortField: "DateStartSort"),
+                column5: new DCC_Standard.GridColumn(GridColumnType.Text, "DateEndText"               , "End date"               , 100, alignRight: true, boundSortField: "DateEndSort"),
+                column6: new DCC_Standard.GridColumn(GridColumnType.Text, "IsBlankText"               , "Is dummy?"              , 100),
+                column7: new DCC_Standard.GridColumn(GridColumnType.Text, "IsPackageText"             , "Is package?"            , 100),
                 addActionResult: "/Specification/Specification",
                 editActionResult: "/Specification/Specification",
                 noOfRowsInGrid: 16,
@@ -65,17 +65,10 @@ namespace Prospect.Controllers
                     return RedirectToAction("Index");
                 }
             }
-            DCC_Session.Add("Saved_K_Specification", k_Specification); // mechanism to tell the tender view where to return to; put -100 for tendergrid; -200 for contractgrid; or K_Specification from the specification view; null to reset
-            DCC_Session.Add("Saved_K_Tender", null);
+            DCC_Session.Add("Saved_K_Specification", k_Specification); // store the primary key of the specification so it's automatically added when adding a tender from this view, set to -999 to reset
             #endregion
 
             Specification model = new Specification(DCC_Session.AutoDatabaseConnection, k_Specification);
-
-            if (model.IsNew)
-            {
-                model.Save(DCC_Session.AutoDatabaseConnection);
-                model = new Specification(DCC_Session.AutoDatabaseConnection, model.K_Specification);
-            }
 
             #region Initialise Tender Grid
 
@@ -83,11 +76,11 @@ namespace Prospect.Controllers
                 Request,
                 id: "TenderGrid",
                 itemNameSingular: "Tender",
-                column1: new DCC_Standard.GridColumn(GridColumnType.Text, "TenderReference", "Tender reference", 130, alignRight: true, boundSortField: "TenderReferenceSort"),
-                column2: new DCC_Standard.GridColumn(GridColumnType.Text, "ContractorName", "Operator", 200),
-                column3: new DCC_Standard.GridColumn(GridColumnType.Text, "ContractorLicenceNo", "Licence number", 130),
-                column4: new DCC_Standard.GridColumn(GridColumnType.Text, "IsPackage", "Is part of package", 130, trueFalse: "Yes|No"),
-                column5: new DCC_Standard.GridColumn(GridColumnType.Text, "IsTenderAccepted", "Is accepted", 130, trueFalse: "Yes|No"),
+                column1: new DCC_Standard.GridColumn(GridColumnType.Text, "TenderReference"     , "Tender reference"   ,  90, alignRight: true, boundSortField: "TenderReferenceSort"),
+                column2: new DCC_Standard.GridColumn(GridColumnType.Text, "ContractorName"      , "Operator"           , 250),
+                column3: new DCC_Standard.GridColumn(GridColumnType.Text, "ContractorLicenceNo" , "Licence number"     ,  90),
+                column4: new DCC_Standard.GridColumn(GridColumnType.Text, "IsPackageText"       , "Is part of package?", 130),
+                column5: new DCC_Standard.GridColumn(GridColumnType.Text, "IsTenderAcceptedText", "Is accepted?"       , 130, defaultSortColumn: true, defaultSortDescending: true),
                 addActionResult: "/Tender/Tender",
                 editActionResult: "/Tender/Tender",
                 noOfRowsInGrid: 10,
@@ -116,8 +109,15 @@ namespace Prospect.Controllers
             {
                 #region Page validation
 
-                if ((model.DateStart.HasValue && model.DateEnd.HasValue) && (model.DateStart > model.DateEnd)) ModelState.AddModelError("DateStart", "The start date cannot be after the end date.");
-                if (model.NoOfDaysOfOperationPerYear > 365) ModelState.AddModelError("NoOfDaysOfOperationPerYear", "The total number of days can not be greater than 365.");
+                if (model.IsPackage)
+                {
+                    if (!model.Child01_Q_Specification.HasValue) ModelState.AddModelError("Child01_Q_Specification", "You must add at least one specification.");
+                }
+
+                else
+                {
+                    if ((model.DateStart.HasValue && model.DateEnd.HasValue) && (model.DateStart > model.DateEnd)) ModelState.AddModelError("DateStart", "The start date cannot be after the end date.");
+                }
                 
                 #endregion
 
@@ -141,11 +141,11 @@ namespace Prospect.Controllers
                 Request,
                 id: "TenderGrid",
                 itemNameSingular: "Tender",
-                column1: new DCC_Standard.GridColumn(GridColumnType.Text, "TenderReference"     , "Tender reference"  , 130, alignRight: true, boundSortField: "TenderReferenceSort"),
-                column2: new DCC_Standard.GridColumn(GridColumnType.Text, "ContractorName"      , "Operator"          , 200),
-                column3: new DCC_Standard.GridColumn(GridColumnType.Text, "ContractorLicenceNo" , "Licence number"    , 130),
-                column4: new DCC_Standard.GridColumn(GridColumnType.Text, "IsPackage"           , "Is part of package", 130, trueFalse: "Yes|No"),
-                column5: new DCC_Standard.GridColumn(GridColumnType.Text, "IsTenderAccepted"    , "Is accepted"       , 130, trueFalse: "Yes|No", defaultSortColumn: true, defaultSortDescending: true),
+                column1: new DCC_Standard.GridColumn(GridColumnType.Text, "TenderReference"     , "Tender reference"   ,  90, alignRight: true, boundSortField: "TenderReferenceSort"),
+                column2: new DCC_Standard.GridColumn(GridColumnType.Text, "ContractorName"      , "Operator"           , 250),
+                column3: new DCC_Standard.GridColumn(GridColumnType.Text, "ContractorLicenceNo" , "Licence number"     ,  90),
+                column4: new DCC_Standard.GridColumn(GridColumnType.Text, "IsPackageText"       , "Is part of package?", 130),
+                column5: new DCC_Standard.GridColumn(GridColumnType.Text, "IsTenderAcceptedText", "Is accepted?"       , 130, defaultSortColumn: true, defaultSortDescending: true),
                 addActionResult: "/Tender/Tender",
                 editActionResult: "/Tender/Tender",
                 noOfRowsInGrid: 10,
@@ -162,6 +162,18 @@ namespace Prospect.Controllers
         }
 
         #endregion
+
+
+		#region AJAX calls
+
+        [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult CalculateNoDaysOfOperation(string dateAndDays)
+        {
+			var result = ProspectBusinessLayer.Specification.CalculateDaysOfOperation(DCC_Session.AutoDatabaseConnection, dateAndDays);
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+		#endregion
 
 
         #region Create Document
@@ -414,21 +426,6 @@ namespace Prospect.Controllers
         }
 
         #endregion
-
-
-		#region AJAX calls
-
-        [AcceptVerbs(HttpVerbs.Get)]
-        public ActionResult CalculateNoDaysInOperation(string dateAndDays)
-        {
-            
-			var result = ProspectBusinessLayer.Specification.CalculateDaysInOperation(DCC_Session.AutoDatabaseConnection, dateAndDays);
-            return Json(result, JsonRequestBehavior.AllowGet);
-        }
-
-		#endregion
-
-
 
     }
 

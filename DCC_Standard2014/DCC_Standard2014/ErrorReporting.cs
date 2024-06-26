@@ -369,14 +369,17 @@ namespace DCC_Standard
 						foreach (string k in HttpContext.Current.Session.Keys)
 						{
 							object obj = HttpContext.Current.Session[k];
-							string objTxt = obj.ToString();
-                            //if (obj is CurrentUser) YIKES
+                            if (obj != null)
+                            {
+							    string objTxt = obj.ToString();
+                                //if (obj is CurrentUser) YIKES
 
-                            //{
-                            //    CurrentUser cu = (CurrentUser)obj;
-                            //    objTxt = cu.FullName + "  mailto://" + cu.EmailAddress + "   " + cu.TelephoneNumber;
-                            //}
-                            AddTabEndLine(sb, "Session[" + k + "]: " + objTxt);
+                                //{
+                                //    CurrentUser cu = (CurrentUser)obj;
+                                //    objTxt = cu.FullName + "  mailto://" + cu.EmailAddress + "   " + cu.TelephoneNumber;
+                                //}
+                                AddTabEndLine(sb, "Session[" + k + "]: " + objTxt);
+                            }
 						}
 					}
 				}
