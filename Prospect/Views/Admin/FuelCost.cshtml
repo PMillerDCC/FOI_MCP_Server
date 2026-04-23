@@ -33,7 +33,13 @@
 
     $(document).ready(function () {
 
-        $("#EffectiveFrom").datepicker({ dateFormat: 'dd/mm/yy' });
+        $("#EffectiveFrom").datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            minDate: null,   
+            maxDate: null    
+        });
 
 
         // OnLoad

@@ -42,10 +42,22 @@ namespace ProspectBusinessLayer
                     {
                         // create total row for the last contractor before starting a new one
 
+                        // close main contractor table
+                        htmlString += "</table>";
+
+                        // totals mini-table (aligned to Net Amount Due column)
+                        htmlString += "<table style=\"width:100%; font-size:11px; border-collapse:collapse; margin-top:4px; table-layout:fixed;\" class=\"marginBottom30\">";
+                        htmlString += "<colgroup>";
+                        htmlString += "<col style=\"width:62%;\"/>";
+                        htmlString += "<col style=\"width:17%;\"/>";
+                        htmlString += "<col style=\"width:11%;\"/>";
+                        htmlString += "<col style=\"width:10%;\"/>";
+                        htmlString += "</colgroup>";
                         htmlString += "<tr>";
-                        htmlString += "<td colspan=\"7\"></td>";
-                        htmlString += "<td align=\"right\">Total amount due</td>";
-                        htmlString += "<td align=\"right\"><strong>" + DCC_Formatting.ReportMoney(contractorSubTotal) + "</strong></td>"; // totalNetAmountDue on operator contract
+                        htmlString += "<td></td>";
+                        htmlString += "<td align=\"right\" style=\"white-space:nowrap;\"><strong>Total net amount due</strong></td>";
+                        htmlString += "<td align=\"center\" style=\"white-space:nowrap;\"><strong>" + DCC_Formatting.ReportMoney(contractorSubTotal) + "</strong></td>";
+                        htmlString += "<td></td>";
                         htmlString += "</tr>";
                         htmlString += "</table>";
 
@@ -54,7 +66,7 @@ namespace ProspectBusinessLayer
                         contractorSubTotal = 0; // reset the total for the next contractor
 
                         //htmlString += "<div class=\"printOnly\">";
-                        htmlString += "<table style=\"float:none;\">";
+                        htmlString += "<table class=\"marginBottom30\" style=\"width: 100%; table-layout: fixed; font-size: 11px;\">";
                         htmlString += "<tr>";
                         htmlString += "<td>Notes</td>";
                         htmlString += "</tr>";
@@ -81,20 +93,32 @@ namespace ProspectBusinessLayer
 
                     // Start a new table for the new contractor
 
-                    htmlString += "<table style=\"margin: auto; width: 100%;\" class=\"marginBottom30\">";
-
+                    htmlString += "<table style=\"margin: auto; width: 100%; table-layout:auto;\" class=\"marginBottom30\">";
+                    htmlString += "<colgroup>";
+                    htmlString += "<col style=\"width: 6%;\"/>";   // Contract Ref
+                    htmlString += "<col style=\"width: 12%;\"/>";  // Agreement
+                    htmlString += "<col style=\"width: 10%;\"/>";  // Service No
+                    htmlString += "<col style=\"width: 10%;\"/>";  // Route Info
+                    htmlString += "<col style=\"width: 12%;\"/>";  // Price per Day
+                    htmlString += "<col style=\"width: 12%;\"/>";  // Fuel Element
+                    htmlString += "<col style=\"width: 10%;\"/>";  // Total Price
+                    htmlString += "<col style=\"width: 7%;\"/>";   // Days Operating
+                    htmlString += "<col style=\"width: 11%;\"/>";  // Net Amount
+                    htmlString += "<col style=\"width: 10%;\"/>";  // Variations
+                    htmlString += "</colgroup>";
                     // create column headers
 
                     htmlString += "<tr>";
-                    htmlString += "<td>Contract Reference</td>";
-                    htmlString += "<td>Agreement</td>";
-                    htmlString += "<td>Service Number</td>";
-                    htmlString += "<td>Route Information</td>";
-                    htmlString += "<td align=\"right\">Price per Day</td>";
-                    htmlString += "<td align=\"right\">Fuel element</td>";
-                    htmlString += "<td align=\"right\">Total price per day</td>";
-                    htmlString += "<td align=\"right\">Days operating</td>";
-                    htmlString += "<td align=\"right\">Net Amount Due</td>";
+                    htmlString += "<td align=\"left\">Contract Ref</td>";
+                    htmlString += "<td align=\"center\">Agreement</td>";
+                    htmlString += "<td align=\"left\">Service No</td>";
+                    htmlString += "<td align=\"left\">Route Info</td>";
+                    htmlString += "<td align=\"center\">Price per Day<br/>(excluding fuel element)</td>";
+                    htmlString += "<td align=\"center\">Fuel element<br/>(on day of pay period)</td>";
+                    htmlString += "<td align=\"center\">Total price<br/>per day</td>";
+                    htmlString += "<td align=\"center\">Days<br/>Operating</td>";
+                    htmlString += "<td align=\"center\">Net Amount<br/>Due</td>";
+                    htmlString += "<td align=\"center\">Variations</td>";
                     htmlString += "</tr>";
 
                     lastContractor = row.ContractorName;
@@ -104,14 +128,15 @@ namespace ProspectBusinessLayer
 
                 htmlString += "<tr>";
                 htmlString += "<td><strong>" + row.ContractReference + "</strong></td>";
-                htmlString += "<td><strong>" + row.AgreementDescription + "</strong></td>";
-                htmlString += "<td><strong>" + row.ServiceNo + "</strong></td>";
+                htmlString += "<td align=\"center\"><strong>" + row.AgreementDescription + "</strong></td>";
+                htmlString += "<td align=\"left\"><strong>" + row.ServiceNo + "</strong></td>";
                 htmlString += "<td><strong>" + row.RouteText + "</strong></td>";
-                htmlString += "<td align=\"right\"><strong>£" + row.ContractVariationAveragePricePerDay + "</strong></td>";
-                htmlString += "<td align=\"right\"><strong>£" + row.ContractVariationFuelPriceElement + "</strong></td>";
-                htmlString += "<td align=\"right\"><strong>" + (Convert.ToDecimal(row.ContractVariationAveragePricePerDay) + Convert.ToDecimal(row.ContractVariationFuelPriceElement)).ToString("F2") + "</strong></td>";
-                htmlString += "<td align=\"right\"><strong>" + row.NoOfDaysOfOperationPerYear + "</strong></td>";
-                htmlString += "<td align=\"right\"><strong>" + DCC_Formatting.ReportMoney(row.ContractAmount) + "</strong></td>";
+                htmlString += "<td align=\"center\"><strong>£" + row.ContractVariationAveragePricePerDay + "</strong></td>";
+                htmlString += "<td align=\"center\"><strong>£" + row.ContractVariationFuelPriceElement + "</strong></td>";
+                htmlString += "<td align=\"center\"><strong>" + (Convert.ToDecimal(row.ContractVariationAveragePricePerDay) + Convert.ToDecimal(row.ContractVariationFuelPriceElement)).ToString("F2") + "</strong></td>";
+                htmlString += "<td align=\"center\"><strong>" + row.NoOfDaysOfOperationPerYear + "</strong></td>";
+                htmlString += "<td align=\"center\"><strong>" + DCC_Formatting.ReportMoney(row.ContractAmount) + "</strong></td>";
+                htmlString += "<td align=\"center\">.................................</td>";
                 htmlString += "</tr>";
 
                 contractorSubTotal += row.ContractAmount;
@@ -120,23 +145,31 @@ namespace ProspectBusinessLayer
 
             // create total row for the last contractor before starting a new one
 
+            // close main contractor table
+            htmlString += "</table>";
+
+            // totals mini-table (aligned to Net Amount Due column)
+            htmlString += "<table style=\"margin:auto; width:100%; font-size:11px; border-collapse:collapse; margin-top:4px; table-layout:fixed;\" class=\"marginBottom30\">";
+            htmlString += "<colgroup>";
+            htmlString += "<col style=\"width:62%;\"/>";
+            htmlString += "<col style=\"width:17%;\"/>";
+            htmlString += "<col style=\"width:11%;\"/>";
+            htmlString += "<col style=\"width:10%;\"/>";
+            htmlString += "</colgroup>";
             htmlString += "<tr>";
-            htmlString += "<td colspan=\"7\"></td>";
-            htmlString += "<td align=\"right\"><strong>Total amount due</strong></td>";
-            htmlString += "<td align=\"right\"><strong>" + DCC_Formatting.ReportMoney(contractorSubTotal) + "</strong></td>"; // totalNetAmountDue on operator contract
+            htmlString += "<td></td>";
+            htmlString += "<td align=\"right\" style=\"white-space:nowrap;\"><strong>Total net amount due</strong></td>";
+            htmlString += "<td align=\"center\" style=\"white-space:nowrap;\"><strong>" + DCC_Formatting.ReportMoney(contractorSubTotal) + "</strong></td>";
+            htmlString += "<td></td>";
             htmlString += "</tr>";
-
-
-
             htmlString += "</table>";
 
             grandTotal += contractorSubTotal;
 
             contractorSubTotal = 0; // reset the total for the next contractor
 
-
             //htmlString += "<div class=\"printOnly\">";
-            htmlString += "<table style=\"float:none;\">";
+            htmlString += "<table style=\"width: 100%; font-size: 11px; margin-top: 20px;\">";
             htmlString += "<tr>";
             htmlString += "<td>Notes</td>";
             htmlString += "</tr>";

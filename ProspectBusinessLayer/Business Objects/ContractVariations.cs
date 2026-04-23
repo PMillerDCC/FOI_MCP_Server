@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 
 namespace ProspectBusinessLayer
 {
@@ -20,7 +21,24 @@ namespace ProspectBusinessLayer
         public string    ContractVariationNoText                                 { get { return ContractVariationNo.ToString().PadLeft(2, '0'); } }
         public bool      ContractVariationIsCancelled                            { get; set; }
         public bool      ContractVariationIsExtended                             { get; set; }
-
+        public bool      ContractVariationIsOther                                { get; set; }
+        public string    ContractVariationOtherReason                            { get; set; }
+        public string    ContractVariationReasonText
+        {
+            get
+            {
+                var parts = new List<string>();
+                if (ContractVariationIsExtended) parts.Add("Extended");
+                if (ContractVariationIsOther)
+                {
+                    if (!string.IsNullOrWhiteSpace(ContractVariationOtherReason))
+                        parts.Add($"{ContractVariationOtherReason}");
+                    else
+                        parts.Add("Other");
+                }
+                return parts.Count == 0 ? "-" : string.Join(", ", parts);
+            }
+        }
         public DateTime? ContractVariationDateStart                              { get; set; }
         public string    ContractVariationDateStartText                          { get { return DCC_Formatting.NullDateTxt(ContractVariationDateStart, "dd MMM yyyy"); } }
         public string    ContractVariationDateStartSort                          { get { return DCC_Formatting.NullDateTxt(ContractVariationDateStart, "yyyyMMddHHmm"); } }
@@ -101,7 +119,6 @@ namespace ProspectBusinessLayer
         public string    TenderReferenceSort                                     { get { return TenderReference.ToString().PadLeft(5, '0'); } }
 
 
-
         // Utilities
 
         public int PrimaryKey { get { return K_ContractVariation; } set { K_ContractVariation = value; } }
@@ -109,7 +126,7 @@ namespace ProspectBusinessLayer
         public bool IsNew { get { return PrimaryKey == -1; } }
         public override string ToString() { return PrimaryKey.ToString().PadLeft(3) + " - " + ContractVariationNoText; }
 
-
+        //public string ContractVariationAgreementDescription => ddlAgreement?.FirstOrDefault(XmlReadMode => XmlReadMode.Value == ContractVariation_Q_Agreement?.ToString())?.Text;
 
         // Calendar
 
@@ -171,6 +188,8 @@ namespace ProspectBusinessLayer
 
             ContractVariationIsExtended                             = DCC_GetColumn.Bit(dataRow,                "ContractVariationIsExtended");
             ContractVariationIsCancelled                            = DCC_GetColumn.Bit(dataRow,                "ContractVariationIsCancelled");
+            ContractVariationIsOther                                = DCC_GetColumn.Bit(dataRow,                "ContractVariationIsOther");
+            ContractVariationOtherReason                            = DCC_GetColumn.String(dataRow,             "ContractVariationOtherReason");
             ContractVariationDateStart                              = DCC_GetColumn.DateTime(dataRow,           "ContractVariationDateStart");
             ContractVariationDateEnd                                = DCC_GetColumn.DateTime(dataRow,           "ContractVariationDateEnd");
             ContractVariationServiceNo                              = DCC_GetColumn.String(dataRow,             "ContractVariationServiceNo");
@@ -212,7 +231,8 @@ namespace ProspectBusinessLayer
             ContractVariationAverageCostPerYear                     = Math.Round(DCC_GetColumn.Decimal(dataRow, "ContractVariationAverageCostPerYear"), 2);
 
             ContractVariationVariationDateStart                     = DCC_GetColumn.DateTimeQ(dataRow,          "ContractVariationVariationDateStart");
-            ContractVariationVariationDateEnd                       = DCC_GetColumn.DateTimeQ(dataRow,          "ContractVariationVariationDateEnd");
+            var rawEnd = DCC_GetColumn.DateTimeQ(dataRow, "ContractVariationVariationDateEnd");
+            ContractVariationVariationDateEnd = (rawEnd == new DateTime(1900, 1, 1) ? null : rawEnd);
 
             ContractVariationNotes                                  = DCC_GetColumn.String(dataRow,             "ContractVariationNotes");
 
@@ -231,36 +251,135 @@ namespace ProspectBusinessLayer
             return (IsNew ? Insert(db) : Update(db));
         }
 
+        public static ContractVariation CreateNewVariation(
+            DCC_Database db,
+            ContractVariation previousVariation,
+            DateTime newStartDate,
+            int newVariationNo)
+        {
+            // 1. Create a new variation object
+            var newVar = new ContractVariation();
+            newVar.ContractVariation_Q_Tender = previousVariation.ContractVariation_Q_Tender;
+
+            // 1b. Set the variation number
+            newVar.ContractVariationNo = newVariationNo;
+
+            // 2. Set the start date (variation-level and contract-level)
+            newVar.ContractVariationVariationDateStart = newStartDate;
+            newVar.ContractVariationDateStart = newStartDate;
+
+            // 3. Default the end date to the contract end date (Variation 00)
+            newVar.ContractVariationVariationDateEnd = previousVariation.ContractVariationVariationDateEnd;
+            newVar.ContractVariationDateEnd = previousVariation.ContractVariationDateEnd;
+
+            // 4. Shorten variation 00 to end the day before the new variation starts
+            previousVariation.ContractVariationVariationDateEnd = newStartDate.AddDays(-1);
+            previousVariation.ContractVariationDateEnd = newStartDate.AddDays(-1);
+
+            // 5. Save both
+            previousVariation.Save(db);
+            newVar.Save(db);
+
+            return newVar;
+        }
+
         int Insert(DCC_Database db)
         {
-            DCC_DatabaseFrame dbf;
-            if (ContractVariationNo == 0)
-                dbf = new DCC_DatabaseFrame("iFirstContractVariation");
+            bool isFirst = (ContractVariationNo == 0);
+
+            if (isFirst)
+            {
+                var dbf = new DCC_DatabaseFrame("iFirstContractVariation");
+                dbf.AddTable("ContractVariation");
+
+                dbf.AddParameter("ContractVariation_Q_Tender", ContractVariation_Q_Tender);
+                dbf.AddParameter("ContractVariationIsCancelled", ContractVariationIsCancelled);
+                dbf.AddParameter("ContractVariationIsExtended", ContractVariationIsExtended);
+                dbf.AddParameter("ContractVariationIsOther", ContractVariationIsOther);
+                dbf.AddParameter("ContractVariationOtherReason", ContractVariationOtherReason, 500);
+                dbf.AddParameter("ContractVariationDateStart", ContractVariationDateStart);
+                dbf.AddParameter("ContractVariationDateEnd", ContractVariationDateEnd);
+                dbf.AddParameter("ContractVariationServiceNo", ContractVariationServiceNo, 500);
+                dbf.AddParameter("ContractVariationRouteStart", ContractVariationRouteStart, 500);
+                dbf.AddParameter("ContractVariationRouteEnd", ContractVariationRouteEnd, 500);
+                dbf.AddParameter("ContractVariationExceptionalConditions", ContractVariationExceptionalConditions, 500);
+                dbf.AddParameter("ContractVariationVehicleCapacity", ContractVariationVehicleCapacity, 500);
+                dbf.AddParameter("ContractVariationVehicleElderlyAndDisabled", ContractVariationVehicleElderlyAndDisabled, 500);
+                dbf.AddParameter("ContractVariationVehicleDimensions", ContractVariationVehicleDimensions, 500);
+                dbf.AddParameter("ContractVariation_Q_Agreement", ContractVariation_Q_Agreement);
+                dbf.AddParameter("ContractVariationServiceDetails", ContractVariationServiceDetails, 500);
+                dbf.AddParameter("ContractVariationTicketNotes", ContractVariationTicketNotes, 500);
+                dbf.AddParameter("ContractVariationRouteTimetableNotes", ContractVariationRouteTimetableNotes, 500);
+
+                dbf.AddParameter("ContractVariationOperatesOnMon", ContractVariationOperatesOnMon);
+                dbf.AddParameter("ContractVariationOperatesOnTue", ContractVariationOperatesOnTue);
+                dbf.AddParameter("ContractVariationOperatesOnWed", ContractVariationOperatesOnWed);
+                dbf.AddParameter("ContractVariationOperatesOnThu", ContractVariationOperatesOnThu);
+                dbf.AddParameter("ContractVariationOperatesOnFri", ContractVariationOperatesOnFri);
+                dbf.AddParameter("ContractVariationOperatesOnSat", ContractVariationOperatesOnSat);
+                dbf.AddParameter("ContractVariationOperatesOnSun", ContractVariationOperatesOnSun);
+                dbf.AddParameter("ContractVariationOperatesOnSchoolDays", ContractVariationOperatesOnSchoolDays);
+                dbf.AddParameter("ContractVariationOperatesOnNonSchoolDays", ContractVariationOperatesOnNonSchoolDays);
+                dbf.AddParameter("ContractVariationOperatesOnBankHolidays", ContractVariationOperatesOnBankHolidays);
+                dbf.AddParameter("ContractVariationOperatesOnChristmasAndNewYear", ContractVariationOperatesOnChristmasAndNewYear);
+                dbf.AddParameter("ContractVariationCalculatedNoOfDaysOfOperationFirstYear", ContractVariationCalculatedNoOfDaysOfOperationFirstYear);
+                dbf.AddParameter("ContractVariationCalculatedNoOfDaysOfOperationFullTerm", ContractVariationCalculatedNoOfDaysOfOperationFullTerm);
+
+                dbf.AddParameter("ContractVariationAverageMilesPerDay", ContractVariationAverageMilesPerDay);
+                dbf.AddParameter("ContractVariationRatePerMile", ContractVariationRatePerMile);
+                dbf.AddParameter("ContractVariationFuelPriceElement", ContractVariationFuelPriceElement);
+                dbf.AddParameter("ContractVariationAveragePricePerDay", ContractVariationAveragePricePerDay);
+                dbf.AddParameter("ContractVariationAveragePricePerYear", ContractVariationAveragePricePerYear);
+                dbf.AddParameter("ContractVariationAverageRevenuePerDay", ContractVariationAverageRevenuePerDay);
+                dbf.AddParameter("ContractVariationAverageRevenuePerYear", ContractVariationAverageRevenuePerYear);
+                dbf.AddParameter("ContractVariationAverageCostPerDay", ContractVariationAverageCostPerDay);
+                dbf.AddParameter("ContractVariationAverageCostPerYear", ContractVariationAverageCostPerYear);
+
+                dbf.AddParameter("ContractVariationVariationDateStart", ContractVariationVariationDateStart);
+                dbf.AddParameter("ContractVariationVariationDateEnd", ContractVariationVariationDateEnd);
+
+                dbf.AddParameter("ContractVariationNotes", ContractVariationNotes, 500);
+
+                dbf.AddParameter("_PRIMARYKEY", DCC_DatabaseFrame.OUTINTEGER);
+
+                int newKey = db.DataLayer.NonQueryPK(dbf);
+                if (newKey > -1) K_ContractVariation = newKey;
+                return newKey;
+            }
             else
-                dbf = new DCC_DatabaseFrame("iContractVariation");
-            dbf.AddTable("ContractVariation");
-            SetCommonParameters(dbf);
-            dbf.AddParameter("_PRIMARYKEY", DCC_DatabaseFrame.OUTINTEGER);
-            int newKey = db.DataLayer.NonQueryPK(dbf);
-            if (newKey > -1) K_ContractVariation = newKey;
-            return newKey;
+            {
+                var dbf = new DCC_DatabaseFrame("iContractVariation");
+                dbf.AddTable("ContractVariation");
+                SetCommonParameters(dbf, includeVariationDates: true);
+                dbf.AddParameter("_PRIMARYKEY", DCC_DatabaseFrame.OUTINTEGER);
+
+                int newKey = db.DataLayer.NonQueryPK(dbf);
+                if (newKey > -1) K_ContractVariation = newKey;
+                return newKey;
+            }
         }
 
         int Update(DCC_Database db)
         {
-            DCC_DatabaseFrame dbf = new DCC_DatabaseFrame("uContractVariation");
+            
+            var dbf = new DCC_DatabaseFrame("uContractVariation");
             dbf.AddTable("ContractVariation");
+
+            dbf.AddParameter("K_ContractVariation", K_ContractVariation);
             SetCommonParameters(dbf);
+
             db.DataLayer.NonQuery(dbf);
             return (dbf.OK ? K_ContractVariation : -1);
         }
 
-        void SetCommonParameters(DCC_DatabaseFrame dbf)
+        void SetCommonParameters(DCC_DatabaseFrame dbf, bool includeVariationDates = true)
         {
             dbf.AddParameter("ContractVariation_Q_Tender"                             , ContractVariation_Q_Tender);
 
             dbf.AddParameter("ContractVariationIsCancelled"                           , ContractVariationIsCancelled);
             dbf.AddParameter("ContractVariationIsExtended"                            , ContractVariationIsExtended);
+            dbf.AddParameter("ContractVariationIsOther"                               , ContractVariationIsOther);
+            dbf.AddParameter("ContractVariationOtherReason"                           , ContractVariationOtherReason, 500);
             dbf.AddParameter("ContractVariationDateStart"                             , ContractVariationDateStart);
             dbf.AddParameter("ContractVariationDateEnd"                               , ContractVariationDateEnd);
             dbf.AddParameter("ContractVariationServiceNo"                             , ContractVariationServiceNo, 500);
@@ -276,6 +395,7 @@ namespace ProspectBusinessLayer
             dbf.AddParameter("ContractVariationServiceDetails"                        , ContractVariationServiceDetails, 500);
             dbf.AddParameter("ContractVariationTicketNotes"                           , ContractVariationTicketNotes, 500);
             dbf.AddParameter("ContractVariationRouteTimetableNotes"                   , ContractVariationRouteTimetableNotes, 500);
+            
 
             dbf.AddParameter("ContractVariationOperatesOnMon"                         , ContractVariationOperatesOnMon);
             dbf.AddParameter("ContractVariationOperatesOnTue"                         , ContractVariationOperatesOnTue);
@@ -301,8 +421,12 @@ namespace ProspectBusinessLayer
             dbf.AddParameter("ContractVariationAverageCostPerDay"                     , ContractVariationAverageCostPerDay);
             dbf.AddParameter("ContractVariationAverageCostPerYear"                    , ContractVariationAverageCostPerYear);
 
-            dbf.AddParameter("ContractVariationVariationDateStart"                    , ContractVariationVariationDateStart);
-            dbf.AddParameter("ContractVariationVariationDateEnd"                      , ContractVariationVariationDateEnd);
+            if (includeVariationDates)
+            {
+                dbf.AddParameter("ContractVariationVariationDateStart"                , ContractVariationVariationDateStart);
+                dbf.AddParameter("ContractVariationVariationDateEnd"                  , ContractVariationVariationDateEnd);
+
+            }
 
             dbf.AddParameter("ContractVariationNotes"                                 , ContractVariationNotes, 500);
         }
@@ -392,7 +516,7 @@ namespace ProspectBusinessLayer
         // Enumerator
 
         public IEnumerator<ContractVariation> GetEnumerator() { foreach (object o in All) yield return (ContractVariation)o; }
-        IEnumerator IEnumerable.GetEnumerator() { foreach (object o in All) yield return "dummy"; }
+        IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
 
     }
 

@@ -1,5 +1,7 @@
 ﻿using DCC_Standard;
+using Microsoft.Ajax.Utilities;
 using ProspectBusinessLayer;
+using System;
 using System.Web.Mvc;
 
 namespace Prospect.Controllers
@@ -49,7 +51,6 @@ namespace Prospect.Controllers
         [HttpGet]
         public ActionResult Tender()
         {
-            #region Determine which Tender has been selected. First looks in DCC_Session, then the URL.
             int k_Tender = -1;
             string queryKey = Request["primaryKey"] ?? "-1";
             if (int.TryParse(queryKey, out k_Tender) && (k_Tender == -999))
@@ -67,27 +68,17 @@ namespace Prospect.Controllers
             {
                 saved_K_Specification = -999;
             }
-            #endregion
 
-            Tender model = new Tender(DCC_Session.AutoDatabaseConnection, k_Tender, pQ_Specification: saved_K_Specification);
+            var db = DCC_Session.AutoDatabaseConnection;
+            var model = new Tender(db, k_Tender, saved_K_Specification, autoSaveIfNew: false);
 
-            #region Initialise Contract Variations Grid
-
-            if (model.IsTenderAccepted)
+            if (model.Q_Specification > 0 && model.TenderAverageMilesPerDay <= 0m)
             {
-                model.ContractVariationGrid.Initialise(
-                    Request,
-                    id: "ContractVariationsGrid",
-                    itemNameSingular: "Contract variation",
-                    column1: new GridColumn(GridColumnType.Text, "VariationNoText"                  , "Variation number"          ,  90, alignRight: true, boundSortField: "VariationNo", defaultSortColumn: true, defaultSortDescending: true),
-                    noOfRowsInGrid: 10,
-                    showEditButton: false,
-                    showSelectorColumn: false,
-                    fullRowSelect: true,
-                    dcc_Session: DCC_Session
-                    );
+                var spec = new Specification(db, model.Q_Specification, pBriefMode: true);
+                model.TenderAverageMilesPerDay = spec.AverageMilesPerDay;
             }
-            #endregion
+
+            model.PopulateDropDownLists(db, model.K_Tender);
 
             ViewBag.PageTitle = "Tender";
             return View(model);
@@ -102,11 +93,11 @@ namespace Prospect.Controllers
         [HttpPost]
         public ActionResult Tender(string saveButton, Tender model)
         {
-            #region Load the parent specification to determine if it's a package and save it to the model so it renders correctly when returning to the view
-            if ( (model.Q_Specification > 0) && string.IsNullOrEmpty(model.SpecificationServiceNo) )
+            #region Load parent specification details for form rendering
+            if ((model.Q_Specification > 0) && string.IsNullOrEmpty(model.SpecificationServiceNo))
             {
-                Specification specification = new Specification(DCC_Session.AutoDatabaseConnection, model.Q_Specification, pBriefMode: true);
-                model.IsPackage = specification.IsPackage;
+                Specification spec = new Specification(DCC_Session.AutoDatabaseConnection, model.Q_Specification, pBriefMode: true);
+                model.IsPackage = spec.IsPackage;
             }
             #endregion
 
@@ -114,40 +105,51 @@ namespace Prospect.Controllers
 
             if (!string.IsNullOrEmpty(saveButton))
             {
-                #region Page validation
-
-                //if (model.TenderReference.Length != 4) ModelState.AddModelError("Reference", "A Tender reference must be 4 characters.");
-
+                #region Validation
+                // if (model.TenderReference.Length != 4) ModelState.AddModelError("Reference", "A Tender reference must be 4 characters.");
                 #endregion
 
-                #region On save
                 if (ModelState.IsValid)
                 {
-                    if (model.Save(DCC_Session.AutoDatabaseConnection, "Tender") < 0) this.DCC_DisplayMessage(DCC_MessageType.Error, "A problem occurred while saving");
-                    else this.DCC_DisplayMessage(DCC_MessageType.Success, "Your changes have been saved");
+                    var db = DCC_Session.AutoDatabaseConnection;
+                    var mode = "Tender";
+                    //var mode = (model.K_Tender > 0) ? "Update" : "Insert";
+
+                    var newKey = model.Save(db, mode);
+
+                    if (newKey <= 0)
+                    {
+                        this.DCC_DisplayMessage(DCC_MessageType.Error, "A problem occurred while saving");
+                    }
+                    else
+                    {
+                        this.DCC_DisplayMessage(DCC_MessageType.Success, "Your changes have been saved", true);
+                        return RedirectToAction("Tender", new { primaryKey = newKey });
+                    }
                 }
-                else this.DCC_DisplayMessage(DCC_MessageType.Error, "Some of your changes are invalid");
-                #endregion
+                else
+                {
+                    this.DCC_DisplayMessage(DCC_MessageType.Error, "Some of your changes are invalid");
+                }
             }
 
-            #region Initialise ContractVariation Grid
-
+            #region Contract Variation Grid
             if (model.IsTenderAccepted)
             {
                 model.ContractVariationGrid.Initialise(
                     Request,
                     id: "ContractVariationsGrid",
                     itemNameSingular: "Contract variation",
-                    column1: new GridColumn(GridColumnType.Text, "VariationNoText"                  , "Variation number"          ,  90, alignRight: true, boundSortField: "VariationNo", defaultSortColumn: true, defaultSortDescending: true),
+                    column1: new GridColumn(GridColumnType.Text, "VariationNoText", "Variation number", 90, alignRight: true, boundSortField: "VariationNo", defaultSortColumn: true, defaultSortDescending: true),
                     noOfRowsInGrid: 10,
                     showEditButton: false,
                     showSelectorColumn: false,
                     fullRowSelect: true,
                     dcc_Session: DCC_Session
-                    );
+                );
             }
             #endregion
-
+          
             ViewBag.PageTitle = "Tender";
             return View(model);
         }

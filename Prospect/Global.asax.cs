@@ -4,6 +4,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using SqlServerTypes;
 
 namespace Prospect
 {
@@ -18,6 +19,7 @@ namespace Prospect
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             ModelBinders.Binders.Add(typeof(TimeSpan), new DCC_TimeBinder());
+            SqlServerTypes.Utilities.LoadNativeAssemblies(Server.MapPath("~/bin"));
         }
 
         protected void Application_AuthenticateRequest(Object sender, EventArgs e)

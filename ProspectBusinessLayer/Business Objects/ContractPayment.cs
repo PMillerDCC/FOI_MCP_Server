@@ -23,7 +23,7 @@ namespace ProspectBusinessLayer
         public int       PricePerDay              { get; set; }
         public int       NumberOfDays             { get; set; }
         public int       Amount                   { get; set; }
-        public string    LicenceNo            { get; set; }
+        public string    LicenceNo                { get; set; }
         public DateTime? DateStart                { get; set; }
         public DateTime? DateEnd                  { get; set; }
         public bool      OperatesMonday           { get; set; }
@@ -37,7 +37,7 @@ namespace ProspectBusinessLayer
         public bool      OperatesSchoolTerm       { get; set; }
         public bool      OperatesNonSchoolTerm    { get; set; }
         public bool      OperatesChristmasNewYear { get; set; }
-        public string    Agreement                { get; set; }
+        public string    AgreementDescription     { get; set; }
         public int       Q_Agreement              { get; set; }
         public int       Variation                { get; set; }
         public int       NetAmount                { get; set; }
@@ -117,15 +117,17 @@ namespace ProspectBusinessLayer
             OperatesSchoolTerm       = DCC_GetColumn.Bit       (dataRow, "OperatesSchoolTerm");
             OperatesNonSchoolTerm    = DCC_GetColumn.Bit       (dataRow, "OperatesNonSchoolTerm");
             OperatesChristmasNewYear = DCC_GetColumn.Bit       (dataRow, "OperatesChristmasNewYear");
-            Agreement                = DCC_GetColumn.String    (dataRow, "Agreement");
+            AgreementDescription     = DCC_GetColumn.String    (dataRow, "AgreementDescription");
             Q_Agreement              = DCC_GetColumn.Integer32 (dataRow, "Q_Agreement");
-            Variation                = DCC_GetColumn.Integer32 (dataRow, "Variation");
+            Variation                = DCC_GetColumn.Integer32 (dataRow, "Variation"); 
             NetAmount                = DCC_GetColumn.Integer32 (dataRow, "NetAmount");
             Notes                    = DCC_GetColumn.String    (dataRow, "Notes");
             FirstStop                = DCC_GetColumn.Bit       (dataRow, "FirstStop");
             DispSpecification        = DCC_GetColumn.String    (dataRow, "DispSpecification");
             VariationNumber          = DCC_GetColumn.String    (dataRow, "VariationNumber");
             SortName                 = DCC_GetColumn.String    (dataRow, "SortName");
+
+            if (DCC_GetColumn.Exists(dataRow, "AgreementDescription")) AgreementDescription = DCC_GetColumn.String(dataRow, "AgreementDescription");
 
             return true;
         }
@@ -180,7 +182,7 @@ namespace ProspectBusinessLayer
             dbf.AddParameter("OperatesSchoolTerm", OperatesSchoolTerm);
             dbf.AddParameter("OperatesNonSchoolTerm", OperatesNonSchoolTerm);
             dbf.AddParameter("OperatesChristmasNewYear", OperatesChristmasNewYear);
-            dbf.AddParameter("Agreement", Agreement, 2);
+            dbf.AddParameter("Agreement", AgreementDescription, 2);
             dbf.AddParameter("Q_Agreement", Q_Agreement);
             dbf.AddParameter("Variation", Variation);
             dbf.AddParameter("NetAmount", NetAmount);

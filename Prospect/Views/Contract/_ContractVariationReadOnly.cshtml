@@ -5,18 +5,21 @@
     <div class="row marginTop10">
         <div class="col-lg-4">
             <h3 class="marginTop1">Service details</h3>
-            <div class="width400 floatLeft fontSize14">Variation start date: <strong>@Model.ContractVariationVariationDateStartText</strong></div>
-            @*<div class="width400 floatLeft fontSize14">Variation end date: <strong>@Model.ContractVariationVariationEndDateText</strong></div>*@
-            <div class="width400 floatLeft fontSize14">Service number: <strong>@Model.ContractVariationServiceNo</strong></div>
-            <div class="width400 floatLeft fontSize14">Route: <strong>@Model.ContractVariationRouteText</strong></div>
-            <div class="width400 floatLeft fontSize14 marginBottom15">Exceptional conditions: <strong>@Model.ContractVariationExceptionalConditions</strong></div>
-            <h3 class="marginTop1">Quality of service</h3>
-            <div class="width400 floatLeft fontSize14">Vehicle capacity: <strong>@Model.ContractVariationVehicleCapacity</strong></div>
-            <div class="width400 floatLeft fontSize14">Accessibility: <strong>@Model.ContractVariationVehicleElderlyAndDisabled</strong></div>
-            <div class="width400 floatLeft fontSize14 marginBottom15">Vehicle dimensions: <strong>@Model.ContractVariationVehicleDimensions</strong></div>
-            <h3 class="marginTop1">Agreement</h3>
-            <div class="width400 floatLeft fontSize14 marginBottom10">Agreement for fares: <strong>@Model.AgreementDescription</strong></div>
-        </div>
+                <div class="width400 floatLeft fontSize14">Reason for variation: <strong>@Model.ContractVariationReasonText</strong></div>
+                <div class="width400 floatLeft fontSize14">Variation start date: <strong>@Model.ContractVariationVariationDateStartText</strong></div>
+                <div class="width400 floatLeft fontSize14">Variation end date: <strong>@Model.ContractVariationVariationDateEndText</strong></div>
+                <div class="width400 floatLeft fontSize14">Service number: <strong>@Model.ContractVariationServiceNo</strong></div>
+                <div class="width400 floatLeft fontSize14">Route: <strong>@Model.ContractVariationRouteText</strong></div>
+                <div class="width400 floatLeft fontSize14 marginBottom15">Exceptional conditions: <strong>@Model.ContractVariationExceptionalConditions</strong></div>
+
+                <h3 class="marginTop1">Quality of service</h3>
+                <div class="width400 floatLeft fontSize14">Vehicle capacity: <strong>@Model.ContractVariationVehicleCapacity</strong></div>
+                <div class="width400 floatLeft fontSize14">Accessibility: <strong>@Model.ContractVariationVehicleElderlyAndDisabled</strong></div>
+                <div class="width400 floatLeft fontSize14 marginBottom15">Vehicle dimensions: <strong>@Model.ContractVariationVehicleDimensions</strong></div>
+
+                <h3 class="marginTop1">Agreement</h3>
+                <div class="width400 floatLeft fontSize14 marginBottom10">Agreement for fares: <strong>@Model.ContractVariationAgreementDescription</strong></div>
+            </div>
         <div class="col-lg-4">
             <h3 class="marginTop1">Days of operation</h3>
             <div class="width400 floatLeft fontSize14">Operates on Monday: <strong>@Model.ContractVariationOperatesOnMonText</strong></div>
@@ -44,8 +47,10 @@
             <div class="width400 floatLeft fontSize14">Estimate of average revenue per year: <strong>@Model.ContractVariationAverageRevenuePerYear</strong></div>
             <div class="width400 floatLeft fontSize14">Contractor estimate of total income per day: <strong>@Model.ContractVariationAverageCostPerDay</strong></div>
             <div class="width400 floatLeft fontSize14 marginBottom15">Contractor estimate of total income per year: <strong>@Model.ContractVariationAverageCostPerYear</strong></div>
+            
             <h3>Notes</h3>
-            <div class="width400 floatLeft fontSize14"><strong>@Model.ContractVariationNotes</strong></div>
+            <div class="width400 floatLeft fontSize14">@Model.ContractVariationNotes</div>
+
         </div>
     </div>
 </fieldset>

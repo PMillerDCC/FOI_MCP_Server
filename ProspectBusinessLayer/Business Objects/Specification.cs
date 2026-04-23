@@ -1,9 +1,12 @@
 ﻿using DCC_Standard;
+using Microsoft.Ajax.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Web.Mvc;
+using System.Globalization;
+using System.Windows.Forms;
 
 namespace ProspectBusinessLayer
 {
@@ -425,6 +428,10 @@ namespace ProspectBusinessLayer
                 (OperatesOnBankHolidays ? "y" : "f") +
                 (OperatesOnChristmasAndNewYear ? "y" : "f");
 
+            var fyStart = DateStart.Value.Date;
+            var fyEnd = (DateEnd.Value > DateStart.Value.AddDays(364) ? DateStart.Value.AddDays(364) : DateEnd.Value).Date;
+            DebugTrace.WriteLine($"[FY] Range: {fyStart:dd/MM/yyyy}..{fyEnd:dd/MM/yyyy}  Days: {(fyEnd - fyStart).TotalDays + 1}");
+
             CalculatedNoOfDaysOfOperationFirstYear = CalculateDaysOfOperation(db, dateAndDays);
 
             string dateAndDays2 =
@@ -442,6 +449,10 @@ namespace ProspectBusinessLayer
                (OperatesOnBankHolidays ? "y" : "f") +
                (OperatesOnChristmasAndNewYear ? "y" : "f");
 
+            var ftStart = DateStart.Value.Date;
+            var ftEnd = DateEnd.Value.Date;
+            DebugTrace.WriteLine($"[FT] Range: {ftStart:dd/MM/yyyy}..{ftEnd:dd/MM/yyyy}  Days: {(ftEnd - ftStart).TotalDays + 1}");
+
             CalculatedNoOfDaysOfOperationFullTerm = CalculateDaysOfOperation(db, dateAndDays2);
         }
 
@@ -457,9 +468,8 @@ namespace ProspectBusinessLayer
 
             try
             {
-                DateTime startDate, endDate;
-                DateTime.TryParse(DateAndDays.Substring(0, 10), out startDate);
-                DateTime.TryParse(DateAndDays.Substring(10, 10), out endDate);
+                var startDate = DateTime.ParseExact(DateAndDays.Substring(0, 10), "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                var endDate = DateTime.ParseExact(DateAndDays.Substring(10, 10), "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 bool operatesOnMon = (DateAndDays.Substring(20, 1) == "y");
                 bool operatesOnTue = (DateAndDays.Substring(21, 1) == "y");
                 bool operatesOnWed = (DateAndDays.Substring(22, 1) == "y");
@@ -486,6 +496,45 @@ namespace ProspectBusinessLayer
 
                     Holiday holiday = new Holiday(db, pYear: date.Year.ToString());
 
+                    // --- 31/12/2025 forensic probe ---
+                    if (date.Year == 2025 && date.Month == 12 && date.Day == 31)
+                    {
+                        // Recreate each equality used by IsBankHoliday
+                        bool bhNY = (date == holiday.NewYearsDay);
+                        bool bhGF = (date == holiday.GoodFriday);
+                        bool bhEM = (date == holiday.EasterMonday);
+                        bool bhMay = (date == holiday.MayDay);
+                        bool bhSpr = (date == holiday.SpringBankHoliday);
+                        bool bhSum = (date == holiday.SummerBankHoliday);
+                        bool bhXmas = (date == holiday.ChristmasDay);
+                        bool bhBox = (date == holiday.BoxingDay);
+                        bool bhS1 = (holiday.Special1 != null) && (date == holiday.Special1);
+                        bool bhS2 = (holiday.Special2 != null) && (date == holiday.Special2);
+                        bool bhS3 = (holiday.Special3 != null) && (date == holiday.Special3);
+                        bool bhS4 = (holiday.Special4 != null) && (date == holiday.Special4);
+                        bool bhS5 = (holiday.Special5 != null) && (date == holiday.Special5);
+                        bool bhS6 = (holiday.Special6 != null) && (date == holiday.Special6);
+                        bool bhS7 = (holiday.Special7 != null) && (date == holiday.Special7);
+                        bool bhS8 = (holiday.Special8 != null) && (date == holiday.Special8);
+
+                        var bhCalc = bhNY || bhGF || bhEM || bhMay || bhSpr || bhSum || bhXmas || bhBox
+                                     || bhS1 || bhS2 || bhS3 || bhS4 || bhS5 || bhS6 || bhS7 || bhS8;
+
+                        // Xmas window comparison: data-driven vs hard-coded
+                        var windowStartData = (holiday.BoxingDay ?? new DateTime(2025, 12, 26));
+                        var windowEndData = (holiday.NewYearsDay?.AddYears(1)) ?? new DateTime(2026, 1, 1);
+                        bool xmasWinData = (date >= windowStartData) && (date < windowEndData);
+
+                        var windowStartFixed = new DateTime(2025, 12, 26);
+                        var windowEndFixed = new DateTime(2026, 1, 1);
+                        bool xmasWinFixed = (date >= windowStartFixed) && (date < windowEndFixed);
+
+                        DebugTrace.WriteLine($"[Probe 31/12/2025] BH? calc:{bhCalc}");
+                        DebugTrace.WriteLine($"NY:{bhNY} GF:{bhGF} EM:{bhEM} May:{bhMay} Spr:{bhSpr} Sum:{bhSum}");
+                        DebugTrace.WriteLine($"Xmas:{bhXmas} Box:{bhBox} S1:{bhS1} S2:{bhS2} S3:{bhS3} S4:{bhS4} S5:{bhS5} S6:{bhS6} S7:{bhS7} S8:{bhS8}");
+                        DebugTrace.WriteLine($"XmasWin data:{xmasWinData} [{windowStartData:dd/MM}..{windowEndData:dd/MM})  fixed:{xmasWinFixed} [{windowStartFixed:dd/MM}..{windowEndFixed:dd/MM})");
+                    }
+
                     calendarDay.IsBankHoliday = (
                         (date == holiday.NewYearsDay) ||
                         (date == holiday.GoodFriday) ||
@@ -504,80 +553,141 @@ namespace ProspectBusinessLayer
                         ((holiday.Special7 != null) && (date == holiday.Special7)) ||
                         ((holiday.Special8 != null) && (date == holiday.Special8)));
 
-                    calendarDay.IsSchoolDay = (
-                        ((date >= holiday.Spring1Start) && (date <= holiday.Spring1End)) ||
-                        ((date >= holiday.Spring2Start) && (date <= holiday.Spring2End)) ||
-                        ((date >= holiday.Summer1Start) && (date <= holiday.Summer1End)) ||
-                        ((date >= holiday.Summer2Start) && (date <= holiday.Summer2End)) ||
-                        ((date >= holiday.Autumn1Start) && (date <= holiday.Autumn1End)) ||
-                        ((date >= holiday.Autumn2Start) && (date <= holiday.Autumn2End)));
+                    // 1) First set the Xmas–New Year window (null-safe)
+                    var windowStart = holiday.BoxingDay ?? new DateTime(date.Year, 12, 26);
+                    var windowEnd = (holiday.NewYearsDay?.AddYears(1)) ?? new DateTime(date.Year + 1, 1, 1);
+                    calendarDay.IsBetweenChristmasAndNewYear = (date >= windowStart) && (date < windowEnd);
 
-                    calendarDay.IsBetweenChrismasAndNewYear = (
-                        ((date > holiday.BoxingDay) && (date < holiday.NewYearsDay.Value.AddYears(1))));
+                    // 2) Now derive weekday flags
+                    bool isWeekday = date.DayOfWeek >= DayOfWeek.Monday && date.DayOfWeek <= DayOfWeek.Friday;
+                    bool inXmasMonFri = calendarDay.IsBetweenChristmasAndNewYear && isWeekday;
 
-                    if (calendarDay.IsBankHoliday)
+                    if (date.Year == 2025 && date.Month == 1 && date.Day == 1)
                     {
-                        if (operatesOnBankHolidays)
+                        DebugTrace.WriteLine(
+                            $"[HOL 2025] NYD:{holiday.NewYearsDay:dd/MM/yyyy}  " +
+                            $"GF:{holiday.GoodFriday:dd/MM/yyyy}  EM:{holiday.EasterMonday:dd/MM/yyyy}  " +
+                            $"May:{holiday.MayDay:dd/MM/yyyy}  Spring:{holiday.SpringBankHoliday:dd/MM/yyyy}  " +
+                            $"Summer:{holiday.SummerBankHoliday:dd/MM/yyyy}  " +
+                            $"Xmas:{holiday.ChristmasDay:dd/MM/yyyy}  Boxing:{holiday.BoxingDay:dd/MM/yyyy}  " +
+                            $"Xmas:{holiday.NewYearsDay:dd/MM/yyyy} " +
+                            $"S1:{holiday.Special1:dd/MM/yyyy}  S2:{holiday.Special2:dd/MM/yyyy}  " +
+                            $"S3:{holiday.Special3:dd/MM/yyyy}  S4:{holiday.Special4:dd/MM/yyyy}  " +
+                            $"S5:{holiday.Special5:dd/MM/yyyy}  S6:{holiday.Special6:dd/MM/yyyy}  " +
+                            $"S7:{holiday.Special7:dd/MM/yyyy}  S8:{holiday.Special8:dd/MM/yyyy}"
+                        );
+                    }
+
+                    // 3) Then school-day calc can safely use isWeekday
+                    calendarDay.IsSchoolDay =
+                        isWeekday && (
+                            (date >= holiday.Spring1Start && date <= holiday.Spring1End) ||
+                            (date >= holiday.Spring2Start && date <= holiday.Spring2End) ||
+                            (date >= holiday.Summer1Start && date <= holiday.Summer1End) ||
+                            (date >= holiday.Summer2Start && date <= holiday.Summer2End) ||
+                            (date >= holiday.Autumn1Start && date <= holiday.Autumn1End) ||
+                            (date >= holiday.Autumn2Start && date <= holiday.Autumn2End)
+                        );
+
+                    // //
+                    // ----- Prospect rule: at least one of School/Non-school must be selected -----
+                    if (!operatesOnSchoolDays && !operatesOnNonSchoolDays)
+                    {
+                        calendarDay.IsInOperation = false;
+                        Calendar.Add(calendarDay);
+                        continue; // skip this date entirely
+                    }
+
+                    // Selected DoW
+                    bool dowSelected =
+                        (calendarDay.IsMon && operatesOnMon) ||
+                        (calendarDay.IsTue && operatesOnTue) ||
+                        (calendarDay.IsWed && operatesOnWed) ||
+                        (calendarDay.IsThu && operatesOnThu) ||
+                        (calendarDay.IsFri && operatesOnFri) ||
+                        (calendarDay.IsSat && operatesOnSat) ||
+                        (calendarDay.IsSun && operatesOnSun);
+
+                    // “never operate” trio
+                    bool isNeverService = (date.Month == 1 && date.Day == 1) ||
+                                         (date.Month == 12 && date.Day == 25) ||
+                                         (date.Month == 12 && date.Day == 26);
+
+                    bool include = false;
+
+                    if (isNeverService) { include = false; }
+
+                    // 0) Hard stop: never run on 1 Jan, 25 Dec, 26 Dec
+                    if (isNeverService)
+                    {
+                        include = false;
+                    }
+                    else
+                    {
+                        // 1) Xmas window special handling (Mon–Fri only, never count BHs here)
+                        if (inXmasMonFri)
                         {
-                            calendarDay.IsInOperation = (
-                                (calendarDay.IsMon && operatesOnMon) ||
-                                (calendarDay.IsTue && operatesOnTue) ||
-                                (calendarDay.IsWed && operatesOnWed) ||
-                                (calendarDay.IsThu && operatesOnThu) ||
-                                (calendarDay.IsFri && operatesOnFri) ||
-                                (calendarDay.IsSat && operatesOnSat) ||
-                                (calendarDay.IsSun && operatesOnSun));
+                            if (calendarDay.IsBankHoliday)
+                            {
+                                include = operatesOnBankHolidays;
+                            }
+                            else
+                            {
+                                // Non-BH weekdays in that window depend on the Xmas checkbox
+                                if (!operatesOnChristmasAndNewYear)
+                                {
+                                    include = false;
+                                }
+                                else
+                                {
+                                    // In the Xmas window, Mon-Fri should operate if the Xmas flag is on, regardless of normal weekday selections.
+                                    include = true;
+
+                                    // Apply School/Non-school filter on Mon–Fri only
+                                    if (isWeekday)
+                                    {
+                                        if (operatesOnSchoolDays && !operatesOnNonSchoolDays)
+                                            include = calendarDay.IsSchoolDay;
+                                        else if (!operatesOnSchoolDays && operatesOnNonSchoolDays)
+                                            include = !calendarDay.IsSchoolDay;
+                                        // both selected => no extra filter
+                                    }
+                                }
+                            }
+                        }
+                        else if (calendarDay.IsBankHoliday)
+                        {
+                                include = operatesOnBankHolidays;
+                        }
+                        else
+                        {
+                            // 3) Regular non-BH day, outside Xmas suppression
+                            if (dowSelected)
+                            {
+                                include = true;
+
+                                // Apply School/Non-school filter on Mon–Fri only
+                                if (isWeekday)
+                                {
+                                    if (operatesOnSchoolDays && !operatesOnNonSchoolDays)
+                                        include = calendarDay.IsSchoolDay;
+                                    else if (!operatesOnSchoolDays && operatesOnNonSchoolDays)
+                                        include = !calendarDay.IsSchoolDay;
+                                    // both selected => no extra filter
+                                }
+                            }
+                            else
+                            {
+                                include = false;
+                            }
                         }
                     }
 
-                    else if (calendarDay.IsBetweenChrismasAndNewYear)
-                    {
-                        if (operatesOnChristmasAndNewYear)
-                        {
-                            calendarDay.IsInOperation = (
-                                (calendarDay.IsMon && operatesOnMon) ||
-                                (calendarDay.IsTue && operatesOnTue) ||
-                                (calendarDay.IsWed && operatesOnWed) ||
-                                (calendarDay.IsThu && operatesOnThu) ||
-                                (calendarDay.IsFri && operatesOnFri) ||
-                                (calendarDay.IsSat && operatesOnSat) ||
-                                (calendarDay.IsSun && operatesOnSun));
-                        }
-                    }
-
-                    else if (calendarDay.IsSchoolDay)
-                    {
-                        if (operatesOnSchoolDays)
-                        {
-                            calendarDay.IsInOperation = (
-                                (calendarDay.IsMon && operatesOnMon) ||
-                                (calendarDay.IsTue && operatesOnTue) ||
-                                (calendarDay.IsWed && operatesOnWed) ||
-                                (calendarDay.IsThu && operatesOnThu) ||
-                                (calendarDay.IsFri && operatesOnFri) ||
-                                (calendarDay.IsSat && operatesOnSat) ||
-                                (calendarDay.IsSun && operatesOnSun));
-                        }
-                    }
-
-                    else if (!calendarDay.IsSchoolDay)
-                    {
-                        if (operatesOnNonSchoolDays)
-                        {
-                            calendarDay.IsInOperation = (
-                                (calendarDay.IsMon && operatesOnMon) ||
-                                (calendarDay.IsTue && operatesOnTue) ||
-                                (calendarDay.IsWed && operatesOnWed) ||
-                                (calendarDay.IsThu && operatesOnThu) ||
-                                (calendarDay.IsFri && operatesOnFri) ||
-                                (calendarDay.IsSat && operatesOnSat) ||
-                                (calendarDay.IsSun && operatesOnSun));
-                        }
-                    }
-
-                    if (calendarDay.IsInOperation) noOfDaysInOperation++;
+                    calendarDay.IsInOperation = include;
+                    if (include) noOfDaysInOperation++;
 
                     Calendar.Add(calendarDay);
+
                 }
             }
             catch (Exception e)
@@ -603,6 +713,33 @@ namespace ProspectBusinessLayer
 
         #endregion
 
+        public int CalculateDaysOfOperationInPeriod(DCC_Database db, DateTime periodStart, DateTime periodEnd)
+        {
+            if (!DateStart.HasValue || !DateEnd.HasValue) return 0;
+
+            DateTime actualStart = (periodStart < DateStart.Value) ? DateStart.Value : periodStart;
+            DateTime actualEnd = (periodEnd > DateEnd.Value) ? DateEnd.Value : periodEnd;
+
+            if (actualEnd < actualStart) return 0;
+            
+            string dateAndDays =
+                actualStart.ToString("dd/MM/yyyy") +
+                actualEnd.ToString("dd/MM/yyyy") +
+                (OperatesOnMon ? "y" : "f") +
+                (OperatesOnTue ? "y" : "f") +
+                (OperatesOnWed ? "y" : "f") +
+                (OperatesOnThu ? "y" : "f") +
+                (OperatesOnFri ? "y" : "f") +
+                (OperatesOnSat ? "y" : "f") +
+                (OperatesOnSun ? "y" : "f") +
+                (OperatesOnSchoolDays ? "y" : "f") +
+                (OperatesOnNonSchoolDays ? "y" : "f") +
+                (OperatesOnBankHolidays ? "y" : "f") +
+                (OperatesOnChristmasAndNewYear ? "y" : "f");
+
+            return CalculateDaysOfOperation(db, dateAndDays);
+        }
+
     }
 
     #endregion
@@ -624,8 +761,8 @@ namespace ProspectBusinessLayer
             get
             {
                 return
-"K_Specification|" +
-"PrimaryKey|Key|IsNew";
+                    "K_Specification|" +
+                    "PrimaryKey|Key|IsNew";
             }
         }
 
@@ -718,7 +855,7 @@ namespace ProspectBusinessLayer
         public bool     IsSun;
         public bool     IsBankHoliday;
         public bool     IsSchoolDay;
-        public bool     IsBetweenChrismasAndNewYear;
+        public bool     IsBetweenChristmasAndNewYear;
         public bool     IsInOperation;
         public string   IsInOperationText { get { return DCC_Formatting.NullDateTxt(Date, "yyyy MMM dd ddd" + (IsInOperation ? " YES" : "")); } }
 

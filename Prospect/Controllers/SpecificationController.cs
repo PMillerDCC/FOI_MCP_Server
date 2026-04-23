@@ -101,6 +101,7 @@ namespace Prospect.Controllers
 
         #region Specification ActionResult (Post)
 
+
         [Authorize]
         [HttpPost]
         public ActionResult Specification(string saveButton, Specification model)
@@ -118,18 +119,27 @@ namespace Prospect.Controllers
                 {
                     if ((model.DateStart.HasValue && model.DateEnd.HasValue) && (model.DateStart > model.DateEnd)) ModelState.AddModelError("DateStart", "The start date cannot be after the end date.");
                 }
-                
+
                 #endregion
 
                 #region On save
 
                 if (ModelState.IsValid)
                 {
-                    if (model.Save(DCC_Session.AutoDatabaseConnection) < 0) this.DCC_DisplayMessage(DCC_MessageType.Error, "A problem occurred while saving");
-                    else this.DCC_DisplayMessage(DCC_MessageType.Success, "Your changes have been saved");
+                    var pk = model.Save(DCC_Session.AutoDatabaseConnection);
+                    if (pk < 0)
+                    {
+                        this.DCC_DisplayMessage(DCC_MessageType.Error, "A problem occurred while saving.");
+                    }
+                    else
+                    {
+                        this.DCC_DisplayMessage(DCC_MessageType.Success, "Your changes have been saved.", true);
+
+                        DCC_Session.Add("Saved_K_Specification", pk);
+                        return RedirectToAction("Specification", new { primaryKey = pk });
+                    }
                 }
-                else this.DCC_DisplayMessage(DCC_MessageType.Error, "Some of your changes are invalid");
-                
+
                 #endregion
             }
 
@@ -169,7 +179,7 @@ namespace Prospect.Controllers
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult CalculateNoDaysOfOperation(string dateAndDays)
         {
-			var result = ProspectBusinessLayer.Specification.CalculateDaysOfOperation(DCC_Session.AutoDatabaseConnection, dateAndDays);
+			 var result = ProspectBusinessLayer.Specification.CalculateDaysOfOperation(DCC_Session.AutoDatabaseConnection, dateAndDays);
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 

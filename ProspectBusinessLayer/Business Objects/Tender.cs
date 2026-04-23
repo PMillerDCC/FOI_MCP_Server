@@ -2,7 +2,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
+using System.Linq;
 using System.Web.Mvc;
 
 namespace ProspectBusinessLayer
@@ -52,10 +54,32 @@ namespace ProspectBusinessLayer
 
         public bool      ContractVariationIsCancelled                            { get; set; }
         public bool      ContractVariationIsExtended                             { get; set; }
+        public bool      ContractVariationIsOther                                { get; set; }
+        public string    ContractVariationOtherReason                            { get; set; }
+
+        public string ContractVariationReasonText
+        { 
+            get
+            { 
+                var parts = new List<string>();
+                if (ContractVariationIsExtended) parts.Add("Extended");
+                if (ContractVariationIsOther)
+                { 
+                    if (!string.IsNullOrWhiteSpace(ContractVariationOtherReason))
+                        parts.Add($"Other: {ContractVariationOtherReason}");
+                    else
+                        parts.Add("Other");
+                }
+                return parts.Count == 0 ? "-" : string.Join(", ", parts);
+            }
+        }
+
         public DateTime? ContractVariationDateStart                              { get; set; }
         public string    ContractVariationDateStartText                          { get { return DCC_Formatting.NullDateTxt(ContractVariationDateStart, "dd MMM yyyy"); } }
         public string    ContractVariationDateStartSort                          { get { return DCC_Formatting.NullDateTxt(ContractVariationDateStart, "yyyyMMddHHmm"); } }
         public DateTime? ContractVariationDateEnd                                { get; set; }
+        public string    ContractVariationDateEndText                            { get { return DCC_Formatting.NullDateTxt(ContractVariationDateEnd, "dd MMM yyyy"); } }
+        public string    ContractVariationDateEndSort                            { get { return DCC_Formatting.NullDateTxt(ContractVariationDateEnd, "yyyyMMddHHmm"); } }
         public string    ContractVariationServiceNo                              { get; set; }
         public string    ContractVariationRouteStart                             { get; set; }
         public string    ContractVariationRouteEnd                               { get; set; }
@@ -93,7 +117,6 @@ namespace ProspectBusinessLayer
         public decimal   ContractVariationAverageRevenuePerYear                  { get; set; }
         public decimal   ContractVariationAverageCostPerDay                      { get; set; }
         public decimal   ContractVariationAverageCostPerYear                     { get; set; }
-
         public DateTime? ContractVariationVariationDateStart                     { get; set; }
         public string    ContractVariationVariationDateStartText                 { get { return DCC_Formatting.NullDateTxt(ContractVariationVariationDateStart, "dd MMM yyyy"); } }
         public string    ContractVariationVariationDateStartSort                 { get { return DCC_Formatting.NullDateTxt(ContractVariationVariationDateStart, "yyyyMMddHHmm"); } }
@@ -141,7 +164,6 @@ namespace ProspectBusinessLayer
         public string    TenderClosingDateText                                   { get { return DCC_Formatting.NullDateTxt(TenderClosingDate, "dd MMM yyyy"); } }
         public string    JointResponsibility1                                    { get; set; }
         public string    ServiceDetails1                                         { get; set; }
-
         public bool      OperatesOnMon                                           { get; set; }
         public bool      OperatesOnTue                                           { get; set; }
         public bool      OperatesOnWed                                           { get; set; }
@@ -160,7 +182,7 @@ namespace ProspectBusinessLayer
         public string    ContractorName                                          { get; set; }
         public string    ContractorLicenceNo                                     { get; set; }
         public string    SpecificationAgreementDescription                       { get; set; }    
-        public string    ContractVariationAgreementDescription                   { get; set; }    
+        //public string    ContractVariationAgreementDescription                   { get; set; }    
         public string    AgreementDescription                                    { get; set; }
 
 
@@ -223,6 +245,7 @@ namespace ProspectBusinessLayer
         public string    TicketNotes                                             { get; set; }
         public string    VehicleNotes                                            { get; set; }
 
+        
 
 
         // Utilities
@@ -232,7 +255,10 @@ namespace ProspectBusinessLayer
         public bool IsNew { get { return PrimaryKey == -1; } }
         public override string ToString() { return PrimaryKey.ToString().PadLeft(5) + "; specref: " + ContractReference + "; " + ContractorName + "; " + (IsTenderAccepted ? "Successful" : "Not successful"); }
 
-
+        public string ContractVariationAgreementDescription =>
+            ddlAgreement?
+                .FirstOrDefault(x => x.Value == ContractVariation_Q_Agreement?.ToString())
+                ?.Text;
 
         // Drop Down Lists
 
@@ -266,18 +292,23 @@ namespace ProspectBusinessLayer
             GetColumns(dataRow);
         }
 
-        public Tender(DCC_Database db, int pK_Tender = -999, int pQ_Specification = -999, bool pBriefMode = false)
+        public Tender(DCC_Database db, int pK_Tender = -999, int pQ_Specification = -999, bool pBriefMode = false, bool autoSaveIfNew = false)
         {
-            if (pK_Tender == -1) // create a new instance of Tender and set defaults
+            if (pK_Tender <= 0 && pQ_Specification > 0) // covers both -1 and 0
             {
-                K_Tender = -1;
+                Q_Specification = pQ_Specification;
 
-                if (pQ_Specification > 0)
+                Specification spec = new Specification(db, Q_Specification, pBriefMode: true);
+
+                CalculatedNoOfDaysOfOperationFirstYear = spec.CalculatedNoOfDaysOfOperationFirstYear;
+                CalculatedNoOfDaysOfOperationFullTerm = spec.CalculatedNoOfDaysOfOperationFullTerm;
+
+                TenderAverageMilesPerDay = spec.AverageMilesPerDay;
+
+                if (autoSaveIfNew && !pBriefMode)
                 {
-                    Q_Specification = pQ_Specification;
+                    pK_Tender = Save(db, "Tender");
                 }
-
-                pK_Tender = Save(db, "Tender");
             }
 
             if (pK_Tender > 0) // read a record from the database for the given K_Tender
@@ -287,7 +318,7 @@ namespace ProspectBusinessLayer
                 dbf.AddParameter("K_Tender", pK_Tender);
                 db.DataLayer.SelectData(dbf);
                 if (dbf.hasTables && dbf.TableZeroRows.Count == 1) GetColumns(dbf.RowZero);
-                
+
                 if (!pBriefMode) PopulateDropDownLists(db, pK_Tender);
             }
         }
@@ -334,12 +365,16 @@ namespace ProspectBusinessLayer
             if (DCC_GetColumn.Exists(dataRow, "ContractVariationRouteStart"))                             ContractVariationRouteStart                             = DCC_GetColumn.String(dataRow,             "ContractVariationRouteStart");
             if (DCC_GetColumn.Exists(dataRow, "ContractVariationRouteEnd"))                               ContractVariationRouteEnd                               = DCC_GetColumn.String(dataRow,             "ContractVariationRouteEnd");
             if (DCC_GetColumn.Exists(dataRow, "ContractVariationExceptionalConditions"))                  ContractVariationExceptionalConditions                  = DCC_GetColumn.String(dataRow,             "ContractVariationExceptionalConditions");
+            if (DCC_GetColumn.Exists(dataRow, "ContractVariationIsCancelled"))                            ContractVariationIsCancelled                            = DCC_GetColumn.Bit(dataRow,                "ContractVariationIsCancelled");
+            if (DCC_GetColumn.Exists(dataRow, "ContractVariationIsExtended"))                             ContractVariationIsExtended                             = DCC_GetColumn.Bit(dataRow, "ContractVariationIsExtended");
+            if (DCC_GetColumn.Exists(dataRow, "ContractVariationIsOther"))                                ContractVariationIsOther                                = DCC_GetColumn.Bit(dataRow, "ContractVariationIsOther");
+            if (DCC_GetColumn.Exists(dataRow, "ContractVariationOtherReason"))                            ContractVariationOtherReason                            = DCC_GetColumn.String(dataRow, "ContractVariationOtherReason");
 
             if (DCC_GetColumn.Exists(dataRow, "ContractVariationVehicleCapacity"))                        ContractVariationVehicleCapacity                        = DCC_GetColumn.String(dataRow,             "ContractVariationVehicleCapacity");
             if (DCC_GetColumn.Exists(dataRow, "ContractVariationVehicleElderlyAndDisabled"))              ContractVariationVehicleElderlyAndDisabled              = DCC_GetColumn.String(dataRow,             "ContractVariationVehicleElderlyAndDisabled");
             if (DCC_GetColumn.Exists(dataRow, "ContractVariationVehicleDimensions"))                      ContractVariationVehicleDimensions                      = DCC_GetColumn.String(dataRow,             "ContractVariationVehicleDimensions");
 
-            if (DCC_GetColumn.Exists(dataRow, "ContractVariation_Q_Agreement"))                           ContractVariation_Q_Agreement                           = DCC_GetColumn.Integer32(dataRow,          "ContractVariation_Q_Agreement");
+            
             if (DCC_GetColumn.Exists(dataRow, "ContractVariationServiceDetails"))                         ContractVariationServiceDetails                         = DCC_GetColumn.String(dataRow,             "ContractVariationServiceDetails");
             if (DCC_GetColumn.Exists(dataRow, "ContractVariationTicketNotes"))                            ContractVariationTicketNotes                            = DCC_GetColumn.String(dataRow,             "ContractVariationTicketNotes");
             if (DCC_GetColumn.Exists(dataRow, "ContractVariationRouteTimetableNotes"))                    ContractVariationRouteTimetableNotes                    = DCC_GetColumn.String(dataRow,             "ContractVariationRouteTimetableNotes");
@@ -381,13 +416,15 @@ namespace ProspectBusinessLayer
             if (DCC_GetColumn.Exists(dataRow, "RouteStart"))                                              RouteStart                                              = DCC_GetColumn.String(dataRow,             "RouteStart");
             if (DCC_GetColumn.Exists(dataRow, "RouteEnd"))                                                RouteEnd                                                = DCC_GetColumn.String(dataRow,             "RouteEnd");
 
-            if (DCC_GetColumn.Exists(dataRow, "Q_Agreement"))                                             Q_Agreement                                             = DCC_GetColumn.Integer32(dataRow,          "Q_Agreement");
+            
             if (DCC_GetColumn.Exists(dataRow, "IsFuelTerm"))                                              IsFuelTerm                                              = DCC_GetColumn.Bit(dataRow,                "IsFuelTerm");
             if (DCC_GetColumn.Exists(dataRow, "TenderClosingDate"))                                       TenderClosingDate                                       = DCC_GetColumn.DateTimeQ(dataRow,          "TenderClosingDate");
             if (DCC_GetColumn.Exists(dataRow, "JointResponsibility1"))                                    JointResponsibility1                                    = DCC_GetColumn.String(dataRow,             "JointResponsibility1");
             if (DCC_GetColumn.Exists(dataRow, "ServiceDetails1"))                                         ServiceDetails1                                         = DCC_GetColumn.String(dataRow,             "ServiceDetails1");
 
             if (DCC_GetColumn.Exists(dataRow, "ContractTypeDescription"))                                 ContractTypeDescription                                 = DCC_GetColumn.String(dataRow,             "ContractTypeDescription");
+            if (DCC_GetColumn.Exists(dataRow, "Q_Agreement"))                                             Q_Agreement                                             = DCC_GetColumn.Integer32(dataRow,          "Q_Agreement");
+            if (DCC_GetColumn.Exists(dataRow, "ContractVariation_Q_Agreement"))                           ContractVariation_Q_Agreement                           = DCC_GetColumn.Integer32(dataRow,          "ContractVariation_Q_Agreement");
             if (DCC_GetColumn.Exists(dataRow, "AgreementDescription"))                                    AgreementDescription                                    = DCC_GetColumn.String(dataRow,             "AgreementDescription");
             if (DCC_GetColumn.Exists(dataRow, "ContractorName"))                                          ContractorName                                          = DCC_GetColumn.String(dataRow,             "ContractorName");
             if (DCC_GetColumn.Exists(dataRow, "ContractorLicenceNo"))                                     ContractorLicenceNo                                     = DCC_GetColumn.String(dataRow,             "ContractorLicenceNo");
@@ -526,14 +563,15 @@ namespace ProspectBusinessLayer
                 if ( (Q_Specification > 0) && (string.IsNullOrEmpty(RouteStart)) )
                 {
                     Specification specification = new Specification(db, Q_Specification, pBriefMode:true);
-                    ContractReference       = specification.ContractReference;
-                    SpecificationServiceNo  = specification.SpecificationServiceNo;
-                    RouteStart              = specification.RouteStart;
-                    RouteEnd                = specification.RouteEnd;
-                    ContractTypeDescription = specification.ContractTypeDescription;
-                    DateStart               = specification.DateStart;
-                    DateEnd                 = specification.DateEnd;
-                    IsFuelTerm                = specification.IsFuelTerm;
+                    ContractReference           = specification.ContractReference;
+                    SpecificationServiceNo      = specification.SpecificationServiceNo;
+                    RouteStart                  = specification.RouteStart;
+                    RouteEnd                    = specification.RouteEnd;
+                    ContractTypeDescription     = specification.ContractTypeDescription;
+                    DateStart                   = specification.DateStart;
+                    DateEnd                     = specification.DateEnd;
+                    IsFuelTerm                  = specification.IsFuelTerm;
+                    TenderAverageMilesPerDay    = specification.AverageMilesPerDay;
                 }
             }
 
@@ -545,10 +583,20 @@ namespace ProspectBusinessLayer
             }
         }
 
-        public int Save(DCC_Database db, string pMode, bool saveVariation = false)
+        public int Save(DCC_Database db, string mode, bool saveVariation = false)
         {
-            int result = (IsNew ? Insert(db) : Update(db, pMode, saveVariation));
-            return result;
+            if (this.K_Tender <= 0)
+            { 
+                var pk = this.Insert(db);
+                if (pk <= 0) return pk;
+
+                if (this.IsTenderAccepted)
+                    this.ContractVariationGrid = new ContractVariationGrid(db, pk);
+
+                return this.Update(db, "Tender", false);
+            }
+
+            return this.Update(db, mode ?? "Tender", saveVariation);
         }
 
         int Insert(DCC_Database db)
@@ -785,7 +833,7 @@ namespace ProspectBusinessLayer
                 K_Tender = SaveTenderBlock(db);
 
                 // if the tender has been accepted and there isn't already a contract variation '00'
-                if ( (IsTenderAccepted) && (ContractVariationGrid.Count == 0) )
+                if (IsTenderAccepted && ((ContractVariationGrid?.Count ?? 0) == 0))
                 {
                     if (IsPackage)
                     {
@@ -899,6 +947,7 @@ namespace ProspectBusinessLayer
                     // save the variation block properties then create the first contract variation '00' by passing a 0 parameter
                     SaveVariationBlock(db);
                     ContractVariationVariationDateStart = parent.DateStart; // set datestart to contract datestart on variation 00, leaving it blank in the variation block for the next one
+                    ContractVariationVariationDateEnd   = parent.DateEnd;
                     SaveContractVariation(db, 0);
                 }
             }
@@ -953,6 +1002,8 @@ namespace ProspectBusinessLayer
 
             dbf.AddParameter("ContractVariationIsCancelled",                            ContractVariationIsCancelled);
             dbf.AddParameter("ContractVariationIsExtended",                             ContractVariationIsExtended);
+            dbf.AddParameter("ContractVariationIsOther",                                ContractVariationIsOther);
+            dbf.AddParameter("ContractVariationOtherReason",                            ContractVariationOtherReason              , 500);
             dbf.AddParameter("ContractVariationDateStart",                              ContractVariationDateStart);
             dbf.AddParameter("ContractVariationDateEnd",                                ContractVariationDateEnd);
             dbf.AddParameter("ContractVariationServiceNo",                              ContractVariationServiceNo                , 500);
@@ -1011,6 +1062,8 @@ namespace ProspectBusinessLayer
 
             newContractVariation.ContractVariationIsCancelled                            = ContractVariationIsCancelled;
             newContractVariation.ContractVariationIsExtended                             = ContractVariationIsExtended;
+            newContractVariation.ContractVariationIsOther                                = ContractVariationIsOther;
+            newContractVariation.ContractVariationOtherReason                            = ContractVariationOtherReason;
             newContractVariation.ContractVariationDateStart                              = ContractVariationDateStart;
             newContractVariation.ContractVariationDateEnd                                = ContractVariationDateEnd;
             newContractVariation.ContractVariationServiceNo                              = ContractVariationServiceNo;
@@ -1052,7 +1105,9 @@ namespace ProspectBusinessLayer
             newContractVariation.ContractVariationAverageCostPerYear                     = ContractVariationAverageCostPerYear;
 
             newContractVariation.ContractVariationVariationDateStart                     = ContractVariationVariationDateStart;
-            newContractVariation.ContractVariationVariationDateEnd                       = ContractVariationVariationDateEnd;
+            newContractVariation.ContractVariationVariationDateEnd                       = ContractVariationVariationDateEnd.HasValue
+                                                                                                ? ContractVariationVariationDateEnd.Value
+                                                                                                : (DateTime?)null;
 
             newContractVariation.ContractVariationNotes                                  = ContractVariationNotes;
 
@@ -1149,7 +1204,7 @@ namespace ProspectBusinessLayer
             if (pQ_Specification > 0)
             {
                 dbf = new DCC_DatabaseFrame("sTenderListBySpecification");
-                dbf.AddParameter("Q_Specification ", pQ_Specification);
+                dbf.AddParameter("Q_Specification", pQ_Specification);
             }
             else if (awardedOnly)
             {

@@ -293,16 +293,16 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="form-group">
-                        @Html.LabelFor(model => model.SpecificationServiceNo, "Service number", new { @class="width230" })
-                        @Html.TextBoxFor(model => model.SpecificationServiceNo, new { @class="form-control width350", @maxlength="100", @readonly="readonly" })
+                        @Html.LabelFor(model => model.SpecificationServiceNo, "Service number", new { @class = "width230" })
+                        @Html.TextBoxFor(model => model.SpecificationServiceNo, new { @class = "form-control width350", @maxlength = "100", @readonly = "readonly" })
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(model => model.RouteText, "Route", new { @class="width230" })
-                        @Html.TextBoxFor(model => model.RouteText, new { @class="form-control width300", @readonly="readonly" })
+                        @Html.LabelFor(model => model.RouteText, "Route", new { @class = "width230" })
+                        @Html.TextBoxFor(model => model.RouteText, new { @class = "form-control width300", @readonly = "readonly" })
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(model => model.IsFuelTermText, "Do special fuel terms apply?", new { @class="width230" })
-                        @Html.TextBoxFor(model => model.IsFuelTermText, new { @class="form-control width350", @readonly="readonly" })
+                        @Html.LabelFor(model => model.IsFuelTermText, "Do special fuel terms apply?", new { @class = "width230" })
+                        @Html.TextBoxFor(model => model.IsFuelTermText, new { @class = "form-control width350", @readonly = "readonly" })
                     </div>
                 </div>
             </div>
@@ -403,7 +403,7 @@
                     @Html.CheckBoxFor(model => model.IncludeInTenderAnalysis, new { @id="cbIncludeInTenderAnalysis", @class="hide" })
                 </div>
                 <div class="form-group">
-                    @Html.Label("IsTenderAccepted", "Is tender accepted?", new { @class="width230" })
+                    @Html.Label("IsTenderAccepted", "Is tender accepted?", new { @class = "width230" })
                     <input id="dummyIsTenderAccepted" type="checkbox" name="checkbox" class="hide" onclick="checkboxClick(this);">
                     <label for="dummyIsTenderAccepted"></label>
                     @Html.CheckBoxFor(model => model.IsTenderAccepted, new { @id="cbIsTenderAccepted", @class="hide" })
@@ -420,7 +420,7 @@
                     @Html.LabelFor(model => model.TenderQualificationNotes, "Qualification notes", new { @class="width230 hide" })
                     <div style="width:auto">
                         @Html.TextAreaFor(model => model.TenderQualificationNotes, new { @id="TenderQualificationNotes", @class="form-control width580 height80", onblur="TextAreaOnBlur(this)", @maxlength="500", @onkeyup="TextAreaOnKeyUp(this, 1000);", @onkeydown="return true;" })
-                        <div id="divTenderQualificationNotes" class="marginLeft230 width580 alignRight"></div>
+                        <div id="divTenderQualificationNotes" class="width580 alignRight"></div>
                     </div>
                     @Html.ValidationMessageFor(model => model.TenderQualificationNotes, null, new { @class="width230" })
                 </div>
@@ -447,61 +447,55 @@
 
 <script type="text/javascript">
 
-    $(document).ready(function ()
-    {
+    $(document).ready(function () {
 
         // Customise jquery datepickers
 
         $.datepicker.setDefaults(
-        {
-            inline: true,
-            dateFormat: 'd M yy',
-            dayNamesMin: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-            firstDay: 1,
-            showOtherMonths: true,
-            showAnimation: 'fadeIn',
-            showButtonPanel: true,
-            changeYear: true,
-            changeMonth: true,
-            //maxDate:'365', // no of days after today ('0'=today)
-            yearRange: "-100:+2"
-        });
+            {
+                inline: true,
+                dateFormat: 'd M yy',
+                dayNamesMin: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                firstDay: 1,
+                showOtherMonths: true,
+                showAnimation: 'fadeIn',
+                showButtonPanel: true,
+                changeYear: true,
+                changeMonth: true,
+                //maxDate:'365', // no of days after today ('0'=today)
+                yearRange: "-100:+2"
+            });
 
 
 
 
         // Initialise dropdownlists
 
-        $('select').each(function (index)
-        {
-            var $this=$(this);
-            var id=$this.attr("id");
-            var ddl1=document.getElementById(id), option, i;
-            for (i=0; i < ddl1.length; i++)
-            {
-                option=ddl1[i];
-                if (option.text.toLowerCase() == "-- not set --")
-                {
-                    option.disabled=true;// disable this line if you want to allow user to select "-- not set --"
-                    option.style.color="grey";
+        $('select').each(function (index) {
+            var $this = $(this);
+            var id = $this.attr("id");
+            var ddl1 = document.getElementById(id), option, i;
+            for (i = 0; i < ddl1.length; i++) {
+                option = ddl1[i];
+                if (option.text.toLowerCase() == "-- not set --") {
+                    option.disabled = true;// disable this line if you want to allow user to select "-- not set --"
+                    option.style.color = "grey";
                 }
-                else
-                {
-                    option.style.color="#2e6492";
+                else {
+                    option.style.color = "#2e6492";
                 }
             }
             if ((this.value == "-- not set --") || (this.value == ""))
-                this.style.color="grey";
+                this.style.color = "grey";
             else
-                this.style.color="#2e6492";
+                this.style.color = "#2e6492";
         });
 
-        $('select').on('change', function ()
-        {
+        $('select').on('change', function () {
             if ((this.value == "-- not set --") || (this.value == ""))
-                this.style.color="grey";
+                this.style.color = "grey";
             else
-                this.style.color="#2e6492";
+                this.style.color = "#2e6492";
         });
 
 
@@ -509,13 +503,12 @@
 
         // Initialise Checkboxes
 
-        $("input:checkbox").each(function ()
-        {
-            var $this=$(this);
-            var id=$this.attr("id");
-            if (id.indexOf('dummy') == 0)
-            {
-                this.checked=document.getElementById(id.replace('dummy', 'cb')).checked;
+        $("input:checkbox").each(function () {
+            var $this = $(this);
+            var id = $this.attr("id");
+            if (id.indexOf('dummy') === 0) {
+                var target = document.getElementById(id.replace('dummy', 'cb'));
+                this.checked = target?.checked || false;
             }
         });
 
@@ -523,46 +516,63 @@
 
     });
 
-
-
-
     // OnLoad
 
-    function onLoad()
-    {
+    function onLoad() {
         return false;
     }
-
-
-
 
     // Set checkboxes
 
-    function checkboxClick(element)
-    {
-        var id=element.id;
-        var target=id.replace('dummy', 'cb');
-        var remember=document.getElementById(id);
-        document.getElementById(target).checked=(remember.checked);
-        return false;
+    function checkboxClick(element) {
+        var id = element.id;
+        var realId = id.replace('dummy', 'cb');           
+        var real = document.getElementById(realId);      
+        if (!real) return;
+
+        real.checked = element.checked;                   
+        real.value = element.checked ? 'true' : 'false';
+
+        real.dispatchEvent(new Event('change', { bubbles: true }));
     }
-
-
-
 
     // Show character count while typing in a textarea
 
-    function TextAreaOnKeyUp(ctrl, max)
-    {
-        var remaining=max - ctrl.value.length;
+    function TextAreaOnKeyUp(ctrl, max) {
+        var remaining = max - ctrl.value.length;
         $("#div" + ctrl.id).html(remaining + " characters remaining");
     }
 
-    function TextAreaOnBlur(ctrl)
-    {
+    function TextAreaOnBlur(ctrl) {
         $("#div" + ctrl.id).html("");
     }
 
+    function toNum(v) { var n = parseFloat(String(v || '').replace(/,/g, '')); return isNaN(n) ? 0 : n; }
+    function r2(n) { return Math.round(n * 100) / 100; }
 
+    function recalcYearFromDays() {
+        // the readonly “Days of operation (first year)”
+        var days = parseInt($('#CalculatedNoOfDaysOfOperationFirstYear').val(), 10) || 0;
+
+        var perDay = toNum($('#tbTenderPricePerDay').val());
+        var revDay = toNum($('#tbEstimatedAverageRevenuePerDay').val());
+        var costDay = toNum($('#tbAverageCostPerDay').val());
+
+        $('#tbTenderPricePerYear').val(r2(perDay * days));
+        $('#tbEstimatedAverageRevenuePerYear').val(r2(revDay * days));
+        $('#tbAverageCostPerYear').val(r2(costDay * days));
+    }
+
+    $(function () {
+        // fire on edits to per-day inputs
+        $('#tbTenderPricePerDay,#tbEstimatedAverageRevenuePerDay,#tbAverageCostPerDay')
+            .on('input change blur', recalcYearFromDays);
+
+        // if the days field can change via AJAX, catch it too
+        $('#CalculatedNoOfDaysOfOperationFirstYear').on('change', recalcYearFromDays);
+
+        // initial fill
+        recalcYearFromDays();
+    });
 
 </script>
