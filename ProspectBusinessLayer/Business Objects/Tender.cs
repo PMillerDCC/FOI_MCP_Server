@@ -429,7 +429,7 @@ namespace ProspectBusinessLayer
             if (DCC_GetColumn.Exists(dataRow, "ContractorName"))                                          ContractorName                                          = DCC_GetColumn.String(dataRow,             "ContractorName");
             if (DCC_GetColumn.Exists(dataRow, "ContractorLicenceNo"))                                     ContractorLicenceNo                                     = DCC_GetColumn.String(dataRow,             "ContractorLicenceNo");
             if (DCC_GetColumn.Exists(dataRow, "SpecificationAgreementDescription"))                       SpecificationAgreementDescription                       = DCC_GetColumn.String(dataRow,             "SpecificationAgreementDescription");
-            if (DCC_GetColumn.Exists(dataRow, "ContractVariationAgreementDescription"))                   ContractVariationAgreementDescription                   = DCC_GetColumn.String(dataRow,             "ContractVariationAgreementDescription");
+            //if (DCC_GetColumn.Exists(dataRow, "ContractVariationAgreementDescription"))                   ContractVariationAgreementDescription                   = DCC_GetColumn.String(dataRow,             "ContractVariationAgreementDescription");
                                                                                                        
             return true;
         }
