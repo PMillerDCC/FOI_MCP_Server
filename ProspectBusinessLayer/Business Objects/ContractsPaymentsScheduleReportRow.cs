@@ -382,22 +382,22 @@ namespace ProspectBusinessLayer
             
             FuelCost newPrice = GetFuelCost(segmentStart);
 
+            decimal basePrice = priceVariation.ContractVariationAveragePricePerDay;
+            decimal adjustedFuel = priceVariation.ContractVariationFuelPriceElement;
+
             decimal total;
 
             if (priceVariation.ContractVariationFuelPriceElement == 0
                 || originalPrice.Price == 0
                 || newPrice.Price == 0)
             {
-                total = priceVariation.ContractVariationAveragePricePerDay
-                        + priceVariation.ContractVariationFuelPriceElement;
+                total = basePrice + adjustedFuel;
             }
             else
             {
                 decimal fuelRatio      = newPrice.Price / originalPrice.Price;
-                decimal adjustedFuel   = priceVariation.ContractVariationFuelPriceElement * fuelRatio;
-                
-                decimal basePrice = priceVariation.ContractVariationAveragePricePerDay;
-                
+                adjustedFuel   = priceVariation.ContractVariationFuelPriceElement * fuelRatio;
+               
                 total = basePrice + adjustedFuel;
             }
 
@@ -425,8 +425,8 @@ namespace ProspectBusinessLayer
             row.DateEnd = segmentEnd.ToShortDateString();
             row.DateText = $"{segmentStart:dd/MM/yyyy} - {segmentEnd:dd/MM/yyyy}";
 
-            row.ContractVariationAveragePricePerDay = priceVariation.ContractVariationAveragePricePerDay;
-            row.ContractVariationFuelPriceElement = priceVariation.ContractVariationFuelPriceElement;
+            row.ContractVariationAveragePricePerDay = basePrice;
+            row.ContractVariationFuelPriceElement = adjustedFuel;
             row.ContractVariationClosingDate = priceVariation.ContractVariationVariationDateStartText;
             row.NoOfDaysOfOperationPerYear = daysInOperation;
             row.ContractAmount = grandTotal;

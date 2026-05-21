@@ -258,6 +258,12 @@
                         </div>
                         @Html.ValidationMessageFor(m => m.ContractVariationNotes, null, new { @class = "marginLeft210" })
                     </div>
+
+                    <div class="form-group">
+                        <h3 class="marginTop20">Reason for edit</h3>
+                        @Html.TextAreaFor(m => m.ContractVariationReasonForEdit, new { @class = "width380 height80"})
+                    </div>
+
                 </div>
             </div>
         </fieldset>
@@ -600,6 +606,12 @@
 
     $('input.price-format').on('blur', function () {
         formatPriceInput(this);
+    });
+
+    $(document).ready(function() {
+        $('input.price-format').each(function() {
+            formatPriceInput(this);
+        });
     });
 
     $('#variationForm').on('submit', function () {

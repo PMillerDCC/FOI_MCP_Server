@@ -117,6 +117,65 @@ namespace ProspectBusinessLayer
         public int       TenderReference                                         { get; set; }
         public string    TenderReferenceText                                     { get { return TenderReference.ToString().PadLeft(5, '0'); } }
         public string    TenderReferenceSort                                     { get { return TenderReference.ToString().PadLeft(5, '0'); } }
+        public string ContractVariationReasonForEdit                             { get; set; }
+
+        public string PackageServiceNumbers
+        {
+            get
+            {
+                // Load the Tender properly using the correct constructor
+                using (var db = new DCC_Database("SQLSERVER", "Prospect", "Prospect"))
+                {
+                    var tender = new Tender(db, this.ContractVariation_Q_Tender);
+
+                    // If the tender is not a package, return the variation's own service number
+                    if (!tender.IsPackage)
+                        return this.ContractVariationServiceNo;
+
+                    // If it IS a package, aggregate service numbers from child specifications
+                    var numbers = new List<string>();
+
+                    var dbf = new DCC_DatabaseFrame("sChildSpecificationsByTenderReference");
+                    dbf.AddTable("Specification");
+                    dbf.AddParameter("TenderReference", tender.TenderReference);
+
+                    db.DataLayer.SelectData(dbf);
+
+                    if (dbf.hasTables)
+                    {
+                        foreach (DataRow row in dbf.TableZeroRows)
+                        {
+                            var serviceNo = row["SpecificationServiceNo"]?.ToString();
+
+                            if (!string.IsNullOrEmpty(serviceNo) && !numbers.Contains(serviceNo))
+                                numbers.Add(serviceNo);
+                        }
+                    }
+
+                    // If no child service numbers found, fall back to the variation's own service number
+                    if (numbers.Count == 0)
+                        return this.ContractVariationServiceNo;
+
+                    return string.Join(", ", numbers);
+                }
+            }
+        }
+
+        public string PackageRouteText
+        {
+            get
+            {
+                using (var db = new DCC_Database("SQLSERVER", "Prospect", "Prospect"))
+                {
+                    var tender = new Tender(db, this.ContractVariation_Q_Tender);
+
+                    if (tender.IsPackage)
+                        return "Package";
+
+                    return this.ContractVariationRouteText;
+                }
+            }
+        }
 
 
         // Utilities
@@ -235,6 +294,7 @@ namespace ProspectBusinessLayer
             ContractVariationVariationDateEnd = (rawEnd == new DateTime(1900, 1, 1) ? null : rawEnd);
 
             ContractVariationNotes                                  = DCC_GetColumn.String(dataRow,             "ContractVariationNotes");
+            ContractVariationReasonForEdit = DCC_GetColumn.String(dataRow, "ContractVariationReasonForEdit");
 
             if (DCC_GetColumn.Exists(dataRow, "ContractReference"))                         ContractReference                       = DCC_GetColumn.Integer32(dataRow, "ContractReference");
             if (DCC_GetColumn.Exists(dataRow, "ContractTypeDescription"))                   ContractTypeDescription                 = DCC_GetColumn.String(dataRow,    "ContractTypeDescription");
@@ -340,6 +400,8 @@ namespace ProspectBusinessLayer
 
                 dbf.AddParameter("ContractVariationNotes", ContractVariationNotes, 500);
 
+                dbf.AddParameter("ContractVariationReasonForEdit", ContractVariationReasonForEdit);
+
                 dbf.AddParameter("_PRIMARYKEY", DCC_DatabaseFrame.OUTINTEGER);
 
                 int newKey = db.DataLayer.NonQueryPK(dbf);
@@ -429,6 +491,8 @@ namespace ProspectBusinessLayer
             }
 
             dbf.AddParameter("ContractVariationNotes"                                 , ContractVariationNotes, 500);
+
+            dbf.AddParameter("ContractVariationReasonForEdit"                         , ContractVariationReasonForEdit, 500);
         }
 
     }

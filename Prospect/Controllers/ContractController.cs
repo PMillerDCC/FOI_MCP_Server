@@ -289,6 +289,8 @@ namespace Prospect.Controllers
             cv.ContractVariationAverageCostPerYear = model.ContractVariationAverageCostPerYear;
 
             cv.ContractVariationNotes = model.ContractVariationNotes;
+
+            cv.ContractVariationReasonForEdit = model.ContractVariationReasonForEdit;
         }
 
         private void InitialiseContractVariationGrid(Tender model)
@@ -368,6 +370,8 @@ namespace Prospect.Controllers
             model.ContractVariationAverageCostPerYear = cv.ContractVariationAverageCostPerYear;
 
             model.ContractVariationNotes = cv.ContractVariationNotes;
+
+            model.ContractVariationReasonForEdit = cv.ContractVariationReasonForEdit;
         }
 
         private DateTime? GetNextVariationStartDate(Tender model)

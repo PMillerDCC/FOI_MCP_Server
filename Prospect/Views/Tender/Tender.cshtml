@@ -336,47 +336,47 @@
                 <h3>Prices</h3>
                 <div class="form-group">
                     @Html.LabelFor(model => model.TenderAverageMilesPerDay, "Average miles per day", new { @class="width230" })
-                    @Html.TextBoxFor(model => model.TenderAverageMilesPerDay, new { @id="tbTenderAverageMilesPerDay", @class="form-control width100" })
+                    @Html.TextBoxFor(model => model.TenderAverageMilesPerDay, new { @id="tbTenderAverageMilesPerDay", @class= "form-control width100 price-format" })
                     @Html.ValidationMessageFor(model => model.TenderAverageMilesPerDay, null, new { @class="marginLeft230" })
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(model => model.TenderRatePerMile, "Rate per mile", new { @class="width230" })
-                    @Html.TextBoxFor(model => model.TenderRatePerMile, new { @id="tbRatePerMile", @class="form-control width100" })
+                    @Html.TextBoxFor(model => model.TenderRatePerMile, new { @id="tbRatePerMile", @class= "form-control width100 price-format" })
                     @Html.ValidationMessageFor(model => model.TenderRatePerMile, null, new { @class="marginLeft230" })
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(model => model.TenderFuelPriceElement, "Fuel related price element", new { @class="width230" })
-                    @Html.TextBoxFor(model => model.TenderFuelPriceElement, new { @id="tbFuelPriceElement", @class="form-control width100" })
+                    @Html.TextBoxFor(model => model.TenderFuelPriceElement, new { @id="tbFuelPriceElement", @class= "form-control width100 price-format" })
                     @Html.ValidationMessageFor(model => model.TenderFuelPriceElement, null, new { @class="marginLeft230" })
                 </div>
                  <div class="form-group">
                     @Html.LabelFor(model => model.TenderPricePerDay, "Tender price per day", new { @class="width230" })
-                    @Html.TextBoxFor(model => model.TenderPricePerDay, new { @id="tbTenderPricePerDay", @class="form-control width100" })
+                    @Html.TextBoxFor(model => model.TenderPricePerDay, new { @id="tbTenderPricePerDay", @class= "form-control width100 price-format" })
                     @Html.ValidationMessageFor(model => model.TenderPricePerDay, null, new { @class="marginLeft230" })
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(model => model.TenderPricePerYear, "Tender price per year", new { @class="width230" })
-                    @Html.TextBoxFor(model => model.TenderPricePerYear, new { @id="tbTenderPricePerYear", @class="form-control width100" })
+                    @Html.TextBoxFor(model => model.TenderPricePerYear, new { @id="tbTenderPricePerYear", @class= "form-control width100 price-format" })
                     @Html.ValidationMessageFor(model => model.TenderPricePerYear, null, new { @class="marginLeft230" })
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(model => model.EstimatedAverageRevenuePerDay, "Estimated average revenue per day", new { @class="width230" })
-                    @Html.TextBoxFor(model => model.EstimatedAverageRevenuePerDay, new { @id="tbEstimatedAverageRevenuePerDay", @class="form-control width100" })
+                    @Html.TextBoxFor(model => model.EstimatedAverageRevenuePerDay, new { @id="tbEstimatedAverageRevenuePerDay", @class= "form-control width100 price-format" })
                     @Html.ValidationMessageFor(model => model.EstimatedAverageRevenuePerDay, null, new { @class="marginLeft230" })
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(model => model.EstimatedAverageRevenuePerYear, "Estimated average revenue peryear", new { @class="width230" })
-                    @Html.TextBoxFor(model => model.EstimatedAverageRevenuePerYear, new { @id="tbEstimatedAverageRevenuePerYear", @class="form-control width100" })
+                    @Html.TextBoxFor(model => model.EstimatedAverageRevenuePerYear, new { @id="tbEstimatedAverageRevenuePerYear", @class= "form-control width100 price-format" })
                     @Html.ValidationMessageFor(model => model.EstimatedAverageRevenuePerYear, null, new { @class="marginLeft230" })
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(model => model.AverageCostPerDay, "Average cost per day", new { @class="width230" })
-                    @Html.TextBoxFor(model => model.AverageCostPerDay, new { @id="tbAverageCostPerDay", @class="form-control width100" })
+                    @Html.TextBoxFor(model => model.AverageCostPerDay, new { @id="tbAverageCostPerDay", @class= "form-control width100 price-format" })
                     @Html.ValidationMessageFor(model => model.AverageCostPerDay, null, new { @class="marginLeft230" })
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(model => model.AverageCostPerYear, "Average cost per year", new { @class="width230" })
-                    @Html.TextBoxFor(model => model.AverageCostPerYear, new { @id="tbAverageCostPerYear", @class="form-control width100" })
+                    @Html.TextBoxFor(model => model.AverageCostPerYear, new { @id="tbAverageCostPerYear", @class= "form-control width100 price-format" })
                     @Html.ValidationMessageFor(model => model.AverageCostPerYear, null, new { @class="marginLeft230" })
                 </div>
             </div>
@@ -573,6 +573,26 @@
 
         // initial fill
         recalcYearFromDays();
+    });
+
+    function formatPriceInput(input) {
+    var num = input.value.replace(/,/g, '');
+    if (!isNaN(num) && num.trim() !== '') {
+        input.value = parseFloat(num).toLocaleString('en-GB', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 2
+        });
+    }
+    }
+
+    $('input.price-format').on('blur', function() {
+        formatPriceInput(this);
+    });
+
+    $(document).ready(function() {
+        $('input.price-format').each(function() {
+            formatPriceInput(this);
+        });
     });
 
 </script>

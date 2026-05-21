@@ -126,6 +126,7 @@ namespace ProspectBusinessLayer
 
         public string    ContractVariationNotes                                  { get; set; }
 
+        public string ContractVariationReasonForEdit { get; set; }
 
         // join to parent specification properties
 
@@ -143,7 +144,6 @@ namespace ProspectBusinessLayer
         public int?      Child08_Q_Specification                                 { get; set; }
         public int?      Child09_Q_Specification                                 { get; set; }
         public int?      Child10_Q_Specification                                 { get; set; }
-
         public DateTime? DateStart                                               { get; set; }
         public string    DateStartText                                           { get { return DCC_Formatting.NullDateTxt(DateStart, "dd MMM yyyy"); } }
         public string    DateStartSort                                           { get { return DCC_Formatting.NullDateTxt(DateStart, "yyyyMMddHHmm"); } }
@@ -152,10 +152,29 @@ namespace ProspectBusinessLayer
         public string    DateEndSort                                             { get { return DCC_Formatting.NullDateTxt(DateEnd, "yyyyMMddHHmm"); } }
         public string    DatesText                                               { get { return ((DateStart == null) ? "- not set -" : DateStartText + " to " + DateEndText); } }
         public string    SpecificationServiceNo                                  { get; set; }
-        public string    SpecificationServiceNoText                              { get { return (IsPackage ? "Various" : SpecificationServiceNo); }  }
+        public string SpecificationServiceNoText
+        {
+            get
+            {
+                return string.IsNullOrWhiteSpace(SpecificationServiceNo)
+                    ? "- not set -"
+                    : SpecificationServiceNo;
+            }
+        }
         public string    RouteStart                                              { get; set; }
         public string    RouteEnd                                                { get; set; }
-        public string    RouteText                                               { get { return (IsPackage ? "Various" : (string.IsNullOrEmpty(RouteStart) ? "- not set -" : RouteStart + " to " + RouteEnd) ); } }
+        public string RouteText
+        {
+            get
+            {
+                if (IsPackage)
+                    return "Package";
+
+                return string.IsNullOrWhiteSpace(RouteStart)
+                    ? "- not set -"
+                    : RouteStart + " to " + RouteEnd;
+            }
+        }
 
         public int?      Q_Agreement                                             { get; set; }
         public bool      IsFuelTerm                                              { get; set; }
@@ -229,7 +248,7 @@ namespace ProspectBusinessLayer
 		public string    Child08_HyperLink                                       { get { return "/Specification/Specification?primaryKey=" + Child08_Q_Specification.ToString(); }}
 		public string    Child09_HyperLink                                       { get { return "/Specification/Specification?primaryKey=" + Child09_Q_Specification.ToString(); }}
 		public string    Child10_HyperLink                                       { get { return "/Specification/Specification?primaryKey=" + Child10_Q_Specification.ToString(); }}
-
+        public List<Specification> ChildSpecifications => LoadChildSpecifications();
 
         // don't know ???
 
@@ -245,7 +264,24 @@ namespace ProspectBusinessLayer
         public string    TicketNotes                                             { get; set; }
         public string    VehicleNotes                                            { get; set; }
 
-        
+        public string PackageServiceNumbers
+        {
+            get
+            {
+                // If not a package or no children, return the normal service number
+                if (!IsPackage || ChildSpecifications == null || ChildSpecifications.Count == 0)
+                    return this.SpecificationServiceNo;
+
+                // Collect unique service numbers from child specs
+                var numbers = ChildSpecifications
+                    .Where(s => !string.IsNullOrEmpty(s.SpecificationServiceNo))
+                    .Select(s => s.SpecificationServiceNo)
+                    .Distinct()
+                    .ToList();
+
+                return string.Join(", ", numbers);
+            }
+        }
 
 
         // Utilities
@@ -1053,6 +1089,33 @@ namespace ProspectBusinessLayer
             return (dbf.OK ? K_Tender : -1);
         }
 
+        private List<Specification> LoadChildSpecifications()
+        {
+            var list = new List<Specification>();
+
+            // Call the stored procedure you created
+            var dbf = new DCC_DatabaseFrame("sChildSpecificationsByTenderReference");
+            dbf.AddTable("Specification");
+            dbf.AddParameter("TenderReference", this.TenderReference);
+
+            using (var db = new DCC_Database("SQLSERVER", "Prospect", "Prospect"))
+            {
+                db.DataLayer.SelectData(dbf);
+
+                if (dbf.hasTables)
+                {
+                    foreach (DataRow row in dbf.TableZeroRows)
+                    {
+                        list.Add(new Specification(row));
+                    }
+                }
+            }
+
+            return list;
+        }
+
+    
+
         void SaveContractVariation(DCC_Database db, int mode)
         {
             ContractVariation newContractVariation = new ContractVariation();
@@ -1218,8 +1281,22 @@ namespace ProspectBusinessLayer
             db.DataLayer.SelectData(dbf);
             if (dbf.hasTables)
             {
-                foreach (DataRow dataRow in dbf.TableZeroRows) Add(new Tender(dataRow));
+                foreach (DataRow dataRow in dbf.TableZeroRows)
+                {
+                    var tender = new Tender(dataRow);
+
+                    if (tender.TenderReference == 11566)
+                    {
+                        var stopHere = true;
+                    }
+
+                    Add(tender);
+                }
             }
+            //if (dbf.hasTables)
+            //{
+            //    foreach (DataRow dataRow in dbf.TableZeroRows) Add(new Tender(dataRow));
+            //}
         }
 
 
