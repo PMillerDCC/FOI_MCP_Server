@@ -20,6 +20,8 @@ namespace Prospect
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             ModelBinders.Binders.Add(typeof(TimeSpan), new DCC_TimeBinder());
             SqlServerTypes.Utilities.LoadNativeAssemblies(Server.MapPath("~/bin"));
+            ModelBinders.Binders.Add(typeof(decimal), new CommaSafeDecimalModelBinder());
+            ModelBinders.Binders.Add(typeof(decimal?), new CommaSafeDecimalModelBinder());
         }
 
         protected void Application_AuthenticateRequest(Object sender, EventArgs e)

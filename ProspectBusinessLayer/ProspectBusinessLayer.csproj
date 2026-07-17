@@ -175,8 +175,11 @@
     <Compile Include="Business Objects\Specification.cs" />
     <Compile Include="Business Objects\SpecificationExport.cs" />
     <Compile Include="Business Objects\Tender.cs" />
+    <Compile Include="Business Objects\TenderAnalysisGrid.cs" />
+    <Compile Include="Business Objects\TenderAnalysisList.cs" />
     <Compile Include="Business Objects\TenderAnalysisPackageCombinations.cs" />
     <Compile Include="Business Objects\TenderAnalysisResult.cs" />
+    <Compile Include="Business Objects\TenderAnalysisRow.cs" />
     <Compile Include="Business Objects\TendersIncludedInAnalysis.cs" />
     <Compile Include="Business Objects\TendersInCombinations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

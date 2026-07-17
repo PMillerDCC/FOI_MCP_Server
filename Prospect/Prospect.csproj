@@ -588,11 +588,13 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ContractorController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
+    <Compile Include="Controllers\TenderAnalysisController.cs" />
     <Compile Include="Controllers\TenderController.cs" />
     <Compile Include="Controllers\SpecificationController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="ModelBinders\CommaSafeDecimalModelBinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
   </ItemGroup>
@@ -634,6 +636,7 @@
     <Content Include="Views\Admin\FuelCost.cshtml" />
     <Content Include="Views\Admin\SpecificationExport.cshtml" />
     <Content Include="Views\ContractVariation\Edit.cshtml" />
+    <Content Include="Views\TenderAnalysis\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

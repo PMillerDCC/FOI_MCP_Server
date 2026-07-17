@@ -66,8 +66,8 @@
 		</NavigationOption>
 
 		<NavigationOption>
-			<title>Report 2</title>
-			<href>/Home/Index</href>
+			<title>Tender Analysis</title>
+			<href>/TenderAnalysis/Index</href>
 			<isParent>no</isParent>
 			<isChild>yes</isChild>
 			<isDummy>no</isDummy>

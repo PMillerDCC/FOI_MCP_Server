@@ -117,9 +117,9 @@ namespace ProspectBusinessLayer
         public int       TenderReference                                         { get; set; }
         public string    TenderReferenceText                                     { get { return TenderReference.ToString().PadLeft(5, '0'); } }
         public string    TenderReferenceSort                                     { get { return TenderReference.ToString().PadLeft(5, '0'); } }
-        public string ContractVariationReasonForEdit                             { get; set; }
+        public string    ContractVariationReasonForEdit                          { get; set; }
 
-        public string PackageServiceNumbers
+        public string    PackageServiceNumbers
         {
             get
             {

@@ -14,29 +14,29 @@ namespace ProspectBusinessLayer
 
         // Properties
 
-        public string ContractorName { get; set; }
-        public string AgreementDescription { get; set; }
-        public int ContractReference { get; set; }
-        public string TenderReferenceSort { get; set; }
-        public string ServiceNo { get; set; }
-        public string RouteStart { get; set; }
-        public string RouteEnd { get; set; }
-        public string RouteText { get; set; }
-        public string DateStart { get; set; }
-        public string DateEnd { get; set; }
-        public string DateText { get; set; }
-        public decimal TenderPricePerDay { get; set; }
-        public int NoOfDaysOfOperationPerYear { get; set; }
-        public string NoOfDaysOfOperationPerYearString { get { return NoOfDaysOfOperationPerYear.ToString(); } }
-        public decimal ContractAmount { get; set; }
-        public string ContractAmountString { get { return DCC_Formatting.ReportMoney(ContractAmount); } }
-        public string NetAmountDue { get; set; }
-        public string Variations { get; set; }
-        public string OrderString { get; set; }
-        public decimal ContractVariationAveragePricePerDay { get; set; }
-        public decimal ContractVariationFuelPriceElement { get; set; }
-        public string ContractVariationClosingDate { get; set; }
-        public string ContractorLicenceNo { get; set; }
+        public string   ContractorName                      { get; set; }
+        public string   AgreementDescription                { get; set; }
+        public int      ContractReference                   { get; set; }
+        public string   TenderReferenceSort                 { get; set; }
+        public string   ServiceNo                           { get; set; }
+        public string   RouteStart                          { get; set; }
+        public string   RouteEnd                            { get; set; }
+        public string   RouteText                           { get; set; }
+        public string   DateStart                           { get; set; }
+        public string   DateEnd                             { get; set; }
+        public string   DateText                            { get; set; }
+        public decimal  TenderPricePerDay                   { get; set; }
+        public int      NoOfDaysOfOperationPerYear          { get; set; }
+        public string   NoOfDaysOfOperationPerYearString    { get { return NoOfDaysOfOperationPerYear.ToString(); } }
+        public decimal  ContractAmount                      { get; set; }
+        public string   ContractAmountString                { get { return DCC_Formatting.ReportMoney(ContractAmount); } }
+        public string   NetAmountDue                        { get; set; }
+        public string   Variations                          { get; set; }
+        public string   OrderString                         { get; set; }
+        public decimal  ContractVariationAveragePricePerDay { get; set; }
+        public decimal  ContractVariationFuelPriceElement   { get; set; }
+        public string   ContractVariationClosingDate        { get; set; }
+        public string   ContractorLicenceNo                 { get; set; }
 
 
         // Constructors
@@ -60,6 +60,65 @@ namespace ProspectBusinessLayer
         public List<ContractsPaymentsScheduleReportRow> All = new List<ContractsPaymentsScheduleReportRow>();
 
         // Constructors
+
+
+        private void AddPackageChildRows(Tender tender, DCC_Database db)
+        {
+            var childRefs = new List<string>
+            {
+                tender.Child01_ContractReference,
+                tender.Child02_ContractReference,
+                tender.Child03_ContractReference,
+                tender.Child04_ContractReference,
+                tender.Child05_ContractReference,
+                tender.Child06_ContractReference,
+                tender.Child07_ContractReference,
+                tender.Child08_ContractReference,
+                tender.Child09_ContractReference,
+                tender.Child10_ContractReference
+            }
+            .Where(r => !string.IsNullOrWhiteSpace(r) && r != "0")
+            .ToList();
+
+            foreach (var childRef in childRefs)
+            {
+                var spec = tender.ChildSpecifications
+                    .FirstOrDefault(s => s.ContractReference.ToString() == childRef);
+
+                var row = new ContractsPaymentsScheduleReportRow
+                {
+                    ContractorName = tender.ContractorName + " - " + tender.ContractorLicenceNo,
+                    AgreementDescription = tender.AgreementDescription,
+                    ContractReference = int.Parse(childRef),
+                    TenderReferenceSort = tender.TenderReferenceSort,
+
+                    // Service number from child specification
+                    ServiceNo = spec?.SpecificationServiceNo ?? "",
+
+                    // Route text for child
+                    RouteText = $"part of package {tender.ContractReference}",
+                    RouteStart = spec?.RouteStart,
+                    RouteEnd = spec?.RouteEnd,
+
+                    // Dates (child rows do not have variation dates)
+                    DateStart = tender.DateStartText,
+                    DateEnd = tender.DateEndText,
+                    DateText = tender.DatesText,
+
+                    // Prices zeroed
+                    ContractVariationAveragePricePerDay = 0,
+                    ContractVariationFuelPriceElement = 0,
+                    ContractAmount = 0,
+                    NoOfDaysOfOperationPerYear = 0,
+
+                    // ✔ REQUIRED: prevents sorting crash
+                    OrderString = $"{tender.ContractorName}-{childRef}"
+                };
+
+                All.Add(row);
+            }
+        }
+
 
         public ContractsPaymentsScheduleReportRowList(DCC_Database db, DateTime pStartDate, DateTime pEndDate)
         {
@@ -113,15 +172,25 @@ namespace ProspectBusinessLayer
             {
                 var firstVar = contractGroup.First();
 
+                //For each contract, we need ALL its variations (not just those in the period)
+                var allContractVariations = contractGroup
+                    .OrderBy(v =>
+                    v.ContractVariationVariationDateStart
+                    ?? v.ContractVariationDateStart
+                    ?? sqlMin)
+                    .ToList();
+
                 DateTime contractStart = 
                     firstVar.ContractVariationDateStart
                     ?? firstVar.ContractVariationVariationDateStart
                     ?? sqlMin;
 
                 DateTime contractEnd =
-                    firstVar.ContractVariationDateEnd
-                    ?? firstVar.ContractVariationVariationDateEnd
-                    ?? sqlMax;
+                    allContractVariations
+                        .Select(v => v.ContractVariationDateEnd ?? v.ContractVariationVariationDateEnd)
+                        .Where(d => d != null)
+                        .DefaultIfEmpty(sqlMax)
+                        .Max().Value;
 
                 // Skip contracts that do not overlap the report period
                 if (contractEnd < pStartDate || contractStart > pEndDate)
@@ -130,15 +199,7 @@ namespace ProspectBusinessLayer
                         $"Skipping Contract={contractGroup.Key.ContractReference}, " + 
                         $"contractStart={contractStart}, contractEnd={contractEnd}"); 
                     continue;
-                }
-
-                //For each contract, we need ALL its variations (not just those in the period)
-                var allContractVariations = contractGroup 
-                    .OrderBy(v => 
-                    v.ContractVariationVariationDateStart
-                    ?? v.ContractVariationDateStart
-                    ?? sqlMin) 
-                    .ToList(); 
+                } 
                 
                 // 3. Build price segments based on variation start dates
                 for (int i = 0; i < allContractVariations.Count; i++) 
@@ -152,7 +213,7 @@ namespace ProspectBusinessLayer
 
                     DateTime priceEnd =
                         priceVar.ContractVariationVariationDateEnd
-                        ?? (priceVar.ContractVariationNo > 0 ? sqlMax : priceVar.ContractVariationDateEnd)
+                        ?? priceVar.ContractVariationDateEnd
                         ?? sqlMax;
 
                     // Segment start = later of report start or price variation start
@@ -248,7 +309,9 @@ namespace ProspectBusinessLayer
                     if (segmentStart > segmentEnd) continue;
 
                     // 5. Build the row for this segment
-                    var row = BuildRow(priceVar, opVar, db, segmentStart, segmentEnd); 
+                    Tender tender = new Tender(db, priceVar.ContractVariation_Q_Tender);
+
+                    var row = BuildRow(priceVar, opVar, tender, db, segmentStart, segmentEnd); 
                     contractorSubTotal += row.ContractAmount; 
                     Add(row); 
                     
@@ -315,8 +378,9 @@ namespace ProspectBusinessLayer
         private Dictionary<DateTime, FuelCost> fuelCostCache = new Dictionary<DateTime, FuelCost>();
         private ContractsPaymentsScheduleReportRow BuildRow(
 
-        ContractVariation priceVariation,
+            ContractVariation priceVariation,
             ContractVariation opVariation,
+            Tender tender,
             DCC_Database db,
             DateTime segmentStart,
             DateTime segmentEnd)
@@ -376,14 +440,12 @@ namespace ProspectBusinessLayer
                 return fc;
             }
 
-            FuelCost originalPrice = GetFuelCost(
-                priceVariation.ContractVariationVariationDateStart 
-                ?? priceVariation.ContractVariationDateStart);
+            FuelCost originalPrice = GetFuelCost(tender.TenderClosingDate);
             
             FuelCost newPrice = GetFuelCost(segmentStart);
 
             decimal basePrice = priceVariation.ContractVariationAveragePricePerDay;
-            decimal adjustedFuel = priceVariation.ContractVariationFuelPriceElement;
+            decimal adjustedFuel = tender.TenderFuelPriceElement;
 
             decimal total;
 
@@ -396,7 +458,7 @@ namespace ProspectBusinessLayer
             else
             {
                 decimal fuelRatio      = newPrice.Price / originalPrice.Price;
-                adjustedFuel   = priceVariation.ContractVariationFuelPriceElement * fuelRatio;
+                adjustedFuel   = tender.TenderFuelPriceElement * fuelRatio;
                
                 total = basePrice + adjustedFuel;
             }
@@ -406,7 +468,27 @@ namespace ProspectBusinessLayer
             ContractsPaymentsScheduleReportRow row = new ContractsPaymentsScheduleReportRow();
 
             row.ContractorName = priceVariation.ContractorName + " - " + priceVariation.ContractorLicenceNo;
-            row.AgreementDescription = priceVariation.AgreementDescription;
+
+            string agreementAbbrev;
+
+            if (priceVariation.AgreementDescription == "Cost Based")
+            {
+                agreementAbbrev = "CB";
+            }
+            else if (priceVariation.AgreementDescription == "Net Subsidy")
+            {
+                agreementAbbrev = "NS";
+            }
+            else if (priceVariation.AgreementDescription == "Mixed")
+            {
+                agreementAbbrev = "M";
+            }
+            else
+            {
+                agreementAbbrev = priceVariation.AgreementDescription; // fallback
+            }
+
+            row.AgreementDescription = agreementAbbrev;
             row.ContractReference = priceVariation.ContractReference;
             row.TenderReferenceSort = priceVariation.TenderReferenceSort;
 
@@ -426,15 +508,49 @@ namespace ProspectBusinessLayer
             row.DateText = $"{segmentStart:dd/MM/yyyy} - {segmentEnd:dd/MM/yyyy}";
 
             row.ContractVariationAveragePricePerDay = basePrice;
-            row.ContractVariationFuelPriceElement = adjustedFuel;
+            row.ContractVariationFuelPriceElement = Math.Round(adjustedFuel, 2, MidpointRounding.AwayFromZero);
             row.ContractVariationClosingDate = priceVariation.ContractVariationVariationDateStartText;
             row.NoOfDaysOfOperationPerYear = daysInOperation;
             row.ContractAmount = grandTotal;
 
             row.OrderString = $"{priceVariation.ContractorName}-{priceVariation.ContractReference}";
 
-            return row;
+            var childRefs = new List<string>
+            {
+                tender.Child01_ContractReference, 
+                tender.Child02_ContractReference, 
+                tender.Child03_ContractReference, 
+                tender.Child04_ContractReference, 
+                tender.Child05_ContractReference, 
+                tender.Child06_ContractReference, 
+                tender.Child07_ContractReference, 
+                tender.Child08_ContractReference, 
+                tender.Child09_ContractReference, 
+                tender.Child10_ContractReference
+            }
+            .Where(r => !string.IsNullOrWhiteSpace(r))
+            .ToList();
 
+            bool isPackageParent = tender.IsPackage;
+            bool isPackageChild = childRefs
+                .Any(r => r != null && r.Trim() == priceVariation.ContractReference.ToString());
+
+            if (isPackageChild)
+            {
+                row.ContractVariationAveragePricePerDay = 0;
+                row.ContractVariationFuelPriceElement = 0;
+                row.ContractAmount = 0; // child rows do NOT contribute to totals
+                row.RouteText = $"part of package {tender.ContractReference}";
+            }
+
+            if (isPackageParent)
+            {
+               AddPackageChildRows(tender, db);
+               row.RouteText = "package";
+               row.ServiceNo = "Package";
+            }
+
+            return row;
 
         }
 
