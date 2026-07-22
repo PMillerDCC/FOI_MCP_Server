@@ -30,6 +30,7 @@ namespace ProspectBusinessLayer.Business_Objects
                     {
                         K_Tender = row.Field<int>("K_Tender"),
                         TenderReference = row.Field<int>("TenderReference"),
+                        Q_Specification = row.Field<int>("Q_Specification"),
                         SpecRef = row.Field<int>("SpecRef"),
                         ContractorName = row.Field<string>("ContractorName"),
                         TenderPricePerDay = row.Field<decimal?>("TenderPricePerDay") ?? 0,

@@ -13,9 +13,12 @@ namespace Prospect.Controllers
 {
     public class TenderAnalysisController : DCC_Controller
     {
+
         [Authorize]
         public ActionResult Index(int specStart = 1, int specEnd = 999999)
         {
+            var db = DCC_Session.AutoDatabaseConnection;
+
             TenderAnalysisGrid model = new TenderAnalysisGrid(
                 DCC_Session.AutoDatabaseConnection,
                 specStart,
@@ -69,6 +72,16 @@ namespace Prospect.Controllers
             {
                 var db = DCC_Session.AutoDatabaseConnection;
                 Tender tender = new Tender(db, primaryKey);
+                DCC_DatabaseFrame dbf = new DCC_DatabaseFrame("sAcceptedTenderExistsForSpecification");
+                dbf.AddParameter("Q_Specification", tender.Q_Specification);
+                dbf.AddParameter("K_Tender", tender.K_Tender);
+                dbf.AddTable("");
+                db.DataLayer.SelectData(dbf);
+                if (dbf.hasTables && dbf.TableZeroRows.Count > 0)
+                {
+                    this.DCC_DisplayMessage(DCC_MessageType.Error, "A tender has already been accepted for this specification.", true);
+                    return RedirectToAction("Index");
+                }
                 tender.IsTenderAccepted = true;
                 tender.Save(db, "Tender");
                 this.DCC_DisplayMessage(DCC_MessageType.Success, "Tender accepted successfully.", true);
