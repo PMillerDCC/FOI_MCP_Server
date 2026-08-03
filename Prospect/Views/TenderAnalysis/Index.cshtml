@@ -1,19 +1,20 @@
-﻿
-@model ProspectBusinessLayer.Business_Objects.TenderAnalysisGrid
+﻿@model ProspectBusinessLayer.Business_Objects.TenderAnalysisGrid
 
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success">
-        @TempData["SuccessMessage"]
+<fieldset>
+    <h2 class="fakeLegend doNotPrint">Tender Analysis</h2>
+    <div class="row">
+        <div class="col-lg-12 doNotPrint">
+            @using (Html.BeginForm("AcceptTender", "TenderAnalysis", FormMethod.Post))
+            {
+                @Html.Raw(Model.RenderGrid())
+            }
+
+            <div style="clear: both">
+                <input type="button"
+                       class="btn btn-success marginTop20 marginBottom10"
+                       value="Print"
+                       onclick="window.open('@Url.Action("Print", "TenderAnalysis", new { specStart = ViewBag.SpecStart, specEnd = ViewBag.SpecEnd })', 'TenderAnalysisPrint', 'width=1000,height=700,scrollbars=yes,resizable=yes'); return false;" />
+            </div>
+        </div>
     </div>
-}
-@if (TempData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger">
-        @TempData["ErrorMessage"]
-    </div>
-}
-@using (Html.BeginForm("AcceptTender", "TenderAnalysis", FormMethod.Post))
-{
-    @Html.Raw(Model.RenderGrid())
-}
+</fieldset>

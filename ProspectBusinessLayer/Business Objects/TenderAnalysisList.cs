@@ -26,7 +26,7 @@ namespace ProspectBusinessLayer.Business_Objects
             {
                 foreach (DataRow row in dbf.TableZeroRows)
                 {
-                    All.Add(new TenderAnalysisRow
+                    var analysisRow = new TenderAnalysisRow
                     {
                         K_Tender = row.Field<int>("K_Tender"),
                         TenderReference = row.Field<int>("TenderReference"),
@@ -36,9 +36,45 @@ namespace ProspectBusinessLayer.Business_Objects
                         TenderPricePerDay = row.Field<decimal?>("TenderPricePerDay") ?? 0,
                         IsConforming = row.Field<bool?>("IsConforming") ?? false,
                         IsTenderAccepted = row.Field<bool?>("IsTenderAccepted") ?? false
-                    });
+                    };
+
+                    analysisRow.ChildSpecs = new List<int>
+                    {
+                        row.Field<int?>("Child01_SpecRef") ?? 0,
+                        row.Field<int?>("Child02_SpecRef") ?? 0,
+                        row.Field<int?>("Child03_SpecRef") ?? 0,
+                        row.Field<int?>("Child04_SpecRef") ?? 0,
+                        row.Field<int?>("Child05_SpecRef") ?? 0,
+                        row.Field<int?>("Child06_SpecRef") ?? 0,
+                        row.Field<int?>("Child07_SpecRef") ?? 0,
+                        row.Field<int?>("Child08_SpecRef") ?? 0,
+                        row.Field<int?>("Child09_SpecRef") ?? 0,
+                        row.Field<int?>("Child10_SpecRef") ?? 0
+                    }
+                    .Where(x => x > 0)
+                    .ToList();
+
+                    analysisRow.IsPackage = analysisRow.ChildSpecs.Any();
+
+                    All.Add(analysisRow);
                 }
             }
+
+            var allRows = this.All.Cast<TenderAnalysisRow>().ToList();
+
+            var packageSpecs = allRows
+                .Where(r => r.IsPackage)
+                .SelectMany(r => r.ChildSpecs)
+                .ToHashSet();
+
+            foreach (var row in allRows)
+            {
+                row.IsPartOfAnotherPackage =
+                packageSpecs.Contains(row.SpecRef) &&
+                !row.IsPackage;
+            }
+
+
         }
 
         public IEnumerator<TenderAnalysisRow> GetEnumerator() => All.GetEnumerator();

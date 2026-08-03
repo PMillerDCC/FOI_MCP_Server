@@ -637,6 +637,7 @@
     <Content Include="Views\Admin\SpecificationExport.cshtml" />
     <Content Include="Views\ContractVariation\Edit.cshtml" />
     <Content Include="Views\TenderAnalysis\Index.cshtml" />
+    <Content Include="Views\TenderAnalysis\TenderAnalysisPrint.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

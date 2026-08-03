@@ -9,15 +9,18 @@ namespace ProspectBusinessLayer.Business_Objects
     public class TenderAnalysisRow
     {
         public int PrimaryKey => K_Tender;
-        public int K_Tender              { get; set; }
-        public int TenderReference       { get; set; }
-        public int Q_Specification       { get; set; }
-        public int SpecRef               { get; set; }
-        public string ContractorName     { get; set; }
-        public decimal TenderPricePerDay { get; set; }
-        public bool IsConforming         { get; set; }
-        public bool IsTenderAccepted     { get; set; }
-
+        public int K_Tender                { get; set; }
+        public int TenderReference         { get; set; }
+        public int Q_Specification         { get; set; }
+        public int SpecRef                 { get; set; }
+        public string ContractorName       { get; set; }
+        public decimal TenderPricePerDay   { get; set; }
+        public string TenderPricePerDayFormatted => TenderPricePerDay.ToString("F2");
+        public bool IsConforming           { get; set; }
+        public bool IsTenderAccepted       { get; set; }
+        public bool IsPackage              { get; set; }
+        public List<int> ChildSpecs        { get; set; } = new List<int>();
+        public bool IsPartOfAnotherPackage { get; set; }
         public string AcceptTenderButton
         {
             get

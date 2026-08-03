@@ -13,8 +13,8 @@ namespace Prospect.Controllers
 {
     public class TenderAnalysisController : DCC_Controller
     {
-
         [Authorize]
+        [HttpGet]
         public ActionResult Index(int specStart = 1, int specEnd = 999999)
         {
             var db = DCC_Session.AutoDatabaseConnection;
@@ -34,8 +34,10 @@ namespace Prospect.Controllers
                 column2: new GridColumn(GridColumnType.Text, "SpecRef", "Specification Reference", 120),
                 column3: new GridColumn(GridColumnType.Text, "ContractorName", "Operator", 200),
                 column4: new GridColumn(GridColumnType.Text, "IsConforming", "Conforming", 120, trueFalse: "Yes|No"),
-                column5: new GridColumn(GridColumnType.Text, "TenderPricePerDay", "Price Per Day", 120, alignRight: true),
-                column6: new GridColumn(GridColumnType.Text, "AcceptTenderButton", "Accept Tender", 140),
+                column5: new GridColumn(GridColumnType.Text, "IsPackage", "Is Package", 120, trueFalse: "Yes|No"),
+                column6: new GridColumn(GridColumnType.Text, "IsPartOfAnotherPackage", "Part of Another Package", 160, trueFalse: "Yes|No"),
+                column7: new GridColumn(GridColumnType.Text, "TenderPricePerDayFormatted", "Price Per Day", 120, alignRight: true),
+                column8: new GridColumn(GridColumnType.Text, "AcceptTenderButton", "Accept Tender", 140),
 
                 addActionResult: null,
                 editActionResult: null,
@@ -47,22 +49,36 @@ namespace Prospect.Controllers
                 dcc_Session: DCC_Session
             );
 
+            ViewBag.SpecStart = specStart;
+            ViewBag.SpecEnd = specEnd;
+            ViewBag.PageTitle = "Tender Analysis";
+
             return View(model);
         }
 
-        //POST: TenderAnalysis
-        [HttpPost]
-        public ActionResult Save(FormCollection form, int specStart, int specEnd)
+        [Authorize]
+        [HttpGet]
+        public ActionResult Print(int specStart = 1, int specEnd = 999999)
         {
-            var model = new TenderAnalysisGrid(DCC_Session.AutoDatabaseConnection, specStart, specEnd);
-            model.Initialise(Request);
+            var db = DCC_Session.AutoDatabaseConnection;
+            var list = new TenderAnalysisList(db, specStart, specEnd);
+            var model = new TenderAnalysisPrintModel
+            {
+                SpecStart = specStart,
+                SpecEnd = specEnd,
+                Groups = list.All
+                    .GroupBy(x => x.SpecRef)
+                    .OrderBy(g => g.Key)
+                    .Select(g => new TenderAnalysisSpecificationGroup
+                    {
+                        SpecRef = g.Key,
+                        Rows = g.OrderBy(x => x.TenderPricePerDay).ToList()
+                    })
+                    .ToList()
+            };
 
-            // model.Save(form);
-            return RedirectToAction("Index", new { specStart, specEnd });
+            return View("TenderAnalysisPrint", model);
         }
-
-
-
 
         [Authorize]
         [HttpPost]
