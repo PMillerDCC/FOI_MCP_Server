@@ -1,9 +1,17 @@
 ﻿using DCC_Standard;
+using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.EMMA;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Wordprocessing;
 using ProspectBusinessLayer;
 using System;
+using System.IO;
 using System.Linq;
 using System.Web.Mvc;
+using A = DocumentFormat.OpenXml.Drawing;
+using GridColumn = DCC_Standard.GridColumn;
+using PIC = DocumentFormat.OpenXml.Drawing.Pictures;
+using DW = DocumentFormat.OpenXml.Drawing.Wordprocessing;
 
 namespace Prospect.Controllers
 {
@@ -394,6 +402,188 @@ namespace Prospect.Controllers
             }
 
             return lastEnd?.AddDays(1);
+        }
+
+        [Authorize]
+        public FileContentResult ExportContractVariationToWord(int k_ContractVariation)
+        {
+            var variation = new ContractVariation(DCC_Session.AutoDatabaseConnection, pK_ContractVariation: k_ContractVariation);
+            var tender = new Tender(DCC_Session.AutoDatabaseConnection, variation.ContractVariation_Q_Tender);
+
+            using (var stream = new MemoryStream())
+            {
+                using (var wordDoc = WordprocessingDocument.Create(stream, WordprocessingDocumentType.Document, true))
+                {
+                    var mainPart = wordDoc.AddMainDocumentPart();
+                    mainPart.Document = new Document(new Body());
+
+                    var body = mainPart.Document.Body;
+
+                    AddCouncilLogo(wordDoc, mainPart, body, HttpContext.Server.MapPath("~/Template/SpecTemplate.docx"));
+                    AddHeading(body, $"Contract Variation {variation.ContractVariationNoText}", "28");
+                    AddField(body, "Contract reference", variation.ContractReferenceText);
+                    AddField(body, "Tender reference", variation.TenderReferenceText);
+                    AddField(body, "Operator", FirstPopulated(variation.ContractorName, tender.ContractorName));
+                    AddField(body, "Licence number", FirstPopulated(variation.ContractorLicenceNo, tender.ContractorLicenceNo));
+                    AddField(body, "Contract type", FirstPopulated(variation.ContractTypeDescription, tender.ContractTypeDescription));
+
+                    AddHeading(body, "Service details", "24");
+                    AddField(body, "Reason for variation", variation.ContractVariationReasonText);
+                    AddField(body, "Variation start date", variation.ContractVariationVariationDateStartText);
+                    AddField(body, "Variation end date", variation.ContractVariationVariationDateEndText);
+                    AddField(body, "Service number", variation.ContractVariationServiceNo);
+                    AddField(body, "Route", variation.ContractVariationRouteText);
+                    AddField(body, "Exceptional conditions", variation.ContractVariationExceptionalConditions);
+                    AddField(body, "Service details", variation.ContractVariationServiceDetails);
+                    AddField(body, "Ticket notes", variation.ContractVariationTicketNotes);
+                    AddField(body, "Route timetable notes", variation.ContractVariationRouteTimetableNotes);
+
+                    AddHeading(body, "Quality of service", "24");
+                    AddField(body, "Vehicle capacity", variation.ContractVariationVehicleCapacity);
+                    AddField(body, "Accessibility", variation.ContractVariationVehicleElderlyAndDisabled);
+                    AddField(body, "Vehicle dimensions", variation.ContractVariationVehicleDimensions);
+
+                    AddHeading(body, "Agreement", "24");
+                    AddField(body, "Agreement for fares", variation.AgreementDescription);
+
+                    AddHeading(body, "Days of operation", "24");
+                    AddField(body, "Operates on Monday", variation.ContractVariationOperatesOnMonText);
+                    AddField(body, "Operates on Tuesday", variation.ContractVariationOperatesOnTueText);
+                    AddField(body, "Operates on Wednesday", variation.ContractVariationOperatesOnWedText);
+                    AddField(body, "Operates on Thursday", variation.ContractVariationOperatesOnThuText);
+                    AddField(body, "Operates on Friday", variation.ContractVariationOperatesOnFriText);
+                    AddField(body, "Operates on Saturday", variation.ContractVariationOperatesOnSatText);
+                    AddField(body, "Operates on Sunday", variation.ContractVariationOperatesOnSunText);
+                    AddField(body, "Operates on bank holidays", variation.ContractVariationOperatesOnBankHolidaysText);
+                    AddField(body, "Operates on school days", variation.ContractVariationOperatesOnSchoolDaysText);
+                    AddField(body, "Operates on non school days", variation.ContractVariationOperatesOnNonSchoolDaysText);
+                    AddField(body, "Operates between Christmas and New Year", variation.ContractVariationOperatesOnChristmasAndNewYearText);
+                    AddField(body, "Days of operation (first year)", variation.ContractVariationCalculatedNoOfDaysOfOperationFirstYear.ToString());
+                    AddField(body, "Days of operation (full term)", variation.ContractVariationCalculatedNoOfDaysOfOperationFullTerm.ToString());
+
+                    AddHeading(body, "Prices", "24");
+                    AddField(body, "Average miles per day", variation.ContractVariationAverageMilesPerDay.ToString("N1"));
+                    AddField(body, "Rate per mile", variation.ContractVariationRatePerMile.ToString("N2"));
+                    AddField(body, "Fuel price element", variation.ContractVariationFuelPriceElement.ToString("N2"));
+                    AddField(body, "Contract price per day", variation.ContractVariationAveragePricePerDay.ToString("N2"));
+                    AddField(body, "Contract price per year", variation.ContractVariationAveragePricePerYear.ToString("N2"));
+                    AddField(body, "Estimate of average revenue per day", variation.ContractVariationAverageRevenuePerDay.ToString("N2"));
+                    AddField(body, "Estimate of average revenue per year", variation.ContractVariationAverageRevenuePerYear.ToString("N2"));
+                    AddField(body, "Contractor estimate of total income per day", variation.ContractVariationAverageCostPerDay.ToString("N2"));
+                    AddField(body, "Contractor estimate of total income per year", variation.ContractVariationAverageCostPerYear.ToString("N2"));
+
+                    AddHeading(body, "Notes", "24");
+                    AddField(body, "Notes", variation.ContractVariationNotes);
+                    AddField(body, "Reason for edit", variation.ContractVariationReasonForEdit);
+
+                    mainPart.Document.Save();
+                }
+
+                var fileName = $"ContractVariation_{variation.ContractReferenceText}_{variation.ContractVariationNoText}.docx";
+                return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", fileName);
+            }
+        }
+
+        private static void AddCouncilLogo(WordprocessingDocument targetDocument, MainDocumentPart mainPart, Body body, string templatePath)
+        {
+            if (!System.IO.File.Exists(templatePath)) return;
+
+            using (var templateDocument = WordprocessingDocument.Open(templatePath, false))
+            {
+                var templateImagePart = templateDocument.MainDocumentPart.ImageParts.FirstOrDefault();
+                if (templateImagePart == null) return;
+
+                var imagePart = mainPart.AddImagePart(GetImagePartType(templateImagePart.ContentType));
+                using (var imageStream = templateImagePart.GetStream())
+                {
+                    imagePart.FeedData(imageStream);
+                }
+
+                var relationshipId = mainPart.GetIdOfPart(imagePart);
+                body.Append(CreateImageParagraph(relationshipId));
+            }
+        }
+
+        private static ImagePartType GetImagePartType(string contentType)
+        {
+            switch ((contentType ?? string.Empty).ToLowerInvariant())
+            {
+                case "image/jpeg":
+                case "image/jpg":
+                    return ImagePartType.Jpeg;
+                case "image/gif":
+                    return ImagePartType.Gif;
+                case "image/bmp":
+                    return ImagePartType.Bmp;
+                case "image/tiff":
+                    return ImagePartType.Tiff;
+                case "image/x-icon":
+                    return ImagePartType.Icon;
+                default:
+                    return ImagePartType.Png;
+            }
+        }
+
+        private static Paragraph CreateImageParagraph(string relationshipId)
+        {
+            const long widthEmus = 1905000;
+            const long heightEmus = 762000;
+
+            var inline = new DW.Inline(
+                new DW.Extent { Cx = widthEmus, Cy = heightEmus },
+                new DW.EffectExtent { LeftEdge = 0L, TopEdge = 0L, RightEdge = 0L, BottomEdge = 0L },
+                new DW.DocProperties { Id = 1U, Name = "Council logo" },
+                new DW.NonVisualGraphicFrameDrawingProperties(new A.GraphicFrameLocks { NoChangeAspect = true }),
+                new A.Graphic(
+                    new A.GraphicData(
+                        new PIC.Picture(
+                            new PIC.NonVisualPictureProperties(
+                                new PIC.NonVisualDrawingProperties { Id = 0U, Name = "Council logo" },
+                                new PIC.NonVisualPictureDrawingProperties()),
+                            new PIC.BlipFill(
+                                new A.Blip { Embed = relationshipId },
+                                new A.Stretch(new A.FillRectangle())),
+                            new PIC.ShapeProperties(
+                                new A.Transform2D(
+                                    new A.Offset { X = 0L, Y = 0L },
+                                    new A.Extents { Cx = widthEmus, Cy = heightEmus }),
+                                new A.PresetGeometry(new A.AdjustValueList()) { Preset = A.ShapeTypeValues.Rectangle })))
+                    { Uri = "http://schemas.openxmlformats.org/drawingml/2006/picture" }))
+            { DistanceFromTop = 0U, DistanceFromBottom = 0U, DistanceFromLeft = 0U, DistanceFromRight = 0U };
+
+            var element = new Drawing(inline);
+
+            return new Paragraph(
+                new ParagraphProperties(new Justification { Val = JustificationValues.Left }, new SpacingBetweenLines { After = "240" }),
+                new Run(element));
+        }
+
+        private static void AddHeading(Body body, string text, string fontSize)
+        {
+            var paragraph = new Paragraph(
+                new ParagraphProperties(new SpacingBetweenLines { Before = "240", After = "120" }),
+                new Run(
+                    new RunProperties(new Bold(), new FontSize { Val = fontSize }),
+                    new Text(text ?? string.Empty)));
+
+            body.Append(paragraph);
+        }
+
+        private static void AddField(Body body, string label, string value)
+        {
+            var paragraph = new Paragraph(
+                new ParagraphProperties(new SpacingBetweenLines { After = "80" }),
+                new Run(
+                    new RunProperties(new Bold()),
+                    new Text(label + ": ") { Space = SpaceProcessingModeValues.Preserve }),
+                new Run(new Text(value ?? string.Empty)));
+
+            body.Append(paragraph);
+        }
+
+        private static string FirstPopulated(params string[] values)
+        {
+            return values.FirstOrDefault(value => !string.IsNullOrWhiteSpace(value)) ?? string.Empty;
         }
 
         public ActionResult TestUpdateVariation(int id)

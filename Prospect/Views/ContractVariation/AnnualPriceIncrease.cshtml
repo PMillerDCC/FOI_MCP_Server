@@ -1,0 +1,229 @@
+@model ProspectBusinessLayer.AnnualPriceIncreaseModel
+@{
+    ViewBag.Title = "Annual Price Increase";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("AnnualPriceIncrease", "ContractVariation", FormMethod.Post, new { id = "annualPriceIncreaseForm" }))
+{
+    @Html.AntiForgeryToken()
+
+    <h2>Annual Price Increase</h2>
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            <div class="col-md-12">
+                <h4></h4>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SpecStart, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.SpecStart, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SpecStart, "", new { @class = "text-danger" })
+            </div>
+
+            @Html.LabelFor(model => model.SpecEnd, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.SpecEnd, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SpecEnd, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="col-md-2 mt-3">
+                <button type="submit" name="action" value="Search" class="btn btn-primary">Search</button>
+            </div>
+        </div>
+
+        @if (Model.HasSearched && Model.Rows.Count > 0)
+        {
+            <hr />
+
+            <div class="form-group">
+                <div class="col-md-12">
+                    <h4>Price Increase</h4>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.IncreasePercentage, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.IncreasePercentage, new { htmlAttributes = new { @class = "form-control", step = "0.01" } })
+                    @Html.ValidationMessageFor(model => model.IncreasePercentage, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="col-md-2 mt-3">
+                    <button type="submit" name="action" value="Calculate" class="btn btn-info">Calculate</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.PriceIncreaseAppliesFrom, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.PriceIncreaseAppliesFrom, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+                    @Html.ValidationMessageFor(model => model.PriceIncreaseAppliesFrom, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <hr />
+
+            <div class="form-group">
+                <div class="col-md-12">
+                    <h4>Contracts Found: @Model.Rows.Count</h4>
+                    <p class="text-info">Select the contracts to apply the price increase, then click Apply.</p>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-striped table-hover table-bordered">
+                    <thead>
+                        <tr>
+                            <th>
+                                <input type="checkbox" id="selectAll" title="Select/Deselect All" />
+                            </th>
+                            <th>Contract Ref</th>
+                            <th>Tender Ref</th>
+                            <th>Contractor</th>
+                            <th>Service No</th>
+                            <th>Route</th>
+                            <th>Variation</th>
+                            <th class="text-right">Current Price/Day</th>
+                            <th class="text-center">Days</th>
+                            <th class="text-right">Current Price/Year</th>
+                            @if (Model.IncreasePercentage.HasValue)
+                            {
+                                <th class="text-right">New Price/Day</th>
+                                <th class="text-right">New Price/Year</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.Rows.Count; i++)
+                        {
+                            var row = Model.Rows[i];
+                            <tr>
+                                <td class="text-center">
+                                    @Html.CheckBoxFor(m => m.Rows[i].IsSelected, new { @class = "row-checkbox", data_variation_id = row.K_ContractVariation })
+                                    @Html.HiddenFor(m => m.Rows[i].K_ContractVariation)
+                                    @Html.HiddenFor(m => m.Rows[i].K_Tender)
+                                    @Html.HiddenFor(m => m.Rows[i].ContractReference)
+                                    @Html.HiddenFor(m => m.Rows[i].TenderReference)
+                                    @Html.HiddenFor(m => m.Rows[i].ContractorName)
+                                    @Html.HiddenFor(m => m.Rows[i].ServiceNo)
+                                    @Html.HiddenFor(m => m.Rows[i].RouteText)
+                                    @Html.HiddenFor(m => m.Rows[i].ContractVariationNo)
+                                    @Html.HiddenFor(m => m.Rows[i].CurrentPricePerDay)
+                                    @Html.HiddenFor(m => m.Rows[i].DaysOfOperation)
+                                    @Html.HiddenFor(m => m.Rows[i].CurrentPricePerYear)
+                                </td>
+                                <td>@row.ContractReferenceText</td>
+                                <td>@row.TenderReferenceText</td>
+                                <td>@row.ContractorName</td>
+                                <td>@row.ServiceNo</td>
+                                <td>@row.RouteText</td>
+                                <td>@row.ContractVariationNoText</td>
+                                <td class="text-right">@row.CurrentPricePerDayText</td>
+                                <td class="text-center">@row.DaysOfOperation</td>
+                                <td class="text-right">@row.CurrentPricePerYearText</td>
+                                @if (Model.IncreasePercentage.HasValue)
+                                {
+                                    <td class="text-right">@row.NewPricePerDayText</td>
+                                    <td class="text-right">@row.NewPricePerYearText</td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-12">
+                    <button type="submit" name="action" value="Apply" class="btn btn-success" onclick="return confirmApply();">Apply Price Increase</button>
+                    <span class="text-muted" style="margin-left: 15px;">
+                        Selected: <span id="selectedCount">0</span> of @Model.Rows.Count
+                    </span>
+                </div>
+            </div>
+        }
+
+        @if (Model.HasSearched && Model.Rows.Count == 0)
+        {
+            <div class="form-group">
+                <div class="col-md-12">
+                    <div class="alert alert-info">
+                        No accepted contracts found in the specified range.
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+<script type="text/javascript">
+        $(document).ready(function () {
+            updateSelectedCount();
+
+            // Select/Deselect All checkbox
+            $('#selectAll').on('change', function () {
+                var isChecked = $(this).is(':checked');
+                $('.row-checkbox').prop('checked', isChecked);
+                updateSelectedCount();
+                collectSelectedIds();
+            });
+
+            // Individual row checkbox
+            $('.row-checkbox').on('change', function () {
+                updateSelectedCount();
+                collectSelectedIds();
+            });
+
+            // Collect selected variation IDs before form submit
+            $('#annualPriceIncreaseForm').on('submit', function () {
+                collectSelectedIds();
+            });
+
+            function updateSelectedCount() {
+                var count = $('.row-checkbox:checked').length;
+                $('#selectedCount').text(count);
+            }
+
+            function collectSelectedIds() {
+                // Clear existing hidden inputs for SelectedVariationIds
+                $('input[name="SelectedVariationIds"]').remove();
+
+                // Add hidden input for each selected variation
+                $('.row-checkbox:checked').each(function () {
+                    var variationId = $(this).data('variation-id');
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: 'SelectedVariationIds',
+                        value: variationId
+                    }).appendTo('#annualPriceIncreaseForm');
+                });
+            }
+        });
+
+        function confirmApply() {
+            var count = $('.row-checkbox:checked').length;
+            if (count === 0) {
+                alert('Please select at least one contract variation.');
+                return false;
+            }
+
+            var percentage = $('input[name="IncreasePercentage"]').val();
+            if (!percentage || percentage <= 0) {
+                alert('Please enter a valid percentage increase.');
+                return false;
+            }
+
+            var appliesFrom = $('input[name="PriceIncreaseAppliesFrom"]').val();
+            if (!appliesFrom) {
+                alert('Please enter the date the price increase applies from.');
+                return false;
+            }
+
+            return confirm('Are you sure you want to apply a ' + percentage + '% price increase from ' + appliesFrom + ' to ' + count + ' contract variation(s)?');
+        }
+</script>

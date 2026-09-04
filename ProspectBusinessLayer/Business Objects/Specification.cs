@@ -225,12 +225,89 @@ namespace ProspectBusinessLayer
             return true;
         }
 
+        public List<Specification> ChildSpecifications
+        {
+            get
+            {
+                using (var db = new DCC_Database("SQLSERVER", "Prospect", "Prospect"))
+                {
+                    return LoadChildSpecifications(db);
+                }
+            }
+        }
+
+        private List<Specification> LoadChildSpecifications(DCC_Database db)
+        {
+            var list = new List<Specification>();
+
+            if (!IsPackage)
+                return list;
+
+            var childSpecificationKeys = new int?[]
+            {
+                Child01_Q_Specification,
+                Child02_Q_Specification,
+                Child03_Q_Specification,
+                Child04_Q_Specification,
+                Child05_Q_Specification,
+                Child06_Q_Specification,
+                Child07_Q_Specification,
+                Child08_Q_Specification,
+                Child09_Q_Specification,
+                Child10_Q_Specification
+            };
+
+            var loadedChildren = new HashSet<int>();
+
+            foreach (var childSpecificationKey in childSpecificationKeys)
+            {
+                if (!childSpecificationKey.HasValue || childSpecificationKey.Value == 0)
+                    continue;
+
+                if (!loadedChildren.Add(childSpecificationKey.Value))
+                    continue;
+
+                list.Add(new Specification(db, childSpecificationKey.Value, pBriefMode: true));
+            }
+
+            return list;
+        }
+
+
+
         public void PopulateDropDownLists(DCC_Database db)
         {
             SpecificationList specificationList = new SpecificationList(db);
             SpecificationItems = new List<ddlItem>();
+
+            var childSpecificationKeys = new int?[]
+            {
+                Child01_Q_Specification,
+                Child02_Q_Specification,
+                Child03_Q_Specification,
+                Child04_Q_Specification,
+                Child05_Q_Specification,
+                Child06_Q_Specification,
+                Child07_Q_Specification,
+                Child08_Q_Specification,
+                Child09_Q_Specification,
+                Child10_Q_Specification
+            };
+
+            var excludedSpecificationIds = new HashSet<int>();
+            foreach (var childSpecificationKey in childSpecificationKeys)
+            {
+                if (childSpecificationKey.HasValue)
+                {
+                    excludedSpecificationIds.Add(childSpecificationKey.Value);
+                }
+            }
+
             foreach (Specification specification in specificationList.ActiveExcludingPackages) // use ExcludingPackages here as you cannot select another package as a child
             {
+                if (excludedSpecificationIds.Contains(specification.K_Specification))
+                    continue;
+
                 ddlItem ddlSpecification = new ddlItem();
                 ddlSpecification.Id = specification.K_Specification;
                 ddlSpecification.Name = specification.ContractReference.ToString() + " - " + specification.SpecificationServiceNoText;
@@ -739,6 +816,8 @@ namespace ProspectBusinessLayer
 
             return CalculateDaysOfOperation(db, dateAndDays);
         }
+
+
 
     }
 

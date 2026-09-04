@@ -32,12 +32,24 @@
     </fieldset>
 
     <div id="divPackage" style="display:none;">
+
         <fieldset>
             <h2 class="fakeLegend">Specifications in the package</h2>
             <div class="row">
                 <div class="col-lg-12">
+                    @if (Model.IsPackage && Model.ChildSpecifications.Any())
+                    {
+                        <div class="form-group marginTop10">
+                            <h3>Package contents</h3>
+                    
+                            @foreach (var child in Model.ChildSpecifications)
+                            {
+                                <div>Specification Reference - @child.ContractReference</div>
+                            }
+                        </div>
+                    }
                     <div class="form-group marginTop10">
-                        @Html.LabelFor(model => model.Child01_Q_Specification, "Specification 1", new { @class = "width250" })
+                        @Html.LabelFor(model => model.Child01_Q_Specification, "Select Specification to add to package:", new { @class = "width250" })
                         @Html.DropDownListFor(model => model.Child01_Q_Specification, Model.ddlSpecification.ToList(), "-- not set --", new { @id = "ddlChild01_Q_Specification", @class = "form-control width380", @onclick = "ddlClick(this);", @onchange = "ddlClick(this);", @onkeyup = "return true;", @onkeydown = "return true;" })
                         @Html.ValidationMessageFor(model => model.Child01_Q_Specification)
                     </div>

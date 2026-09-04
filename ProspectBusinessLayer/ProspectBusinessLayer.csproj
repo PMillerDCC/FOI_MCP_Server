@@ -157,6 +157,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Business Objects\Agreement.cs" />
+    <Compile Include="Business Objects\AnnualPriceIncreaseModels.cs" />
+    <Compile Include="Business Objects\AnnualPriceIncreaseService.cs" />
     <Compile Include="Business Objects\Area.cs" />
     <Compile Include="Business Objects\ContractMileage.cs" />
     <Compile Include="Business Objects\ContractPayment.cs" />

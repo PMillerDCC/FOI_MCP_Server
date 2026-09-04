@@ -2,6 +2,9 @@
 
 <fieldset>
     <h2 class="fakeLegend">Contract variation @Model.ContractVariationNoText</h2>
+    <div class="text-right marginBottom10">
+        <input class="btn btn-success hidden-print" type="button" value="Create word document" onclick="location.href='@Url.Action("ExportContractVariationToWord", "Contract", new { k_ContractVariation = Model.K_ContractVariation })';" />
+    </div>
     <div class="row marginTop10">
         <div class="col-lg-4">
             <h3 class="marginTop1">Service details</h3>

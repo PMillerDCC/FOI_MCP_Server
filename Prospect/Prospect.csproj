@@ -442,6 +442,7 @@
     <Content Include="Content\bootstrap-grid.rtl.css.map" />
     <Content Include="Content\bootstrap-grid.min.css.map" />
     <Content Include="Content\bootstrap-grid.css.map" />
+    <Content Include="Documentation\AnnualPriceIncrease_TestScenarios.md" />
     <None Include="Oracle.DataAccess.Common.Configuration.Section.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -638,6 +639,7 @@
     <Content Include="Views\ContractVariation\Edit.cshtml" />
     <Content Include="Views\TenderAnalysis\Index.cshtml" />
     <Content Include="Views\TenderAnalysis\TenderAnalysisPrint.cshtml" />
+    <Content Include="Views\ContractVariation\AnnualPriceIncrease.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

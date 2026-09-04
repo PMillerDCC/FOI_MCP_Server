@@ -1,4 +1,5 @@
-﻿using DCC_Standard;
+﻿using System;
+using DCC_Standard;
 using ProspectBusinessLayer;
 using System.Web.Mvc;
 
@@ -150,5 +151,127 @@ namespace Prospect.Controllers
             this.DCC_DisplayMessage(DCC_MessageType.Success, "Variation updated");
             return RedirectToAction("Contract", "Contract", new { primaryKey = returnTenderId });
         }
+
+        #region Annual Price Increase
+
+        [Authorize]
+        [HttpGet]
+        public ActionResult AnnualPriceIncrease()
+        {
+            var model = new AnnualPriceIncreaseModel();
+            return View(model);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AnnualPriceIncrease(AnnualPriceIncreaseModel model, string action)
+        {
+            var db = DCC_Session.AutoDatabaseConnection;
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            // Validate range
+            if (model.SpecStart > model.SpecEnd)
+            {
+                ModelState.AddModelError("SpecStart", "Specification Start must be less than or equal to Specification End");
+                return View(model);
+            }
+
+            if (action == "Search")
+            {
+                // Load data
+                model.Rows = AnnualPriceIncreaseService.LoadAcceptedContractsInRange(db, model.SpecStart.Value, model.SpecEnd.Value);
+                model.HasSearched = true;
+
+                if (model.Rows.Count == 0)
+                {
+                    this.DCC_DisplayMessage(DCC_MessageType.Information, "No accepted contracts found in the specified range");
+                }
+
+                return View(model);
+            }
+            else if (action == "Calculate")
+            {
+                // Reload rows
+                model.Rows = AnnualPriceIncreaseService.LoadAcceptedContractsInRange(db, model.SpecStart.Value, model.SpecEnd.Value);
+                model.HasSearched = true;
+
+                if (!model.IncreasePercentage.HasValue)
+                {
+                    ModelState.AddModelError("IncreasePercentage", "Please enter a percentage increase");
+                    return View(model);
+                }
+
+                // Calculate new prices for all rows
+                foreach (var row in model.Rows)
+                {
+                    row.CalculateNewPrices(model.IncreasePercentage.Value);
+                }
+
+                return View(model);
+            }
+            else if (action == "Apply")
+            {
+                // Reload rows and recalculate
+                model.Rows = AnnualPriceIncreaseService.LoadAcceptedContractsInRange(db, model.SpecStart.Value, model.SpecEnd.Value);
+
+                if (!model.IncreasePercentage.HasValue)
+                {
+                    ModelState.AddModelError("IncreasePercentage", "Please enter a percentage increase");
+                    model.HasSearched = true;
+                    return View(model);
+                }
+
+                if (!model.PriceIncreaseAppliesFrom.HasValue)
+                {
+                    ModelState.AddModelError("PriceIncreaseAppliesFrom", "Please enter the date the price increase applies from");
+                    model.HasSearched = true;
+                    return View(model);
+                }
+
+                // Recalculate
+                foreach (var row in model.Rows)
+                {
+                    row.CalculateNewPrices(model.IncreasePercentage.Value);
+                }
+
+                // Validate selections
+                if (model.SelectedVariationIds == null || model.SelectedVariationIds.Count == 0)
+                {
+                    ModelState.AddModelError("", "Please select at least one contract variation to apply the price increase");
+                    model.HasSearched = true;
+                    return View(model);
+                }
+
+                // Apply increases
+                string reasonForVariation = "Annual price increase";
+                int updatedCount = AnnualPriceIncreaseService.ApplyPriceIncrease(
+                    db, 
+                    model.SelectedVariationIds, 
+                    model.IncreasePercentage.Value,
+                    model.SpecStart.Value,
+                    model.SpecEnd.Value,
+                    model.PriceIncreaseAppliesFrom.Value,
+                    reasonForVariation);
+
+                this.DCC_DisplayMessage(DCC_MessageType.Success, $"Price increase applied to {updatedCount} contract variation(s)");
+
+                // Reset for new search
+                model = new AnnualPriceIncreaseModel
+                {
+                    SpecStart = model.SpecStart,
+                    SpecEnd = model.SpecEnd
+                };
+                return View(model);
+            }
+
+            return View(model);
+        }
+
+        #endregion
     }
 }

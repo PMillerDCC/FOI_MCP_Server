@@ -131,8 +131,8 @@
 	
 	
 		<NavigationOption>
-			<title>Apply price increase</title>
-			<href>/Home/Index</href>
+			<title>Annual Price Increase</title>
+			<href>/ContractVariation/AnnualPriceIncrease</href>
 			<isParent>no</isParent>
 			<isChild>yes</isChild>
 			<isDummy>no</isDummy>
