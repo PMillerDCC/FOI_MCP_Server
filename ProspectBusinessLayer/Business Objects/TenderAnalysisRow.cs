@@ -9,6 +9,7 @@ namespace ProspectBusinessLayer.Business_Objects
     public class TenderAnalysisRow
     {
         public int PrimaryKey => K_Tender;
+        public string GroupCssClass       { get; set; }
         public int K_Tender                { get; set; }
         public int TenderReference         { get; set; }
         public int Q_Specification         { get; set; }

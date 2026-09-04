@@ -78,6 +78,26 @@ namespace ProspectBusinessLayer.Business_Objects
                 !row.IsPackage;
             }
 
+            All = All
+                .OrderByDescending(r => r.SpecRef)
+                .ThenBy(r => r.TenderPricePerDay)
+                .ToList();
+
+            var groupedBySpecification = All
+                .GroupBy(r => r.SpecRef)
+                .ToList();
+
+            for (var i = 0; i < groupedBySpecification.Count; i++)
+            {
+                var groupCssClass = (i % 2 == 0) ? "spec-group-a" : "spec-group-b";
+
+                foreach (var row in groupedBySpecification[i])
+                {
+                    row.GroupCssClass = groupCssClass;
+                }
+            }
+
+
 
         }
 

@@ -238,6 +238,11 @@ namespace DCC_Standard
         public delegate string ExportToXMLDelegate();
         public ExportToXMLDelegate ExportToXML;
 
+        public virtual string GetRowCssClass(object rowObject)
+        {
+            return "";
+        }
+
 		#endregion
 
 
@@ -1291,7 +1296,13 @@ namespace DCC_Standard
                     }
                     else
                     {
-						sb.Append("<tr class='" + ( (rowShade == 0) ? "gridRow" : "gridRowAlternate" ) + "'>");
+                        var rowClass = (rowShade == 0) ? "gridRow" : "gridRowAlternate";
+
+                        var customRowClass = GetRowCssClass(row);
+                        if (!string.IsNullOrWhiteSpace(customRowClass))
+                            rowClass += " " + customRowClass;
+
+                        sb.Append("<tr class='" + rowClass + "'>");
                     }
 
                     if (HasSelector)
