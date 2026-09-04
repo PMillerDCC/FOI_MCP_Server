@@ -4,8 +4,27 @@
     <h2 class="fakeLegend doNotPrint">Tender Analysis</h2>
     <div class="row">
         <div class="col-lg-12 doNotPrint">
+            @using (Html.BeginForm("Index", "TenderAnalysis", FormMethod.Get, new { @class = "marginBottom10" }))
+            {
+                <div class="d-flex marginBottom10 marginTop20 align-items-center">
+                    <label for="specStart" class="marginRight10">Specification Start</label>
+                    <input id="specStart" name="specStart" type="number"
+                           class="form-control marginRight20 marginLeft20 width140"
+                           value="@ViewBag.SpecStart" />
+
+                    <label for="specEnd" class="marginRight10 marginLeft20">Specification End</label>
+                    <input id="specEnd" name="specEnd" type="number"
+                           class="form-control marginRight20 marginLeft20 width140"
+                           value="@ViewBag.SpecEnd" />
+
+                    <button type="submit" class="btn btn-primary marginTop10">Submit</button>
+                </div>
+            }
+
             @using (Html.BeginForm("AcceptTender", "TenderAnalysis", FormMethod.Post))
             {
+                <input type="hidden" name="specStart" value="@ViewBag.SpecStart" />
+                <input type="hidden" name="specEnd" value="@ViewBag.SpecEnd" />
                 @Html.Raw(Model.RenderGrid())
             }
 

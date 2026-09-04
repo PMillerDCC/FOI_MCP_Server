@@ -60,6 +60,10 @@ namespace ProspectBusinessLayer.Business_Objects
                 }
             }
 
+            All = All
+                .Where(x => x.SpecRef >= specStart && x.SpecRef <= specEnd)
+                .ToList();
+
             var allRows = this.All.Cast<TenderAnalysisRow>().ToList();
 
             var packageSpecs = allRows

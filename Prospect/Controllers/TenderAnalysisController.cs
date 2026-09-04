@@ -13,16 +13,20 @@ namespace Prospect.Controllers
 {
     public class TenderAnalysisController : DCC_Controller
     {
+        private const int DefaultSpecStart = 1;
+        private const int DefaultSpecEnd = 999999;
+
         [Authorize]
         [HttpGet]
-        public ActionResult Index(int specStart = 1, int specEnd = 999999)
+        public ActionResult Index(int? specStart = null, int? specEnd = null)
         {
             var db = DCC_Session.AutoDatabaseConnection;
+            var range = NormaliseSpecificationRange(specStart, specEnd);
 
             TenderAnalysisGrid model = new TenderAnalysisGrid(
                 DCC_Session.AutoDatabaseConnection,
-                specStart,
-                specEnd
+                range.specStart,
+                range.specEnd
             );
 
             model.Initialise(
@@ -49,8 +53,8 @@ namespace Prospect.Controllers
                 dcc_Session: DCC_Session
             );
 
-            ViewBag.SpecStart = specStart;
-            ViewBag.SpecEnd = specEnd;
+            ViewBag.SpecStart = range.specStart;
+            ViewBag.SpecEnd = range.specEnd;
             ViewBag.PageTitle = "Tender Analysis";
 
             return View(model);
@@ -58,14 +62,15 @@ namespace Prospect.Controllers
 
         [Authorize]
         [HttpGet]
-        public ActionResult Print(int specStart = 1, int specEnd = 999999)
+        public ActionResult Print(int? specStart = null, int? specEnd = null)
         {
             var db = DCC_Session.AutoDatabaseConnection;
-            var list = new TenderAnalysisList(db, specStart, specEnd);
+            var range = NormaliseSpecificationRange(specStart, specEnd);
+            var list = new TenderAnalysisList(db, range.specStart, range.specEnd);
             var model = new TenderAnalysisPrintModel
             {
-                SpecStart = specStart,
-                SpecEnd = specEnd,
+                SpecStart = range.specStart,
+                SpecEnd = range.specEnd,
                 Groups = list.All
                     .GroupBy(x => x.SpecRef)
                     .OrderBy(g => g.Key)
@@ -82,8 +87,10 @@ namespace Prospect.Controllers
 
         [Authorize]
         [HttpPost]
-        public ActionResult AcceptTender(int primaryKey)
+        public ActionResult AcceptTender(int primaryKey, int? specStart = null, int? specEnd = null)
         {
+            var range = NormaliseSpecificationRange(specStart, specEnd);
+
             try
             {
                 var db = DCC_Session.AutoDatabaseConnection;
@@ -96,7 +103,7 @@ namespace Prospect.Controllers
                 if (dbf.hasTables && dbf.TableZeroRows.Count > 0)
                 {
                     this.DCC_DisplayMessage(DCC_MessageType.Error, "A tender has already been accepted for this specification.", true);
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Index", new { specStart = range.specStart, specEnd = range.specEnd });
                 }
                 tender.IsTenderAccepted = true;
                 tender.Save(db, "Tender");
@@ -106,7 +113,28 @@ namespace Prospect.Controllers
             {
                 this.DCC_DisplayMessage(DCC_MessageType.Error, "Failed to accept tender: " + ex.Message, true);
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { specStart = range.specStart, specEnd = range.specEnd });
+        }
+
+        private (int specStart, int specEnd) NormaliseSpecificationRange(int? specStart, int? specEnd)
+        {
+            var normalisedSpecStart = specStart.GetValueOrDefault(DefaultSpecStart);
+            var normalisedSpecEnd = specEnd.GetValueOrDefault(DefaultSpecEnd);
+
+            if (normalisedSpecStart < 0)
+                normalisedSpecStart = DefaultSpecStart;
+
+            if (normalisedSpecEnd < 0)
+                normalisedSpecEnd = DefaultSpecEnd;
+
+            if (normalisedSpecStart > normalisedSpecEnd)
+            {
+                var temp = normalisedSpecStart;
+                normalisedSpecStart = normalisedSpecEnd;
+                normalisedSpecEnd = temp;
+            }
+
+            return (normalisedSpecStart, normalisedSpecEnd);
         }
     }
 }
