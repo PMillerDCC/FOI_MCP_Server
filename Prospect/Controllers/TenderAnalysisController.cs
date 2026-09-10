@@ -34,7 +34,7 @@ namespace Prospect.Controllers
                 id: "TenderAnalysisGrid",
                 itemNameSingular: null,
                 itemNamePlural: "Tenders",
-                column1: new GridColumn(GridColumnType.Text, "TenderReference", "Tender Reference", 120),
+                column1: new GridColumn(GridColumnType.Text, "TenderReference", "Tender Reference", 120, boundLink: "TenderLink") { LinkController = "" },
                 column2: new GridColumn(GridColumnType.Text, "SpecRef", "Specification Reference", 120),
                 column3: new GridColumn(GridColumnType.Text, "ContractorName", "Operator", 200),
                 column4: new GridColumn(GridColumnType.Text, "IsConforming", "Conforming", 120, trueFalse: "Yes|No"),
@@ -43,8 +43,8 @@ namespace Prospect.Controllers
                 column7: new GridColumn(GridColumnType.Text, "TenderPricePerDayFormatted", "Price Per Day", 120, alignRight: true),
                 column8: new GridColumn(GridColumnType.Text, "AcceptTenderButton", "Accept Tender", 140),
 
-                addActionResult: null,
-                editActionResult: null,
+                addActionResult: "/Tender/Tender",
+                editActionResult: "/Tender/Tender",
               
                 noOfRowsInGrid: 16,
                 showEditButton: false,
@@ -95,25 +95,46 @@ namespace Prospect.Controllers
             {
                 var db = DCC_Session.AutoDatabaseConnection;
                 Tender tender = new Tender(db, primaryKey);
+
+                // Prevent duplicate acceptance
                 DCC_DatabaseFrame dbf = new DCC_DatabaseFrame("sAcceptedTenderExistsForSpecification");
                 dbf.AddParameter("Q_Specification", tender.Q_Specification);
                 dbf.AddParameter("K_Tender", tender.K_Tender);
                 dbf.AddTable("");
                 db.DataLayer.SelectData(dbf);
+
                 if (dbf.hasTables && dbf.TableZeroRows.Count > 0)
                 {
-                    this.DCC_DisplayMessage(DCC_MessageType.Error, "A tender has already been accepted for this specification.", true);
-                    return RedirectToAction("Index", new { specStart = range.specStart, specEnd = range.specEnd });
+                    this.DCC_DisplayMessage(
+                        DCC_MessageType.Error,
+                        "A tender has already been accepted for this specification.",
+                        true
+                    );
+
+                    return Index(range.specStart, range.specEnd);
                 }
+
+                // Accept tender
                 tender.IsTenderAccepted = true;
                 tender.Save(db, "Tender");
-                this.DCC_DisplayMessage(DCC_MessageType.Success, "Tender accepted successfully.", true);
+
+                this.DCC_DisplayMessage(
+                    DCC_MessageType.Success,
+                    "Tender accepted successfully.",
+                    true
+                );
             }
             catch (Exception ex)
             {
-                this.DCC_DisplayMessage(DCC_MessageType.Error, "Failed to accept tender: " + ex.Message, true);
+                this.DCC_DisplayMessage(
+                    DCC_MessageType.Error,
+                    "Failed to accept tender: " + ex.Message,
+                    true
+                );
             }
-            return RedirectToAction("Index", new { specStart = range.specStart, specEnd = range.specEnd });
+
+            var indexResult = Index(range.specStart, range.specEnd) as ViewResult;
+            return View("Index", indexResult.Model);
         }
 
         private (int specStart, int specEnd) NormaliseSpecificationRange(int? specStart, int? specEnd)

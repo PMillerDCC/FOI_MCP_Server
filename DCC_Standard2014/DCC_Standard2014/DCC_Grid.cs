@@ -390,6 +390,12 @@ namespace DCC_Standard
             IsDelete    = ((request.Form[ID + "_isDelete"]    ?? "false") == "true");
             IsAdd       = ((request.Form[ID + "_isAdd"]       ?? "false") == "true");
             SortColumn  =  (request.Form[ID + "_sortColumn"]  ?? "");
+            string sortColumnQuery = request.QueryString["sortColumn"] ?? "";
+            string sortDirectionQuery = (request.QueryString["sortDirection"] ?? "asc").ToLower();
+            if ((SortColumn ?? "").Length == 0 && sortColumnQuery.Length > 0)
+            {
+                SortColumn = (sortDirectionQuery == "desc" ? "^" : "") + sortColumnQuery;
+            }
             FilterValue =  (request.Form[ID + "_filter"]      ?? "");
 
 			if (SortColumn == "")
@@ -1166,11 +1172,11 @@ namespace DCC_Standard
                 if (HasSelector) sb.AppendLine("<th class='width40'></th>");
                 foreach (GridColumn gc in Columns)
                 {
-                    string th = "<th class='%3 minWidth" + gc.Width + "' alt='Sort by " + gc.Heading + "' title='Sort by " + gc.Heading + "' onclick='document.getElementById(\"" + ID + "_sortColumn\").value=\"%0\";$(\"form\").submit();'>%1</th>";
-                    string token0 = (SortColumn == gc.ID ? "^" : "") + gc.ID ;
-                    string token1 = gc.Heading_CSS.Length > 0 ? "<div class='" + gc.Heading_CSS + "'>%2</div>" : "%2";
-                    string token2 = gc.Heading;
-					string token3 = "";
+                    string th = "<th class='%3 minWidth" + gc.Width + "' alt='Sort by " + gc.Heading + "' title='Sort by " + gc.Heading + "' onclick='var searchParams=new URLSearchParams(window.location.search);searchParams.set(\"sortColumn\",\"%0\");searchParams.set(\"sortDirection\",\"%1\");searchParams.delete(\"primaryKey\");searchParams.delete(\"" + ID + "_primaryKey\");window.location.search=\"?\"+searchParams.toString();'>%2</th>";
+                    string token0 = gc.ID;
+                    string token1 = (SortColumn == gc.ID ? "desc" : "asc");
+                    string token2 = gc.Heading_CSS.Length > 0 ? "<div class='" + gc.Heading_CSS + "'>" + gc.Heading + "</div>" : gc.Heading;
+                    string token3 = "";
 					if (DisallowSorting)
 					{
 						token3 = ( gc.AlignRight ? "gridColumnHeaderSortlessRight" : "gridColumnHeaderSortless");

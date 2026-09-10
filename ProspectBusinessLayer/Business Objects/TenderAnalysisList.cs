@@ -38,31 +38,31 @@ namespace ProspectBusinessLayer.Business_Objects
                         IsTenderAccepted = row.Field<bool?>("IsTenderAccepted") ?? false
                     };
 
-                    analysisRow.ChildSpecs = new List<int>
+                    var childSpecificationIds = new int?[]
                     {
-                        row.Field<int?>("Child01_SpecRef") ?? 0,
-                        row.Field<int?>("Child02_SpecRef") ?? 0,
-                        row.Field<int?>("Child03_SpecRef") ?? 0,
-                        row.Field<int?>("Child04_SpecRef") ?? 0,
-                        row.Field<int?>("Child05_SpecRef") ?? 0,
-                        row.Field<int?>("Child06_SpecRef") ?? 0,
-                        row.Field<int?>("Child07_SpecRef") ?? 0,
-                        row.Field<int?>("Child08_SpecRef") ?? 0,
-                        row.Field<int?>("Child09_SpecRef") ?? 0,
-                        row.Field<int?>("Child10_SpecRef") ?? 0
-                    }
-                    .Where(x => x > 0)
-                    .ToList();
+                        row.Field<int?>("Child01_SpecRef"),
+                        row.Field<int?>("Child02_SpecRef"),
+                        row.Field<int?>("Child03_SpecRef"),
+                        row.Field<int?>("Child04_SpecRef"),
+                        row.Field<int?>("Child05_SpecRef"),
+                        row.Field<int?>("Child06_SpecRef"),
+                        row.Field<int?>("Child07_SpecRef"),
+                        row.Field<int?>("Child08_SpecRef"),
+                        row.Field<int?>("Child09_SpecRef"),
+                        row.Field<int?>("Child10_SpecRef")
+                    };
+
+                   analysisRow.ChildSpecs = childSpecificationIds
+                        .Where(x => x.HasValue && x.Value > 0)
+                        .Select(contractRef => contractRef.Value)
+                        .Distinct()
+                        .ToList();
 
                     analysisRow.IsPackage = analysisRow.ChildSpecs.Any();
 
                     All.Add(analysisRow);
                 }
             }
-
-            All = All
-                .Where(x => x.SpecRef >= specStart && x.SpecRef <= specEnd)
-                .ToList();
 
             var allRows = this.All.Cast<TenderAnalysisRow>().ToList();
 
@@ -77,6 +77,43 @@ namespace ProspectBusinessLayer.Business_Objects
                 packageSpecs.Contains(row.SpecRef) &&
                 !row.IsPackage;
             }
+
+            var acceptedRows = allRows
+                .Where(r => r.IsTenderAccepted)
+                .ToList();
+
+            var specRefsToRemove = new HashSet<int>();
+
+            foreach (var acceptedRow in acceptedRows)
+            {
+                specRefsToRemove.Add(acceptedRow.SpecRef);
+
+                foreach (var childSpecRef in acceptedRow.ChildSpecs)
+                {
+                    specRefsToRemove.Add(childSpecRef);
+                }
+
+                var parentPackageRows = allRows
+                    .Where(r => r.IsPackage && r.ChildSpecs.Contains(acceptedRow.SpecRef))
+                    .ToList();
+
+                foreach (var parentPackageRow in parentPackageRows)
+                {
+                    specRefsToRemove.Add(parentPackageRow.SpecRef);
+
+                    foreach (var childSpecRef in parentPackageRow.ChildSpecs)
+                    {
+                        specRefsToRemove.Add(childSpecRef);
+                    }
+                }
+            }
+
+            All = allRows
+                .Where(r =>
+                    !specRefsToRemove.Contains(r.SpecRef) &&
+                    r.SpecRef >= specStart &&
+                    r.SpecRef <= specEnd)
+                .ToList();
 
             All = All
                 .OrderByDescending(r => r.SpecRef)
@@ -96,8 +133,6 @@ namespace ProspectBusinessLayer.Business_Objects
                     row.GroupCssClass = groupCssClass;
                 }
             }
-
-
 
         }
 

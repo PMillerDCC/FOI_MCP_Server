@@ -60,13 +60,11 @@ namespace Prospect.Controllers
             }
 
             int saved_K_Specification;
-            try
+            saved_K_Specification = -999;
+            var savedSpecObj = DCC_Session.Get("Saved_K_Specification");
+            if (savedSpecObj != null && int.TryParse(savedSpecObj.ToString(), out var parsedSavedSpec))
             {
-                saved_K_Specification = (int)DCC_Session.Get("Saved_K_Specification");
-            }
-            catch
-            {
-                saved_K_Specification = -999;
+                saved_K_Specification = parsedSavedSpec;
             }
 
             var db = DCC_Session.AutoDatabaseConnection;
