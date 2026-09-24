@@ -1,0 +1,15 @@
+# Visual Studio
+.vs/
+bin/
+obj/
+ 
+# User settings
+*.user
+*.suo
+ 
+# Database files
+*.mdf
+*.ldf
+ 
+# Development config
+appsettings.Development.json
