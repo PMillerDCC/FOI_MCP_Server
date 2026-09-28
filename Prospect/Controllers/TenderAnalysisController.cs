@@ -40,8 +40,9 @@ namespace Prospect.Controllers
                 column4: new GridColumn(GridColumnType.Text, "IsConforming", "Conforming", 120, trueFalse: "Yes|No"),
                 column5: new GridColumn(GridColumnType.Text, "IsPackage", "Is Package", 120, trueFalse: "Yes|No"),
                 column6: new GridColumn(GridColumnType.Text, "IsPartOfAnotherPackage", "Part of Another Package", 160, trueFalse: "Yes|No"),
-                column7: new GridColumn(GridColumnType.Text, "TenderPricePerDayFormatted", "Price Per Day", 120, alignRight: true),
-                column8: new GridColumn(GridColumnType.Text, "AcceptTenderButton", "Accept Tender", 140),
+                column7: new GridColumn(GridColumnType.Text, "FuelElementAppliesText", "Fuel Applies", 100),
+                column8: new GridColumn(GridColumnType.Text, "TenderPricePerDayFormatted", "Price Per Day", 120, alignRight: true),
+                column9: new GridColumn(GridColumnType.Text, "AcceptTenderButton", "Accept Tender", 140),
 
                 addActionResult: "/Tender/Tender",
                 editActionResult: "/Tender/Tender",

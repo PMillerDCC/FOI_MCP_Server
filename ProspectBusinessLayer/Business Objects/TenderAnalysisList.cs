@@ -33,7 +33,11 @@ namespace ProspectBusinessLayer.Business_Objects
                         Q_Specification = row.Field<int>("Q_Specification"),
                         SpecRef = row.Field<int>("SpecRef"),
                         ContractorName = row.Field<string>("ContractorName"),
+                        
                         TenderPricePerDay = row.Field<decimal?>("TenderPricePerDay") ?? 0,
+                        
+                        FuelElementApplies = row.Field<bool>("FuelElementApplies"),
+
                         IsConforming = row.Field<bool?>("IsConforming") ?? false,
                         IsTenderAccepted = row.Field<bool?>("IsTenderAccepted") ?? false
                     };

@@ -66,6 +66,7 @@ namespace ProspectBusinessLayer
                     ServiceNo = latestVariation.ContractVariationServiceNo ?? tender.SpecificationServiceNo,
                     RouteText = latestVariation.ContractVariationRouteText,
                     ContractVariationNo = latestVariation.ContractVariationNo,
+                    FuelElementApplies = tender.IsFuelTerm,
                     CurrentPricePerDay = latestVariation.ContractVariationAveragePricePerDay,
                     DaysOfOperation = latestVariation.ContractVariationCalculatedNoOfDaysOfOperationFullTerm,
                     CurrentPricePerYear = latestVariation.ContractVariationAveragePricePerYear,

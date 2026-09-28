@@ -131,7 +131,7 @@
 	
 	
 		<NavigationOption>
-			<title>Annual Price Increase</title>
+			<title>Annual Price Review</title>
 			<href>/ContractVariation/AnnualPriceIncrease</href>
 			<isParent>no</isParent>
 			<isChild>yes</isChild>

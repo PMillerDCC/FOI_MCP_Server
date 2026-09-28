@@ -20,6 +20,9 @@ namespace ProspectBusinessLayer.Business_Objects
         public string TenderPricePerDayFormatted => TenderPricePerDay.ToString("F2");
         public bool IsConforming           { get; set; }
         public bool IsTenderAccepted       { get; set; }
+        public bool FuelElementApplies { get; set; }
+        public string FuelElementAppliesText =>
+            FuelElementApplies ? "Yes" : "No";
         public bool IsPackage              { get; set; }
         public List<int> ChildSpecs        { get; set; } = new List<int>();
         public bool IsPartOfAnotherPackage { get; set; }

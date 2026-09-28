@@ -8,7 +8,7 @@
 {
     @Html.AntiForgeryToken()
 
-    <h2>Annual Price Increase</h2>
+    <h2>Annual Price Review</h2>
 
     <div class="form-horizontal">
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -89,6 +89,7 @@
                             <th>Service No</th>
                             <th>Route</th>
                             <th>Variation</th>
+                            <th class="text-center">Fuel Applies</th>
                             <th class="text-right">Current Price/Day</th>
                             <th class="text-center">Days</th>
                             <th class="text-right">Current Price/Year</th>
@@ -124,6 +125,7 @@
                                 <td>@row.ServiceNo</td>
                                 <td>@row.RouteText</td>
                                 <td>@row.ContractVariationNoText</td>
+                                <td class="text-center">@row.FuelElementAppliesText</td>
                                 <td class="text-right">@row.CurrentPricePerDayText</td>
                                 <td class="text-center">@row.DaysOfOperation</td>
                                 <td class="text-right">@row.CurrentPricePerYearText</td>

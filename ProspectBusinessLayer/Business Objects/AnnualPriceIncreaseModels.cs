@@ -50,6 +50,8 @@ namespace ProspectBusinessLayer
         public string RouteText { get; set; }
         public int ContractVariationNo { get; set; }
         public string ContractVariationNoText => ContractVariationNo.ToString().PadLeft(2, '0');
+        public bool FuelElementApplies { get; set; }
+        public string FuelElementAppliesText => FuelElementApplies ? "Yes" : "No";
 
         public decimal CurrentPricePerDay { get; set; }
         public string CurrentPricePerDayText => CurrentPricePerDay.ToString("N2");
