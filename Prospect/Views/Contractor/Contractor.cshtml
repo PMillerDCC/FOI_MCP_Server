@@ -1,0 +1,282 @@
+﻿@model ProspectBusinessLayer.Contractor
+
+@using (Html.BeginForm())
+{
+	<input type="hidden" value="@Html.AttributeEncode(Model.K_Contractor)" id="K_Contractor" name="K_Contractor" />
+
+	<fieldset>
+		<h2 class="fakeLegend">Operator details</h2>
+		<div class="row">
+            <div class="col-lg-6">
+                <div class="form-group marginTop10">
+                    @Html.LabelFor(model => model.ContractorName, "Name", new { @class="width280" })
+                    @Html.TextBoxFor(model => model.ContractorName, new { @class="form-control width250" })
+                    @Html.ValidationMessageFor(model => model.ContractorName, null, new { @class="marginLeft200" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ContractorCode, "Operator code", new { @class="width280" })
+                    @Html.TextBoxFor(model => model.ContractorCode, new { @class="form-control width250" })
+                    @Html.ValidationMessageFor(model => model.ContractorCode, null, new { @class="marginLeft200" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ContractorTradeName, "Trade name", new { @class="width280" })
+                    @Html.TextBoxFor(model => model.ContractorTradeName, new { @class="form-control width250" })
+                    @Html.ValidationMessageFor(model => model.ContractorTradeName, null, new { @class="marginLeft200" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.TransportManager, "Transport manager", new { @class="width280" })
+                    @Html.TextBoxFor(model => model.TransportManager, new { @class="form-control width250" })
+                    @Html.ValidationMessageFor(model => model.TransportManager, null, new { @class="marginLeft200" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Address1, "Address line 1", new { @class="width280" })
+                    @Html.TextBoxFor(model => model.Address1, new { @class="form-control width250" })
+                    @Html.ValidationMessageFor(model => model.Address1, null, new { @class="marginLeft200" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Address2, "Address line 2", new { @class="width280" })
+                    @Html.TextBoxFor(model => model.Address2, new { @class="form-control width250" })
+                    @Html.ValidationMessageFor(model => model.Address2, null, new { @class="marginLeft200" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Address3, "Address line 3", new { @class="width280" })
+                    @Html.TextBoxFor(model => model.Address3, new { @class="form-control width250" })
+                    @Html.ValidationMessageFor(model => model.Address3, null, new { @class="marginLeft200" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Address4, "Address line 4", new { @class="width280" })
+                    @Html.TextBoxFor(model => model.Address4, new { @class="form-control width250" })
+                    @Html.ValidationMessageFor(model => model.Address4, null, new { @class="marginLeft200" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Address5, "Address line 5", new { @class="width280" })
+                    @Html.TextBoxFor(model => model.Address5, new { @class="form-control width250" })
+                    @Html.ValidationMessageFor(model => model.Address5, null, new { @class="marginLeft200" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Postcode, "Postcode", new { @class="width280" })
+                    @Html.TextBoxFor(model => model.Postcode, new { @class="form-control width250" })
+                    @Html.ValidationMessageFor(model => model.Postcode, null, new { @class="marginLeft200" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.TelephoneNo, "Telephone number", new { @class="width280" })
+                    @Html.TextBoxFor(model => model.TelephoneNo, new { @class="form-control width250" })
+                    @Html.ValidationMessageFor(model => model.TelephoneNo, null, new { @class="marginLeft200" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.EmailAddress, "Email address", new { @class="width280" })
+                    @Html.TextBoxFor(model => model.EmailAddress, new { @class="form-control width250" })
+                    @Html.ValidationMessageFor(model => model.EmailAddress, null, new { @class="marginLeft200" })
+                </div>
+				<div class="form-group marginTop30">
+                    @Html.LabelFor(model => model.ContractorLicenceNo, "Licence number", new { @class="width280" })
+                    @Html.TextBoxFor(model => model.ContractorLicenceNo, new { @class="form-control width130" })
+                    @Html.ValidationMessageFor(model => model.ContractorLicenceNo, null, new { @class="marginLeft200" })
+                </div>
+				<div class="form-group">
+					@Html.LabelFor(model => model.Q_LicenceType, "Licence type", new { @class="width280" })
+					@Html.DropDownListFor(model => model.Q_LicenceType, Model.ddlLicenceType.ToList(), "Required field", new { @id="ddlLicenceType", @class="form-control width250", required="required" })
+					@Html.ValidationMessageFor(model => model.Q_LicenceType, null, new { @class="marginLeft200" })
+				</div>
+				<div class="form-group">
+					@Html.LabelFor(model => model.Q_LicenceStatus, "Is licence current?", new { @class="width280" })
+					@Html.DropDownListFor(model => model.Q_LicenceStatus, Model.ddlLicenceStatus.ToList(), "Required field", new { @id="ddlLicenceStatus", @class="form-control width250", required="required" })
+					@Html.ValidationMessageFor(model => model.Q_LicenceStatus, null, new { @class="marginLeft200" })
+				</div>
+				<div class="form-group marginBottom15">
+					@Html.LabelFor(model => model.DateLicenceExpires, "Date licence expires", new { @class="width280" })
+					@Html.JQueryUI().DatepickerFor(model => model.DateLicenceExpires, new { @id="DateLicenceExpires", @class="form-control width100" }).DateFormat("dd MMM yyyy")
+					@Html.ValidationMessageFor(model => model.DateLicenceExpires, null, new { @class="marginLeft200" })
+				</div>
+            </div>
+			<div class="col-lg-6">
+				<div class="form-group marginTop10">
+					@Html.Label("RequestsForTendersBusServices", "Standing requests for tenders bus services", new { @class="width280" })
+					<input id="dummyRequestsForTendersBusServices" type="checkbox" name="checkbox" class="hide" onclick="checkboxClick(this);">
+					<label for="dummyRequestsForTendersBusServices"></label>
+					@Html.CheckBoxFor(model => model.RequestsForTendersBusServices, new { @id="cbRequestsForTendersBusServices", @class="hide" })
+				</div>
+				<div class="form-group">
+					@Html.Label("RequestsForTendersTaxiBusServices", "Standing requests for tenders taxi bus services", new { @class="width280" })
+					<input id="dummyRequestsForTendersTaxiBusServices" type="checkbox" name="checkbox" class="hide" onclick="checkboxClick(this);">
+					<label for="dummyRequestsForTendersTaxiBusServices"></label>
+					@Html.CheckBoxFor(model => model.RequestsForTendersTaxiBusServices, new { @id="cbRequestsForTendersTaxiBusServices", @class="hide" })
+				</div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.NoOfVehicles, "Number of vehicles", new { @class="width280" })
+                    @Html.TextBoxFor(model => model.NoOfVehicles, new { @class="form-control width50" })
+                    @Html.ValidationMessageFor(model => model.NoOfVehicles, null, new { @class="marginLeft200" })
+                </div>
+				<div class="form-group">
+					@Html.LabelFor(model => model.Q_Restriction, "Local bus service restrictions", new { @class="width280" })
+					@Html.DropDownListFor(model => model.Q_Restriction, Model.ddlLicenceType.ToList(), "Required field", new { @id="ddlLicenceType", @class="form-control width250", required="required" })
+					@Html.ValidationMessageFor(model => model.Q_Restriction, null, new { @class="marginLeft200" })
+				</div>
+				<div class="form-group">
+					@Html.LabelFor(model => model.PublicEnquiries, "Public enquiries", new { @class="width280" })
+					<div style="width: auto">
+						@Html.TextAreaFor(model => model.PublicEnquiries, new { @id="PublicEnquiries", @class="form-control width320 height140", onblur="TextAreaOnBlur(this)", @maxlength="500", @onkeyup="TextAreaOnKeyUp(this, 500);", @onkeydown="return true;" })
+					    <div id="divPublicEnquiries" class="marginLeft200 width320 alignRight"></div>
+					</div>
+					@Html.ValidationMessageFor(model => model.PublicEnquiries, null, new { @class="marginLeft200" })
+				</div>
+				<div class="form-group">
+					@Html.LabelFor(model => model.OperatingCentre, "Operating centre", new { @class="width280" })
+					<div style="width: auto">
+						@Html.TextAreaFor(model => model.OperatingCentre, new { @id="OperatingCentre", @class="form-control width320 height140", onblur="TextAreaOnBlur(this)", @maxlength="500", @onkeyup="TextAreaOnKeyUp(this, 500);", @onkeydown="return true;" })
+					    <div id="divOperatingCentre" class="marginLeft200 width320 alignRight"></div>
+					</div>
+					@Html.ValidationMessageFor(model => model.OperatingCentre, null, new { @class="marginLeft200" })
+				</div>
+				<div class="form-group marginBottom20">
+					@Html.LabelFor(model => model.GeneralNotes, "General notes", new { @class="width280" })
+					<div style="width: auto">
+						@Html.TextAreaFor(model => model.GeneralNotes, new { @id="GeneralNotes", @class="form-control width320 height140", onblur="TextAreaOnBlur(this)", @maxlength="500", @onkeyup="TextAreaOnKeyUp(this, 500);", @onkeydown="return true;" })
+					    <div id="divGeneralNotes" class="marginLeft200 width320 alignRight"></div>
+					</div>
+					@Html.ValidationMessageFor(model => model.GeneralNotes, null, new { @class="marginLeft200" })
+				</div>
+			</div>
+		</div>
+	</fieldset>
+
+	<div class="text-center marginBottom20">
+		<input class="btn btn-success" name="saveButton" type="submit" value="Save changes" data-ays-ignore="" true"" />
+	</div>
+}
+
+
+
+
+
+<script type="text/javascript">
+
+
+	$(document).ready(function ()
+	{
+
+
+		// Customise jquery datepickers
+
+		$.datepicker.setDefaults(
+		{
+			inline: true,
+			dateFormat: 'd M yy',
+			dayNamesMin: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+			firstDay: 1,
+			showOtherMonths: true,
+			showAnimation: 'fadeIn',
+			showButtonPanel: true,
+			changeYear: true,
+			changeMonth: true,
+			maxDate: '0', // no of days after today ('0'=today)
+			yearRange: "-100:+10"
+		});
+
+        $("#DateLicenceExpires").datepicker(
+        {
+            dateFormat: "d M yy",
+            onClose: function (selectedDate)
+            {
+                $("#ContractVariationDateEnd").datepicker("option", "minDate", selectedDate);
+            }
+        });
+
+
+
+
+        // Initialise dropdownlists
+
+        $('select').each(function (index)
+        {
+            var $this=$(this);
+            var id=$this.attr("id");
+            var ddl1=document.getElementById(id), option, i;
+            for (i=0; i < ddl1.length; i++)
+            {
+                option=ddl1[i];
+                if (option.text.toLowerCase() == "-- not set --")
+                {
+                    option.disabled=true;// disable this line if you want to allow user to select "-- not set --"
+                    option.style.color="grey";
+                }
+                else
+                {
+                    option.style.color="#2e6492";
+                }
+            }
+            if ((this.value == "-- not set --") || (this.value == ""))
+                this.style.color="grey";
+            else
+                this.style.color="#2e6492";
+        });
+
+        $('select').on('change', function ()
+        {
+            if ((this.value == "-- not set --") || (this.value == ""))
+                this.style.color="grey";
+            else
+                this.style.color="#2e6492";
+        });
+
+
+
+
+        // Initialise Checkboxes
+
+        $("input:checkbox").each(function ()
+        {
+            var $this=$(this);
+            var id=$this.attr("id");
+            if (id.indexOf('dummy') == 0)
+            {
+                this.checked=document.getElementById(id.replace('dummy', 'cb')).checked;
+            }
+        });
+
+
+	});
+
+
+
+
+	// OnLoad
+
+	function onLoad()
+	{
+		return false;
+	}
+
+
+
+
+	// Set checkboxes
+
+	function checkboxClick(element)
+	{
+		var id=element.id;
+		var target=id.replace('dummy', 'cb');
+		var remember=document.getElementById(id);
+		document.getElementById(target).checked=(remember.checked);
+		return false;
+	}
+
+
+
+
+	// Show character count while typing in a textarea
+
+	function TextAreaOnKeyUp(ctrl, max)
+	{
+        var remaining = max - ctrl.value.length;
+		$("#div" + ctrl.id).html(remaining + " characters remaining");
+	}
+
+	function TextAreaOnBlur(ctrl)
+	{
+		$("#div" + ctrl.id).html("");
+	}
+
+
+
+</script>

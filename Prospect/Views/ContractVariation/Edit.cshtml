@@ -1,0 +1,23 @@
+﻿@model ProspectBusinessLayer.ContractVariation
+
+@{
+    ViewBag.Title = "Edit Contract Variation";
+}
+
+<h2>Edit Contract Variation</h2>
+
+<p>K_ContractVariation: @Model.K_ContractVariation</p>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.K_ContractVariation)
+    @Html.Hidden("returnTenderId", (int)ViewBag.ReturnTenderId)
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.ContractVariationNotes)
+        @Html.TextAreaFor(m => m.ContractVariationNotes, new { @class = "form-control", rows = 6 })
+    </div>
+
+    <button type="submit" class="btn btn-success">Save</button>
+}

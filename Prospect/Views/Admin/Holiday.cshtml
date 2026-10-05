@@ -1,0 +1,234 @@
+﻿@model ProspectBusinessLayer.Holiday
+
+@using (Html.BeginForm())
+{
+    @Html.HiddenFor(model => model.K_Holiday)
+
+    <fieldset>
+        <h2 class="fakeLegend">Bank holiday and school term dates</h2>
+        <div class="row marginTop10">
+            <div class="col-lg-12">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Year, "Year", new { @class = "width250" })
+                    @Html.TextBoxFor(model => model.Year, new { @class = "width180", @maxlength = "4" })
+                    @Html.ValidationMessageFor(model => model.Year)
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <h3>Bank holidays</h3>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.NewYearsDay, "New Year's Day", new { @class = "width250" })
+                    @Html.JQueryUI().DatepickerFor(model => model.NewYearsDay, new { @id = "NewYear", @class = "form-control width120" }).DateFormat("dd MMM yyyy")
+                    @Html.ValidationMessageFor(model => model.NewYearsDay)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.GoodFriday, "Good Friday", new { @class = "width250" })
+                    @Html.JQueryUI().DatepickerFor(model => model.GoodFriday, new { @id = "GoodFriday", @class = "form-control width120" }).DateFormat("dd MMM yyyy")
+                    @Html.ValidationMessageFor(model => model.GoodFriday)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.EasterMonday, "Easter Monday", new { @class = "width250" })
+                    @Html.JQueryUI().DatepickerFor(model => model.EasterMonday, new { @id = "EasterMonday", @class = "form-control width120" }).DateFormat("dd MMM yyyy")
+                    @Html.ValidationMessageFor(model => model.EasterMonday)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.MayDay, "May Day", new { @class = "width250" })
+                    @Html.JQueryUI().DatepickerFor(model => model.MayDay, new { @id = "MayDay", @class = "form-control width120" }).DateFormat("dd MMM yyyy")
+                    @Html.ValidationMessageFor(model => model.MayDay)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.SpringBankHoliday, "Spring Bank Holiday", new { @class = "width250" })
+                    @Html.JQueryUI().DatepickerFor(model => model.SpringBankHoliday, new { @id = "SpringBankHoliday", @class = "form-control width120" }).DateFormat("dd MMM yyyy")
+                    @Html.ValidationMessageFor(model => model.SpringBankHoliday)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.SummerBankHoliday, "Summer Bank Holiday", new { @class = "width250" })
+                    @Html.JQueryUI().DatepickerFor(model => model.SummerBankHoliday, new { @id = "SummerBankHoliday", @class = "form-control width120" }).DateFormat("dd MMM yyyy")
+                    @Html.ValidationMessageFor(model => model.SummerBankHoliday)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ChristmasDay, "Christmas Day", new { @class = "width250" })
+                    @Html.JQueryUI().DatepickerFor(model => model.ChristmasDay, new { @id = "ChristmasDay", @class = "form-control width120" }).DateFormat("dd MMM yyyy")
+                    @Html.ValidationMessageFor(model => model.ChristmasDay)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.BoxingDay, "Boxing Day", new { @class = "width250" })
+                    @Html.JQueryUI().DatepickerFor(model => model.BoxingDay, new { @id = "BoxingDay", @class = "form-control width120" }).DateFormat("dd MMM yyyy")
+                    @Html.ValidationMessageFor(model => model.BoxingDay)
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <h3>Additional bank holidays</h3>
+				<div class="form-group">
+					@Html.LabelFor(model => model.Special1, "Additional Bank Holiday 1", new { @class = "width250" })
+					@Html.JQueryUI().DatepickerFor(model => model.Special1, new { @id = "Special1", @class = "form-control width120" }).DateFormat("dd MMM yyyy")
+					@Html.ValidationMessageFor(model => model.Special1)
+				</div>
+				<div class="form-group">
+					@Html.LabelFor(model => model.Special2, "Additional Bank Holiday 2", new { @class = "width250" })
+					@Html.JQueryUI().DatepickerFor(model => model.Special2, new { @id = "Special2", @class = "form-control width120" }).DateFormat("dd MMM yyyy")
+					@Html.ValidationMessageFor(model => model.Special2)
+				</div>
+				<div class="form-group">
+					@Html.LabelFor(model => model.Special3, "Additional Bank Holiday 3", new { @class = "width250" })
+					@Html.JQueryUI().DatepickerFor(model => model.Special3, new { @id = "Special3", @class = "form-control width120" }).DateFormat("dd MMM yyyy")
+					@Html.ValidationMessageFor(model => model.Special3)
+				</div>
+				<div class="form-group">
+					@Html.LabelFor(model => model.Special4, "Additional Bank Holiday 4", new { @class = "width250" })
+					@Html.JQueryUI().DatepickerFor(model => model.Special4, new { @id = "Special4", @class = "form-control width120" }).DateFormat("dd MMM yyyy")
+					@Html.ValidationMessageFor(model => model.Special4)
+				</div>
+				<div class="form-group">
+					@Html.LabelFor(model => model.Special5, "Additional Bank Holiday 5", new { @class = "width250" })
+					@Html.JQueryUI().DatepickerFor(model => model.Special5, new { @id = "Special5", @class = "form-control width120" }).DateFormat("dd MMM yyyy")
+					@Html.ValidationMessageFor(model => model.Special5)
+				</div>
+				<div class="form-group">
+					@Html.LabelFor(model => model.Special6, "Additional Bank Holiday 6", new { @class = "width250" })
+					@Html.JQueryUI().DatepickerFor(model => model.Special6, new { @id = "Special6", @class = "form-control width120" }).DateFormat("dd MMM yyyy")
+					@Html.ValidationMessageFor(model => model.Special6)
+				</div>
+				<div class="form-group">
+					@Html.LabelFor(model => model.Special7, "Additional Bank Holiday 7", new { @class = "width250" })
+					@Html.JQueryUI().DatepickerFor(model => model.Special7, new { @id = "Special7", @class = "form-control width120" }).DateFormat("dd MMM yyyy")
+					@Html.ValidationMessageFor(model => model.Special7)
+				</div>
+				<div class="form-group">
+					@Html.LabelFor(model => model.Special8, "Additional Bank Holiday 8", new { @class = "width250" })
+					@Html.JQueryUI().DatepickerFor(model => model.Special8, new { @id = "Special8", @class = "form-control width120" }).DateFormat("dd MMM yyyy")
+					@Html.ValidationMessageFor(model => model.Special8)
+				</div>
+            </div>
+        </div>
+        <div class="row marginTop10 marginBottom30">
+            <div class="col-lg-4">
+                <h3>Spring school term</h3>
+				<div class="form-group">
+					@Html.LabelFor(model => model.Spring1Start, "Spring 1st half Start", new { @class = "width250" })
+					@Html.JQueryUI().DatepickerFor(model => model.Spring1Start, new { @id = "Spring1Start", @class = "form-control width120" }).DateFormat("dd MMM yyyy")
+					@Html.ValidationMessageFor(model => model.Spring1Start)
+				</div>
+				<div class="form-group">
+					@Html.LabelFor(model => model.Spring1End, "Spring 1st half End", new { @class = "width250" })
+					@Html.JQueryUI().DatepickerFor(model => model.Spring1End, new { @id = "Spring1End", @class = "form-control width120" }).DateFormat("dd MMM yyyy")
+					@Html.ValidationMessageFor(model => model.Spring1End)
+				</div>
+				<div class="form-group">
+					@Html.LabelFor(model => model.Spring2Start, "Spring 2nd half Start", new { @class = "width250" })
+					@Html.JQueryUI().DatepickerFor(model => model.Spring2Start, new { @id = "Spring2Start", @class = "form-control width120" }).DateFormat("dd MMM yyyy")
+					@Html.ValidationMessageFor(model => model.Spring2Start)
+				</div>
+				<div class="form-group">
+					@Html.LabelFor(model => model.Spring2End, "Spring 2nd half End", new { @class = "width250" })
+					@Html.JQueryUI().DatepickerFor(model => model.Spring2End, new { @id = "Spring2End", @class = "form-control width120" }).DateFormat("dd MMM yyyy")
+					@Html.ValidationMessageFor(model => model.Spring2End)
+				</div>
+            </div>
+            <div class="col-lg-4">
+                <h3>Summer school term</h3>
+				<div class="form-group">
+					@Html.LabelFor(model => model.Summer1Start, "Summer 1st half Start", new { @class = "width250" })
+					@Html.JQueryUI().DatepickerFor(model => model.Summer1Start, new { @id = "Summer1Start", @class = "form-control width120" }).DateFormat("dd MMM yyyy")
+					@Html.ValidationMessageFor(model => model.Summer1Start)
+				</div>
+				<div class="form-group">
+					@Html.LabelFor(model => model.Summer1End, "Summer 1st half End", new { @class = "width250" })
+					@Html.JQueryUI().DatepickerFor(model => model.Summer1End, new { @id = "Summer1End", @class = "form-control width120" }).DateFormat("dd MMM yyyy")
+					@Html.ValidationMessageFor(model => model.Summer1End)
+				</div>
+				<div class="form-group">
+					@Html.LabelFor(model => model.Summer2Start, "Summer 2nd half Start", new { @class = "width250" })
+					@Html.JQueryUI().DatepickerFor(model => model.Summer2Start, new { @id = "Summer2Start", @class = "form-control width120" }).DateFormat("dd MMM yyyy")
+					@Html.ValidationMessageFor(model => model.Summer2Start)
+				</div>
+				<div class="form-group">
+					@Html.LabelFor(model => model.Summer2End, "Summer 2nd half End", new { @class = "width250" })
+					@Html.JQueryUI().DatepickerFor(model => model.Summer2End, new { @id = "Summer2End", @class = "form-control width120" }).DateFormat("dd MMM yyyy")
+					@Html.ValidationMessageFor(model => model.Summer2End)
+				</div>
+            </div>
+            <div class="col-lg-4">
+                <h3>Autumn school term</h3>
+				<div class="form-group">
+					@Html.LabelFor(model => model.Autumn1Start, "Autumn 1st half Start", new { @class = "width250" })
+					@Html.JQueryUI().DatepickerFor(model => model.Autumn1Start, new { @id = "Autumn1Start", @class = "form-control width120" }).DateFormat("dd MMM yyyy")
+					@Html.ValidationMessageFor(model => model.Autumn1Start)
+				</div>
+				<div class="form-group">
+					@Html.LabelFor(model => model.Autumn1End, "Autumn 1st half End", new { @class = "width250" })
+					@Html.JQueryUI().DatepickerFor(model => model.Autumn1End, new { @id = "Autumn1End", @class = "form-control width120" }).DateFormat("dd MMM yyyy")
+					@Html.ValidationMessageFor(model => model.Autumn1End)
+				</div>
+				<div class="form-group">
+					@Html.LabelFor(model => model.Autumn2Start, "Autumn 2nd half Start", new { @class = "width250" })
+					@Html.JQueryUI().DatepickerFor(model => model.Autumn2Start, new { @id = "Autumn2Start", @class = "form-control width120" }).DateFormat("dd MMM yyyy")
+					@Html.ValidationMessageFor(model => model.Autumn2Start)
+				</div>
+				<div class="form-group">
+					@Html.LabelFor(model => model.Autumn2End, "Autumn 2nd half End", new { @class = "width250" })
+					@Html.JQueryUI().DatepickerFor(model => model.Autumn2End, new { @id = "Autumn2End", @class = "form-control width120" }).DateFormat("dd MMM yyyy")
+					@Html.ValidationMessageFor(model => model.Autumn2End)
+				</div>
+            </div>
+        </div>
+    </fieldset>
+
+    <div class="text-center">
+        <input class="btn btn-success" name="saveButton" type="submit" value="Save Changes" data-ays-ignore="" true"" />
+        <input class="btn btn-success" type="button" value="Back to Bank holidays and school term dates" onclick="location.href='@Url.Action("HolidayGrid", "Admin")';" />
+    </div>
+
+}
+
+
+
+
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+
+
+        // Customise jquery datepickers
+
+        $.datepicker.setDefaults(
+            {
+                inline: true,
+                dateFormat: 'd M yy',
+                dayNamesMin: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                firstDay: 1,
+                showOtherMonths: true,
+                showAnimation: 'fadeIn',
+                showButtonPanel: true,
+                changeYear: true,
+                changeMonth: true,
+                //maxDate:'365', // no of days after today ('0'=today)
+                yearRange: "-100:+10"
+            });
+
+        $(function () {
+            $("#NewYear").datepicker();
+        });
+          
+
+   
+
+    });
+
+
+
+
+    // OnLoad
+
+    function onLoad() {
+        showOrHideDivs();
+        return false;
+    }
+
+
+
+
+</script>
