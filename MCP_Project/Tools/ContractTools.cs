@@ -37,4 +37,30 @@ public class ContractTools
                 """
             ));
     }
+
+    [McpServerTool]
+    public string GetContractsByManager(string managerName)
+    {
+        var contracts =
+            _spreadsheetService.GetContractsByManager(managerName);
+        if (!contracts.Any())
+        { 
+            return $"No contracts found for manager '{managerName}'.";
+        }
+
+        return string.Join(
+            Environment.NewLine,
+            contracts.Select(c =>
+              $"{c.ContractTitle} | {c.Supplier}"));
+    }
+
+    [McpServerTool]
+    public string CountContractsByManager(string managerName)
+    { 
+        var count = 
+            _spreadsheetService
+                .GetContractsByManager(managerName)
+                .Count;
+        return $"{managerName} is the nominated contract manager for {count} contracts.";
+    }
 }

@@ -52,7 +52,6 @@ public class SpreadsheetService
 
         return contracts;
     }
-
     private static DateTime? TryGetDate(IXLCell cell)
     {
         if (cell.TryGetValue<DateTime>(out var date))
@@ -62,7 +61,6 @@ public class SpreadsheetService
 
         return null;
     }
-
     private static decimal? TryGetDecimal(IXLCell cell)
     {
         if (cell.TryGetValue<decimal>(out var value))
@@ -79,6 +77,16 @@ public class SpreadsheetService
                 !string.IsNullOrWhiteSpace(c.Supplier) &&
                 c.Supplier.Contains(
                     supplier,
+                    StringComparison.OrdinalIgnoreCase))
+            .ToList();
+    }
+    public List<ContractRecord> GetContractsByManager(string managerName)
+    { 
+        return GetFrameworkContracts()
+            .Where(c =>
+                !string.IsNullOrWhiteSpace(c.ContractManager) &&
+                c.ContractManager.Contains(
+                    managerName,
                     StringComparison.OrdinalIgnoreCase))
             .ToList();
     }
