@@ -1,8 +1,0 @@
-﻿@model System.Web.Mvc.HandleErrorInfo
-
-<h2 class="marginTop20">Error!</h2>
-<p class="marginTop20">An unexpected error has occurred.  If the problem persists, please contact your System Administrator.</p>
-@if (!string.IsNullOrEmpty(@ViewBag.ExceptionMessage))
-{
-	<p class="marginTop20"><b>Exception: </b>@ViewBag.ExceptionMessage</p>
-}

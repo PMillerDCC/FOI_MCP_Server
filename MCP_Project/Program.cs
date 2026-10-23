@@ -1,4 +1,6 @@
 using FOI_MCP_Server.Tools;
+using MCP_Project.Services;
+using MCP_Project.Tools;
 using ModelContextProtocol.Server;
 using System.ComponentModel;
 
@@ -13,11 +15,15 @@ builder.Services.AddMcpServer()
     })
     .WithToolsFromAssembly();
 
+builder.Services.AddSingleton<SpreadsheetService>();
+
+
 builder.Services
     .AddMcpServer()
     .WithHttpTransport()
     .WithTools<GetFoiRequest>()
-    .WithTools<DatabaseTool>();
+    .WithTools<DatabaseTool>()
+    .WithTools<ContractTools>();
 
 var app = builder.Build();
 
