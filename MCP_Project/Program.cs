@@ -1,10 +1,12 @@
 using FOI_MCP_Server.Tools;
+using MCP_Project.Middleware;
 using MCP_Project.Services;
 using MCP_Project.Tools;
 using ModelContextProtocol.Server;
 using System.ComponentModel;
 
 var builder = WebApplication.CreateBuilder(args);
+
 builder.Services.AddMcpServer()
     .WithHttpTransport(options =>
     {
@@ -16,7 +18,7 @@ builder.Services.AddMcpServer()
     .WithToolsFromAssembly();
 
 builder.Services.AddSingleton<SpreadsheetService>();
-
+builder.Services.AddSingleton<SpreadsheetDatabaseService>();
 
 builder.Services
     .AddMcpServer()
@@ -27,6 +29,10 @@ builder.Services
 
 var app = builder.Build();
 
-app.MapMcp();
+app.UseMiddleware<ApiKeyMiddleware>();
 
-app.Run("http://localhost:3001");
+app.MapGet("/", () => "FOI MCP Server Running");
+
+app.MapMcp("/mcp");
+
+app.Run();

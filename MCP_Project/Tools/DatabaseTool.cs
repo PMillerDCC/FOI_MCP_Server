@@ -14,32 +14,6 @@ public class DatabaseTool
     }
 
     [McpServerTool]
-    public string GetFirstFoiRequest()
-    {
-        try
-        {
-            var connectionString =
-            _configuration.GetConnectionString("DefaultConnection");
-
-            using var connection =
-            new SqlConnection(connectionString);
-
-            connection.Open();
-
-            var command = new SqlCommand(
-            "SELECT TOP 1 Summary FROM FOI_Requests",
-            connection);
-
-            var result = command.ExecuteScalar();
-
-            return result?.ToString() ?? "No records found";
-        }
-        catch (Exception ex)
-        {
-            return ex.Message;
-        }
-    }
-    [McpServerTool]
     public string TestDatabaseConnection()
     {
         try
