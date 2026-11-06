@@ -19,6 +19,7 @@ builder.Services.AddMcpServer()
 
 builder.Services.AddSingleton<SpreadsheetService>();
 builder.Services.AddSingleton<SpreadsheetDatabaseService>();
+builder.Services.AddSingleton<IDataSourceRegistry, DataSourceRegistry>();
 
 builder.Services
     .AddMcpServer()
