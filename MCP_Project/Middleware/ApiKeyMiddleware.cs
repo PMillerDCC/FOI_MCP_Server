@@ -27,6 +27,10 @@
                 context.Request.Path,
                 context.Connection.RemoteIpAddress);
 
+            _logger.LogInformation(
+                "Headers: {Headers}",
+                string.Join(", ", context.Request.Headers.Keys));
+
             if (!context.Request.Headers.TryGetValue(
                     HeaderName,
                     out var suppliedKey))

@@ -1,6 +1,7 @@
-﻿using ModelContextProtocol.Server;
+﻿using MCP_Project.Models;
 using MCP_Project.Services;
 using Microsoft.Extensions.Logging;
+using ModelContextProtocol.Server;
 
 namespace MCP_Project.Tools;
 
@@ -8,12 +9,15 @@ namespace MCP_Project.Tools;
 public class ContractTools
 {
     private readonly SpreadsheetService _spreadsheetService;
+    private readonly AuditService _auditService;
     private readonly ILogger<ContractTools> _logger;
     public ContractTools(
         SpreadsheetService spreadsheetService,
+        AuditService auditService,
         ILogger<ContractTools> logger)
     {
         _spreadsheetService = spreadsheetService;
+        _auditService = auditService;
         _logger = logger;
     }
 
@@ -87,7 +91,7 @@ public class ContractTools
     }
 
     [McpServerTool]
-    public string CountContractsByManager(string managerName)
+    public async Task<string> CountContractsByManager(string managerName)
     {
         try
         {
@@ -100,11 +104,23 @@ public class ContractTools
                     .GetContractsByManager(managerName)
                     .Count;
 
+            var response =
+                $"{managerName} is the nominated contract manager for {count} contracts.";
+
             _logger.LogInformation(
                 "CountContractsByManager returned {Count}",
                 count);
 
-            return $"{managerName} is the nominated contract manager for {count} contracts.";
+            await _auditService.LogAsync( new AuditLog
+            {
+                TimestampUtc = DateTime.UtcNow,
+                ToolName = "CountContractsByManager",
+                RequestData = managerName,
+                ResponseSummary = $"{count} contracts found",
+                Success = true
+            });
+               
+            return response;
         }
         catch (Exception ex)
         {
@@ -113,7 +129,47 @@ public class ContractTools
                 "Error executing CountContractsByManager for {Manager}",
                 managerName);
 
+            await _auditService.LogAsync(new AuditLog
+            {
+                TimestampUtc = DateTime.UtcNow,
+                ToolName = "CountContractsByManager",
+                RequestData = managerName,
+                Success = false,
+                ErrorMessage = ex.Message
+            });
+
             return "An error occurred while counting contracts.";
         }
     }
+    //public string CountContractsByManager(string managerName)
+    //{
+    //    try
+    //    {
+    //        _logger.LogInformation(
+    //            "Tool executed: CountContractsByManager. Manager={Manager}",
+    //            managerName);
+
+    //        var count =
+    //            _spreadsheetService
+    //                .GetContractsByManager(managerName)
+    //                .Count;
+
+
+
+    //        _logger.LogInformation(
+    //            "CountContractsByManager returned {Count}",
+    //            count);
+
+    //        return $"{managerName} is the nominated contract manager for {count} contracts.";
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        _logger.LogError(
+    //            ex,
+    //            "Error executing CountContractsByManager for {Manager}",
+    //            managerName);
+
+    //        return "An error occurred while counting contracts.";
+    //    }
+    //}
 }

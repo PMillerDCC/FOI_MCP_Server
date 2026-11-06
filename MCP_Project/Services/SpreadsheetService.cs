@@ -10,7 +10,7 @@ public class SpreadsheetService
     public SpreadsheetService()
     {
         _filePath =
-            @"C:\Users\philip.miller\OneDrive - Durham County Council\Apprenticeship\QA\Major Project\Assignment\FOI Data\Contracts\Contracts Register.xlsm";
+            @"C:\Users\philip.miller\OneDrive - Durham County Council\Apprenticeship\QA\Major Project\Assignment\FOI Data\Contracts\Contracts Register - ANONYMISED.xlsm";
     }
 
     public List<ContractRecord> GetFrameworkContracts()
