@@ -514,7 +514,7 @@ public sealed class SpreadsheetTools
     [McpServerTool]
     [Description(
         "Counts contracts with an end date within a specified date range " +
-        "and returns basic details of the expiring contracts.")]
+        "and returns basic details of the expiring contracts. If no start date is provided the assistant should ask the user to provide one rather than assuming today's date.")]
     public async Task<string> CountContractsExpiringWithinDateRange(
         [Description(
             "The beginning of the expiry date range, using YYYY-MM-DD " +

@@ -24,6 +24,8 @@ builder.Services.AddSingleton<SpreadsheetService>();
 builder.Services.AddSingleton<SpreadsheetDatabaseService>();
 builder.Services.AddSingleton<IDataSourceRegistry, DataSourceRegistry>();
 builder.Services.AddScoped<AuditService>();
+builder.Services.AddSingleton<DatabaseService>();
+
 
 var app = builder.Build();
 
