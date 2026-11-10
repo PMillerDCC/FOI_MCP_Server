@@ -3,6 +3,13 @@
     public class ContractRecord
     {
         public string MasterRefNo { get; set; } = string.Empty;
+        public string ContractReference { get; set; } = string.Empty;
+        public string ClassReferenceNumber { get; set; } = string.Empty;
+        public string Classification { get; set; } = string.Empty;
+        public string ContractManagerEmail { get; set; } = string.Empty;
+        public string ProcurementOfficer { get; set; } = string.Empty;
+        public string FrameworksTitle { get; set; } = string.Empty;
+        
         public string ServiceArea { get; set; } = string.Empty;
         public string ContractTitle { get; set; } = string.Empty;
         public string Supplier { get; set; } = string.Empty;

@@ -28,25 +28,23 @@ public class SpreadsheetService
             contracts.Add(new ContractRecord
             {
                 MasterRefNo = row.Cell(1).GetString(),
-                ServiceArea = row.Cell(7).GetString(),
-                ContractManager = row.Cell(8).GetString(),
-                ContractTitle = row.Cell(12).GetString(),
-                Supplier = row.Cell(14).GetString(),
-
+                ContractReference = row.Cell(2).GetString(),
+                ClassReferenceNumber = row.Cell(3).GetString(),
+                Classification = row.Cell(4).GetString(),
+                ServiceArea = row.Cell(5).GetString(),
+                ContractManager = row.Cell(7).GetString(),
+                ContractManagerEmail = row.Cell(8).GetString(),
+                ProcurementOfficer = row.Cell(9).GetString(),
+                FrameworksTitle = row.Cell(10).GetString(),
+                Supplier = row.Cell(12).GetString(),
                 RelevantToIT =
-                    row.Cell(13)
-                        .GetString()
-                        .Equals("Yes",
-                            StringComparison.OrdinalIgnoreCase),
-
-                ContractStartDate =
-                    TryGetDate(row.Cell(17)),
-
-                ContractEndDate =
-                    TryGetDate(row.Cell(18)),
-
-                TotalContractValue =
-                    TryGetDecimal(row.Cell(20))
+                            row.Cell(11)
+                            .GetString()
+                            .Equals("Yes",
+                                StringComparison.OrdinalIgnoreCase),
+                ContractStartDate = TryGetDate(row.Cell(15)),
+                ContractEndDate = TryGetDate(row.Cell(16)),
+                TotalContractValue = TryGetDecimal(row.Cell(18))
             });
         }
 
@@ -70,25 +68,35 @@ public class SpreadsheetService
 
         return null;
     }
-    public List<ContractRecord> SearchBySupplier(string supplier)
+    public List<ContractRecord> SearchContracts(string searchText)
     {
+        if (string.IsNullOrWhiteSpace(searchText))
+        {
+            return [];
+        }
+
         return GetFrameworkContracts()
-            .Where(c =>
-                !string.IsNullOrWhiteSpace(c.Supplier) &&
-                c.Supplier.Contains(
-                    supplier,
-                    StringComparison.OrdinalIgnoreCase))
-            .ToList();
+        .Where(contract =>
+            ContainsText(contract.ContractReference, searchText) ||
+            ContainsText(contract.ClassReferenceNumber, searchText) ||
+            ContainsText(contract.Classification, searchText) ||
+            ContainsText(contract.ServiceArea, searchText) ||
+            ContainsText(contract.ContractManager, searchText) ||
+            ContainsText(contract.ContractManagerEmail, searchText) ||
+            ContainsText(contract.ProcurementOfficer, searchText) ||
+            ContainsText(contract.FrameworksTitle, searchText) ||
+            ContainsText(contract.Supplier, searchText)) 
+        .ToList();
     }
-    public List<ContractRecord> GetContractsByManager(string managerName)
+
+    private static bool ContainsText(
+        string? value,
+        string searchText)
     { 
-        return GetFrameworkContracts()
-            .Where(c =>
-                !string.IsNullOrWhiteSpace(c.ContractManager) &&
-                c.ContractManager.Contains(
-                    managerName,
-                    StringComparison.OrdinalIgnoreCase))
-            .ToList();
+        return !string.IsNullOrWhiteSpace(value) &&
+               value.Contains(
+                   searchText, 
+                   StringComparison.OrdinalIgnoreCase);
     }
 }
 
