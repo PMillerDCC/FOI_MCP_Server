@@ -10,6 +10,9 @@ using ModelContextProtocol.Server;
 namespace FOI_MCP_Server.Tools;
 
 [McpServerToolType]
+/// <summary>
+/// MCP tool surface for SQL database connectivity, schema discovery and search.
+/// </summary>
 public sealed class DatabaseTools
 {
     private readonly IConfiguration _configuration;
@@ -17,6 +20,13 @@ public sealed class DatabaseTools
     private readonly AuditService _auditService;
     private readonly ILogger<DatabaseTools> _logger;
 
+    /// <summary>
+    /// Initializes a new <see cref="DatabaseTools"/> instance.
+    /// </summary>
+    /// <param name="configuration">Configuration provider with SQL connection settings.</param>
+    /// <param name="databaseService">Service that executes SQL schema and search operations.</param>
+    /// <param name="auditService">Service used to persist tool invocation audit records.</param>
+    /// <param name="logger">Structured logger for diagnostics.</param>
     public DatabaseTools(
         IConfiguration configuration,
         DatabaseService databaseService,
@@ -37,6 +47,10 @@ public sealed class DatabaseTools
     [Description(
         "Tests whether a connection can be established to the configured " +
         "SQL database. Use this to check database availability and connectivity.")]
+    /// <summary>
+    /// Tests whether the configured SQL connection can be opened.
+    /// </summary>
+    /// <returns>Success or failure message suitable for agent responses.</returns>
     public async Task<string> TestDatabaseConnection()
     {
         const string toolName = nameof(TestDatabaseConnection);
@@ -70,6 +84,7 @@ public sealed class DatabaseTools
                 "{ToolName} completed successfully",
                 toolName);
 
+            // Every tool call is audited to support post-run diagnostics and reporting.
             await WriteAuditLogAsync(
                 toolName,
                 requestData,
@@ -101,6 +116,11 @@ public sealed class DatabaseTools
         "Returns schema information for a specified SQL database table, " +
         "including its column names, data types and nullable status. " +
         "Use this before searching a table when its column names are unknown.")]
+    /// <summary>
+    /// Returns column metadata for a requested SQL table.
+    /// </summary>
+    /// <param name="tableName">Exact SQL table name.</param>
+    /// <returns>Schema information for the table, or <c>null</c> when not found.</returns>
     public async Task<TableInfo?> GetTableSchema(
         [Description(
             "The exact SQL table name, for example FOI_Requests or Contracts.")]
@@ -164,6 +184,13 @@ public sealed class DatabaseTools
     [Description(
         "Searches a specified SQL database table and column for a value. " +
         "Use GetTableSchema first when the available column names are unknown.")]
+    /// <summary>
+    /// Searches one SQL table/column for a value.
+    /// </summary>
+    /// <param name="tableName">Exact SQL table name.</param>
+    /// <param name="columnName">Exact SQL column name.</param>
+    /// <param name="searchValue">Value to match in the selected column.</param>
+    /// <returns>Matching rows.</returns>
     public async Task<IReadOnlyList<DatabaseSearchResult>> SearchDatabase(
         [Description(
             "The exact SQL table name, for example Planning_Applications.")]
@@ -252,6 +279,11 @@ public sealed class DatabaseTools
     [Description(
         "Searches all searchable tables and text columns in the SQL database " +
         "for a value. Use this when the relevant table or column is unknown.")]
+    /// <summary>
+    /// Searches all supported SQL tables and text columns for a value.
+    /// </summary>
+    /// <param name="searchValue">Value to search for.</param>
+    /// <returns>Matching rows aggregated across all scanned tables.</returns>
     public async Task<IReadOnlyList<DatabaseSearchResult>> SearchAllTables(
         [Description(
             "The text or value to find across the SQL database.")]

@@ -3,16 +3,30 @@ using MCP_Project.Models;
 
 namespace MCP_Project.Services;
 
+/// <summary>
+/// Provides contract-specific spreadsheet parsing and filtering operations.
+/// </summary>
 public class SpreadsheetService
 {
     private readonly string _filePath;
 
+    /// <summary>
+    /// Initializes a new <see cref="SpreadsheetService"/>.
+    /// </summary>
+    /// <remarks>
+    /// This service currently uses a fixed local workbook path because it is designed
+    /// as a proof-of-concept for a known source file.
+    /// </remarks>
     public SpreadsheetService()
     {
         _filePath =
             @"C:\Users\philip.miller\OneDrive - Durham County Council\Apprenticeship\QA\Major Project\Assignment\FOI Data\Contracts\Contracts Register - ANONYMISED.xlsm";
     }
 
+    /// <summary>
+    /// Reads contract rows from the Frameworks worksheet and maps them to contract records.
+    /// </summary>
+    /// <returns>All parsed framework contracts.</returns>
     public List<ContractRecord> GetFrameworkContracts()
     {
         var contracts = new List<ContractRecord>();
@@ -21,6 +35,7 @@ public class SpreadsheetService
 
         var worksheet = workbook.Worksheet("Frameworks");
 
+        // Business rule: row 1 is the header row; data begins from row 2.
         var rows = worksheet.RowsUsed().Skip(1);
 
         foreach (var row in rows)
@@ -37,6 +52,7 @@ public class SpreadsheetService
                 ProcurementOfficer = row.Cell(9).GetString(),
                 FrameworksTitle = row.Cell(10).GetString(),
                 Supplier = row.Cell(12).GetString(),
+                // The source workbook stores IT relevance as Yes/No text.
                 RelevantToIT =
                             row.Cell(11)
                             .GetString()
@@ -68,6 +84,11 @@ public class SpreadsheetService
 
         return null;
     }
+    /// <summary>
+    /// Searches known contract text fields for a supplied value.
+    /// </summary>
+    /// <param name="searchText">Text fragment to match.</param>
+    /// <returns>Contracts matching any supported field.</returns>
     public List<ContractRecord> SearchContracts(string searchText)
     {
         if (string.IsNullOrWhiteSpace(searchText))

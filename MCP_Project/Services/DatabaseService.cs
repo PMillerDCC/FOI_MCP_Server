@@ -3,21 +3,38 @@ using Microsoft.Data.SqlClient;
 
 namespace MCP_Project.Services;
 
+/// <summary>
+/// Provides low-level SQL discovery and search operations used by MCP tools.
+/// </summary>
 public class DatabaseService
 {
     private readonly IConfiguration _configuration;
 
+    /// <summary>
+    /// Initializes a new <see cref="DatabaseService"/>.
+    /// </summary>
+    /// <param name="configuration">Application configuration containing database connection settings.</param>
     public DatabaseService(IConfiguration configuration)
     {
         _configuration = configuration;
     }
 
+    /// <summary>
+    /// Creates a SQL connection using the configured DefaultConnection string.
+    /// </summary>
     private SqlConnection GetConnection()
     {
         return new SqlConnection(
             _configuration.GetConnectionString("DefaultConnection"));
     }
 
+    /// <summary>
+    /// Returns schema metadata for a SQL table.
+    /// </summary>
+    /// <param name="tableName">Table name to inspect.</param>
+    /// <returns>
+    /// A <see cref="TableInfo"/> with discovered columns, or <c>null</c> when no columns were found.
+    /// </returns>
     public async Task<TableInfo?> GetTableSchema(string tableName)
     {
         using var connection = GetConnection();
@@ -29,6 +46,8 @@ public class DatabaseService
             TableName = tableName
         };
 
+        // INFORMATION_SCHEMA is used to inspect table shape at runtime so MCP callers
+        // can discover valid columns before issuing targeted search requests.
         const string sql = @"
             SELECT
                 COLUMN_NAME,
@@ -67,6 +86,13 @@ public class DatabaseService
             : table;
     }
 
+    /// <summary>
+    /// Searches one SQL table column for partial matches.
+    /// </summary>
+    /// <param name="tableName">Table to query.</param>
+    /// <param name="columnName">Column to search.</param>
+    /// <param name="searchValue">Value fragment to match.</param>
+    /// <returns>List of matching rows.</returns>
     public async Task<List<DatabaseSearchResult>> SearchDatabase(
         string tableName,
         string columnName,
@@ -76,6 +102,8 @@ public class DatabaseService
 
         await connection.OpenAsync();
 
+        // Table and column identifiers are dynamic here to support generic discovery-driven
+        // search across many datasets. Callers should provide trusted schema names.
         string sql = $@"
             SELECT TOP 100 *
             FROM [{tableName}]
@@ -117,6 +145,11 @@ public class DatabaseService
         return results;
     }
 
+    /// <summary>
+    /// Searches all text columns in all base tables for a value.
+    /// </summary>
+    /// <param name="searchValue">Value to search for.</param>
+    /// <returns>Flattened collection of row matches across all scanned tables.</returns>
     public async Task<List<DatabaseSearchResult>> SearchAllTables(
         string searchValue)
     {
@@ -153,6 +186,8 @@ public class DatabaseService
             var columns =
                 new List<string>();
 
+            // Only text-compatible columns are scanned to avoid invalid casts and to
+            // keep broad searches focused on user-readable content.
             const string columnSql = @"
                 SELECT COLUMN_NAME
                 FROM INFORMATION_SCHEMA.COLUMNS
@@ -198,8 +233,8 @@ public class DatabaseService
                 }
                 catch
                 {
-                    // Ignore individual table/column failures
-                    // and continue searching.
+                    // Keep whole-database search resilient: one problematic table/column
+                    // should not prevent useful results from other tables.
                 }
             }
         }

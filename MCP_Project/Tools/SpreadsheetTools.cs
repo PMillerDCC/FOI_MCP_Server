@@ -8,6 +8,9 @@ using ModelContextProtocol.Server;
 namespace MCP_Project.Tools;
 
 [McpServerToolType]
+/// <summary>
+/// MCP tools for spreadsheet schema discovery, search, and contract-specific calculations.
+/// </summary>
 public sealed class SpreadsheetTools
 {
     private readonly SpreadsheetDatabaseService _spreadsheetDatabaseService;
@@ -15,6 +18,13 @@ public sealed class SpreadsheetTools
     private readonly AuditService _auditService;
     private readonly ILogger<SpreadsheetTools> _logger;
 
+    /// <summary>
+    /// Initializes a new <see cref="SpreadsheetTools"/> instance.
+    /// </summary>
+    /// <param name="spreadsheetDatabaseService">Generic worksheet discovery/search service.</param>
+    /// <param name="spreadsheetService">Contract-focused spreadsheet parsing service.</param>
+    /// <param name="auditService">Audit persistence service for tool executions.</param>
+    /// <param name="logger">Structured logger for diagnostics.</param>
     public SpreadsheetTools(
         SpreadsheetDatabaseService spreadsheetDatabaseService,
         SpreadsheetService spreadsheetService,
@@ -36,6 +46,10 @@ public sealed class SpreadsheetTools
         "Discovers the spreadsheet structure, including worksheet names, " +
         "column names and data-row counts. Use this before a targeted " +
         "spreadsheet search when the sheet or column names are unknown.")]
+    /// <summary>
+    /// Discovers workbook schema and sheet-level metadata.
+    /// </summary>
+    /// <returns>Schema details for all worksheets in the configured workbook.</returns>
     public async Task<SpreadsheetSchema> DiscoverSpreadsheet()
     {
         const string toolName = nameof(DiscoverSpreadsheet);
@@ -54,6 +68,7 @@ public sealed class SpreadsheetTools
                 "{ToolName} completed successfully",
                 toolName);
 
+            // Audit each invocation so data-discovery activity can be traced.
             await WriteAuditLogAsync(
                 toolName,
                 requestData,
@@ -85,6 +100,15 @@ public sealed class SpreadsheetTools
         "Searches a specific worksheet and column for a value. " +
         "Use DiscoverSpreadsheet first to identify valid worksheet " +
         "and column names.")]
+    /// <summary>
+    /// Performs a targeted search in one worksheet and one column.
+    /// </summary>
+    /// <param name="sheetName">Worksheet name returned by <see cref="DiscoverSpreadsheet"/>.</param>
+    /// <param name="columnName">Column name returned by <see cref="DiscoverSpreadsheet"/>.</param>
+    /// <param name="searchValue">Value to find.</param>
+    /// <param name="searchOperator">Comparison operator to apply.</param>
+    /// <param name="maximumResults">Maximum number of matching rows to return.</param>
+    /// <returns>Matching rows.</returns>
     public async Task<IReadOnlyList<SpreadsheetSearchResult>>
         SearchSpreadsheet(
             [Description(
@@ -177,6 +201,12 @@ public sealed class SpreadsheetTools
     [Description(
         "Searches every used column in every worksheet for a value. " +
         "Use this when the relevant worksheet or column is unknown.")]
+    /// <summary>
+    /// Searches across all worksheets and used columns.
+    /// </summary>
+    /// <param name="searchValue">Value to locate anywhere in the workbook.</param>
+    /// <param name="maximumResults">Maximum number of rows to return.</param>
+    /// <returns>Matching rows.</returns>
     public async Task<IReadOnlyList<SpreadsheetSearchResult>>
         SearchEntireSpreadsheet(
             [Description(
@@ -249,6 +279,11 @@ public sealed class SpreadsheetTools
     [Description(
         "Searches contract records across supplier, framework title, " +
         "contract manager, service area, classification and reference fields.")]
+    /// <summary>
+    /// Searches contract records across key contract text fields.
+    /// </summary>
+    /// <param name="searchText">Value fragment to search for.</param>
+    /// <returns>Human-readable summary of matching contracts.</returns>
     public async Task<string> SearchContracts(
         [Description(
             "A supplier, framework title, manager, service area, " +
@@ -337,6 +372,12 @@ public sealed class SpreadsheetTools
     [Description(
         "Calculates the total value of contracts that start within " +
         "a specified date range.")]
+    /// <summary>
+    /// Calculates total value of contracts that start inside a date range.
+    /// </summary>
+    /// <param name="startDate">Inclusive range start date.</param>
+    /// <param name="endDate">Inclusive range end date.</param>
+    /// <returns>Summary message containing counts and combined value.</returns>
     public async Task<string> GetTotalContractValueBetweenDates(
         [Description(
             "The start of the date range, using YYYY-MM-DD where possible.")]
@@ -368,6 +409,8 @@ public sealed class SpreadsheetTools
                 _spreadsheetService
                     .GetFrameworkContracts()
                     .Where(contract =>
+                        // Business rule: contracts are included when the start date falls
+                        // inside the inclusive date range supplied by the user.
                         contract.ContractStartDate.HasValue &&
                         contract.ContractStartDate.Value.Date >=
                             startDate.Date &&
@@ -431,6 +474,11 @@ public sealed class SpreadsheetTools
     [Description(
         "Calculates the combined total contract value for a specified " +
         "service area.")]
+    /// <summary>
+    /// Calculates combined contract value for a service area.
+    /// </summary>
+    /// <param name="serviceArea">Full or partial service area name.</param>
+    /// <returns>Summary message containing count and spend.</returns>
     public async Task<string> GetServiceSpend(
         [Description(
             "The full or partial service area name to calculate spend for.")]
@@ -515,6 +563,12 @@ public sealed class SpreadsheetTools
     [Description(
         "Counts contracts with an end date within a specified date range " +
         "and returns basic details of the expiring contracts. If no start date is provided the assistant should ask the user to provide one rather than assuming today's date.")]
+    /// <summary>
+    /// Counts contracts with end dates inside a date range and lists basic details.
+    /// </summary>
+    /// <param name="startDate">Inclusive range start date.</param>
+    /// <param name="endDate">Inclusive range end date.</param>
+    /// <returns>Summary message including count and optional contract list.</returns>
     public async Task<string> CountContractsExpiringWithinDateRange(
         [Description(
             "The beginning of the expiry date range, using YYYY-MM-DD " +
@@ -548,6 +602,8 @@ public sealed class SpreadsheetTools
                 _spreadsheetService
                     .GetFrameworkContracts()
                     .Where(contract =>
+                        // Business rule: expiry checks use ContractEndDate and an
+                        // inclusive range to align with FOI reporting questions.
                         contract.ContractEndDate.HasValue &&
                         contract.ContractEndDate.Value.Date >=
                             startDate.Date &&
@@ -622,6 +678,11 @@ public sealed class SpreadsheetTools
     [Description(
         "Calculates projected contract spend after applying a percentage " +
         "increase to the current combined contract value.")]
+    /// <summary>
+    /// Projects future spend by applying a percentage increase to current total value.
+    /// </summary>
+    /// <param name="percentageIncrease">Percentage increase to apply.</param>
+    /// <returns>Summary containing current and projected spend values.</returns>
     public async Task<string> CalculateProjectedSpend(
         [Description(
             "The percentage increase to apply. For example, enter 10 " +

@@ -5,11 +5,22 @@ using System.IO;
 
 namespace MCP_Project.Services;
 
+/// <summary>
+/// Provides generic worksheet schema discovery and search capabilities.
+/// </summary>
+/// <remarks>
+/// This implementation intentionally uses a simple spreadsheet contract:
+/// row 1 contains headers and row 2 onward contains data.
+/// </remarks>
 public sealed class SpreadsheetDatabaseService
 {
     private readonly IWebHostEnvironment _environment;
     private readonly string _filePath;
 
+    /// <summary>
+    /// Initializes a new <see cref="SpreadsheetDatabaseService"/>.
+    /// </summary>
+    /// <param name="environment">Hosting environment used to locate the workbook in the app content root.</param>
     public SpreadsheetDatabaseService(IWebHostEnvironment environment)
     {
         _environment = environment;
@@ -19,9 +30,14 @@ public sealed class SpreadsheetDatabaseService
         "Data",
         "Contracts Register - ANONYMISED.xlsm");
 
+        // Startup path output helps confirm packaged workbook resolution during local development.
         Console.WriteLine(_filePath);
     }
 
+    /// <summary>
+    /// Discovers worksheet schema using row 1 as the canonical header row.
+    /// </summary>
+    /// <returns>Workbook and worksheet schema metadata.</returns>
     public SpreadsheetSchema DiscoverSchema()
     {
         EnsureWorkbookExists();
@@ -32,6 +48,7 @@ public sealed class SpreadsheetDatabaseService
 
         foreach (var worksheet in workbook.Worksheets)
         {
+            // Business rule: the first row is always treated as headers.
             var headerRow = worksheet.Row(1);
             var columns = headerRow
                 .CellsUsed()
@@ -45,6 +62,7 @@ public sealed class SpreadsheetDatabaseService
 
             var lastUsedRow = worksheet.LastRowUsed();
 
+            // Data row count excludes the fixed header row.
             var dataRowCount = lastUsedRow is null
                 ? 0
                 : Math.Max(0, lastUsedRow.RowNumber() - 1);
@@ -65,6 +83,15 @@ public sealed class SpreadsheetDatabaseService
         };
     }
 
+    /// <summary>
+    /// Searches a single worksheet column for matches.
+    /// </summary>
+    /// <param name="sheetName">Worksheet name.</param>
+    /// <param name="columnName">Header name from row 1.</param>
+    /// <param name="searchValue">Value to search for.</param>
+    /// <param name="searchOperator">Comparison operator.</param>
+    /// <param name="maximumResults">Maximum number of rows to return.</param>
+    /// <returns>Matching row payloads.</returns>
     public IReadOnlyList<SpreadsheetSearchResult> Search(
         string sheetName,
         string columnName,
@@ -117,6 +144,7 @@ public sealed class SpreadsheetDatabaseService
 
         var results = new List<SpreadsheetSearchResult>();
 
+        // Data rows begin at row 2 because row 1 is reserved for headers.
         foreach (var row in worksheet.RowsUsed()
                      .Where(r =>
                          r.RowNumber() >= 2))
@@ -146,6 +174,12 @@ public sealed class SpreadsheetDatabaseService
         return results;
     }
 
+    /// <summary>
+    /// Searches all worksheets and all used columns for a value.
+    /// </summary>
+    /// <param name="searchValue">Value to search for.</param>
+    /// <param name="maximumResults">Maximum number of rows to return.</param>
+    /// <returns>Matching row payloads across workbook sheets.</returns>
     public IReadOnlyList<SpreadsheetSearchResult> SearchAll(
     string searchValue,
     int maximumResults = 100)
@@ -181,6 +215,7 @@ public sealed class SpreadsheetDatabaseService
                 continue;
             }
 
+            // Row 1 is reserved for headers and excluded from search results.
             foreach (var row in worksheet.RowsUsed()
                          .Where(r =>
                              r.RowNumber() >= 2))
@@ -249,6 +284,7 @@ public sealed class SpreadsheetDatabaseService
         {
             var header = GetHeaderName(cell);
 
+            // Unique header names are required to build deterministic key/value maps.
             if (!seenHeaders.Add(header))
             {
                 throw new InvalidOperationException(
